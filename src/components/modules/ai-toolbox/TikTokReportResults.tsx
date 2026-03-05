@@ -205,7 +205,7 @@ export function TikTokReportResults({ category, sellingPoints, onBack, onReplica
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg font-medium text-foreground truncate">TikTok 爆款视频报告</h2>
+            <h2 className="text-lg font-medium text-foreground truncate">TikTok 爆款视频匹配</h2>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className="text-xs text-muted-foreground bg-muted/40 px-2 py-0.5 rounded-full">{category}</span>
               {sellingPoints.map((p) => (
