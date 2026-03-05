@@ -793,14 +793,19 @@ export function TextToImage({ onNavigate }: TextToImageProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Add Button */}
+                {/* Add Memory Button */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="h-7 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  className={cn(
+                    "h-7 gap-1 px-2 text-xs hover:text-foreground",
+                    selectedMemoryIds.length > 0 ? "text-foreground" : "text-muted-foreground"
+                  )}
+                  onClick={() => setMemoryDialogOpen(true)}
                 >
-                  <Plus className="h-3.5 w-3.5" />
-                  {isZh ? '添加' : 'Add'}
+                  <Database className="h-3.5 w-3.5" />
+                  {isZh ? '记忆库' : 'Memory'}{selectedMemoryIds.length > 0 ? ` (${selectedMemoryIds.length})` : ''}
+                </Button>
                 </Button>
               </div>
               
