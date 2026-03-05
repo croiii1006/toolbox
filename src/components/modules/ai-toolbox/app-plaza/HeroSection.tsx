@@ -1,12 +1,8 @@
+import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, Shield, History, Play, Heart, MessageSquare, BarChart3, Lightbulb, Image, Video, Globe } from 'lucide-react';
 import { FeatureCard } from './FeatureCard';
-
-import expertAnalyst from '@/assets/expert-analyst.png';
-import expertStrategist from '@/assets/expert-strategist.png';
-import textToImage from '@/assets/text-to-image.png';
-import referenceToVideo from '@/assets/reference-to-video.png';
-import ecommerceAssets from '@/assets/ecommerce-assets.png';
+import { PreviewInsight, PreviewPlanner, PreviewImageGen, PreviewVideoGen, PreviewTikTok } from './FeaturePreviews';
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 const fadeUp = (i: number) => ({
@@ -20,38 +16,38 @@ const BRAND_FLOW = [
     targetId: 'brand-health',
     desc: '整合宏观趋势、竞品动态与人群画像，快速生成深度洞察报告',
     icon: <BarChart3 className="size-5" />,
-    image: expertAnalyst,
+    preview: <PreviewInsight />,
   },
   {
     label: '策划方案',
     targetId: 'campaign-planner',
     desc: '基于洞察数据自动生成营销策划方案，涵盖策略、排期与预算',
     icon: <Lightbulb className="size-5" />,
-    image: expertStrategist,
+    preview: <PreviewPlanner />,
   },
   {
     label: '图片生成',
     targetId: 'text-to-image',
     desc: '通过文字描述批量生成电商场景图、封面图与风格化素材',
     icon: <Image className="size-5" />,
-    image: textToImage,
+    preview: <PreviewImageGen />,
   },
   {
     label: '视频生成',
     targetId: 'reference-to-video',
     desc: '从脚本到分镜到成片，AI 辅助完成视频全流程制作',
     icon: <Video className="size-5" />,
-    image: referenceToVideo,
+    preview: <PreviewVideoGen />,
   },
 ];
 
-const SKILLS_FLOW = [
+const SKILLS_FLOW: { label: string; targetId: string; desc: string; icon: ReactNode; preview: ReactNode }[] = [
   {
     label: 'TikTok解决方案',
     targetId: 'skills',
     desc: '从选题到脚本到素材清单，生成完整可执行的 TikTok 增长方案',
     icon: <Globe className="size-5" />,
-    image: ecommerceAssets,
+    preview: <PreviewTikTok />,
   },
 ];
 
@@ -219,7 +215,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                 index={String(i + 1).padStart(2, '0')}
                 title={step.label}
                 description={step.desc}
-                previewImage={step.image}
+                preview={step.preview}
                 onClick={() => onNavigate(step.targetId)}
               />
             ))}
@@ -237,7 +233,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                 index={String(BRAND_FLOW.length + i + 1).padStart(2, '0')}
                 title={step.label}
                 description={step.desc}
-                previewImage={step.image}
+                preview={step.preview}
                 onClick={() => onNavigate(step.targetId)}
               />
             ))}
