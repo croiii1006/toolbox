@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import {
   Database, Plus, Search, Download, X, Edit2, Trash2,
-  Tag, FileText, Package, Users, Target, MoreHorizontal } from
+  Tag, FileText, Package, Users, Target, MoreHorizontal, Upload } from
 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,6 +39,7 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
   const [editEntry, setEditEntry] = useState<MemoryEntry | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filtered = useMemo(() => {
     let list = entries;
@@ -51,8 +52,38 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
   }, [entries, activeCategory, search]);
 
   const openNew = () => {
-    setEditEntry({ id: '', title: '', content: '', category: 'other', tags: [], createdAt: '', updatedAt: '' });
-    setEditDialogOpen(true);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      // Try JSON array import
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed)) {
+        importEntries(parsed);
+      } else {
+        // Single object
+        addEntry({
+          title: parsed.title || file.name.replace(/\.[^/.]+$/, ''),
+          content: parsed.content || text,
+          category: parsed.category || 'other',
+          tags: parsed.tags || [],
+        });
+      }
+    } catch {
+      // Plain text file — create entry from file content
+      addEntry({
+        title: file.name.replace(/\.[^/.]+$/, ''),
+        content: text,
+        category: 'other',
+        tags: [],
+      });
+    }
+    // Reset input so same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const openEdit = (entry: MemoryEntry) => {
@@ -111,17 +142,9 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
                 <Database className="w-4.5 h-4.5" />
                 记忆库
               </SheetTitle>
-              <div className="flex items-center gap-1">
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={handleImport} title="导入">
-                  
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={handleExport} title="导出">
-                  <Download className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => onOpenChange(false)}>
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => onOpenChange(false)}>
+                <X className="w-4 h-4" />
+              </Button>
             </div>
             <div className="relative mt-3">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -188,9 +211,10 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
           </ScrollArea>
 
           <div className="px-5 py-3 border-t border-border">
+            <input ref={fileInputRef} type="file" accept=".json,.txt,.md,.csv" className="hidden" onChange={handleFileImport} />
             <Button onClick={openNew} className="w-full h-10 rounded-xl gap-2 font-medium">
-              <Plus className="w-4 h-4" />
-              新增记忆条目
+              <Upload className="w-4 h-4" />
+              导入记忆条目
             </Button>
           </div>
         </SheetContent>
