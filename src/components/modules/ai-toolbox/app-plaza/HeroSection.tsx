@@ -211,7 +211,6 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             {BRAND_FLOW.map((step, i) => (
               <FeatureCard
                 key={i}
-                icon={step.icon}
                 
                 title={step.label}
                 description={step.desc}
@@ -229,7 +228,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             {SKILLS_FLOW.map((step, i) => (
               <FeatureCard
                 key={i}
-                icon={step.icon}
+                
                 
                 title={step.label}
                 description={step.desc}
