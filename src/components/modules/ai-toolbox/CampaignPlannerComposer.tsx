@@ -112,6 +112,7 @@ interface CampaignPlannerComposerProps {
 }
 
 export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: CampaignPlannerComposerProps) {
+  const { setDrawerOpen } = useMemory();
   const [brandName, setBrandName] = useState(initialData?.brandName || '');
   const [goal, setGoal] = useState(initialData?.goal || '');
   const [audience, setAudience] = useState<string[]>(initialData?.audience || []);
