@@ -132,19 +132,6 @@ const sidebarConfig: Record<ModuleType, SidebarSection[]> = {
       isGroupHeader: true,
     },
     {
-      titleKey: 'sidebar.toolbox',
-      isGroupHeader: true,
-      defaultOpen: true,
-      subgroups: [
-        {
-          titleKey: '',
-          items: [
-            { id: 'tiktok-report', labelKey: 'sidebar.tiktokReport', icon: <BarChart3 className="w-4 h-4" /> },
-          ],
-        },
-      ],
-    },
-    {
       titleKey: 'sidebar.materialGeneration',
       isGroupHeader: true,
       defaultOpen: true,
@@ -155,6 +142,19 @@ const sidebarConfig: Record<ModuleType, SidebarSection[]> = {
             { id: 'text-to-image', labelKey: 'sidebar.imageGeneration', icon: <ImageIcon className="w-4 h-4" /> },
             { id: 'text-to-video', labelKey: 'sidebar.videoGeneration', icon: <Video className="w-4 h-4" /> },
             { id: 'replicate-video', labelKey: 'sidebar.videoReplication', icon: <Copy className="w-4 h-4" /> },
+          ],
+        },
+      ],
+    },
+    {
+      titleKey: 'sidebar.toolbox',
+      isGroupHeader: true,
+      defaultOpen: true,
+      subgroups: [
+        {
+          titleKey: '',
+          items: [
+            { id: 'tiktok-report', labelKey: 'sidebar.tiktokReport', icon: <BarChart3 className="w-4 h-4" /> },
           ],
         },
       ],
