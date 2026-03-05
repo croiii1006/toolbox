@@ -196,7 +196,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
         {/* 品牌营销全链路 */}
         <motion.div variants={fadeUp(3)} initial="hidden" animate="visible" className="mt-12">
-          <h2 className="text-lg font-normal text-foreground mb-4">品牌营销全链路</h2>
+          <h2 className="text-lg font-normal text-foreground/60 mb-4">品牌营销全链路</h2>
           <div className="flex items-center gap-3 overflow-x-auto pb-2">
             {BRAND_FLOW.map((step, i) => (
               <FlowPill
@@ -211,7 +211,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
         {/* AI营销Skills */}
         <motion.div variants={fadeUp(4)} initial="hidden" animate="visible" className="mt-10">
-          <h2 className="text-lg font-normal text-foreground mb-4">AI营销Skills</h2>
+          <h2 className="text-lg font-normal text-foreground/60 mb-4">AI营销Skills</h2>
           <div className="flex items-center gap-3 overflow-x-auto pb-2">
             {SKILLS_FLOW.map((step, i) => (
               <FlowPill
@@ -226,7 +226,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
         {/* 案例 */}
         <motion.div variants={fadeUp(5)} initial="hidden" animate="visible" className="mt-14">
-          <h2 className="text-lg font-normal text-foreground mb-6">案例</h2>
+          <h2 className="text-lg font-normal text-foreground/60 mb-6">案例</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {SHOWCASE_CARDS.map((card, i) => (
               <ShowcaseCard key={i} card={card} onNavigate={onNavigate} />
