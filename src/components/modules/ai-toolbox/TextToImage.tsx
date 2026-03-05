@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { 
   Download, 
   Share2, 
@@ -16,7 +16,9 @@ import {
   RatioIcon,
   X,
   Copy,
-  Clipboard
+  Clipboard,
+  Database,
+  Check
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,12 +28,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { InfiniteCanvas } from './InfiniteCanvas';
 import { ImageCapsule, type SelectedImage } from './ImageCapsule';
 import { toast } from 'sonner';
+import { useMemory } from '@/contexts/MemoryContext';
 
 interface ChatMessage {
   id: string;
@@ -160,8 +164,19 @@ export function TextToImage({ onNavigate }: TextToImageProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [copiedImage, setCopiedImage] = useState<CanvasImage | null>(null);
   const [highlightedImageId, setHighlightedImageId] = useState<string | null>(null);
-  const [chatPanelWidth, setChatPanelWidth] = useState(30); // 百分比宽度，默认35%
+  const [chatPanelWidth, setChatPanelWidth] = useState(30);
   const [isResizing, setIsResizing] = useState(false);
+  const [selectedMemoryIds, setSelectedMemoryIds] = useState<string[]>([]);
+  const [memoryDialogOpen, setMemoryDialogOpen] = useState(false);
+
+  const { entries } = useMemory();
+  const memoryItems = useMemo(() => entries.map((e) => ({
+    id: e.id, name: e.title, desc: e.content.slice(0, 60), tag: e.category,
+  })), [entries]);
+
+  const toggleMemory = useCallback((id: string) => {
+    setSelectedMemoryIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  }, []);
 
   const workModes = [
     { id: 'text-to-image', label: isZh ? '文生图' : 'Text to Image' },
@@ -778,14 +793,18 @@ export function TextToImage({ onNavigate }: TextToImageProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Add Button */}
+                {/* Add Memory Button */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="h-7 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  className={cn(
+                    "h-7 gap-1 px-2 text-xs hover:text-foreground",
+                    selectedMemoryIds.length > 0 ? "text-foreground" : "text-muted-foreground"
+                  )}
+                  onClick={() => setMemoryDialogOpen(true)}
                 >
-                  <Plus className="h-3.5 w-3.5" />
-                  {isZh ? '添加' : 'Add'}
+                  <Database className="h-3.5 w-3.5" />
+                  {isZh ? '记忆库' : 'Memory'}{selectedMemoryIds.length > 0 ? ` (${selectedMemoryIds.length})` : ''}
                 </Button>
               </div>
               
@@ -906,6 +925,55 @@ export function TextToImage({ onNavigate }: TextToImageProps) {
           {canvasImages.length} {isZh ? '张图片' : 'images'}
         </Badge>
       </div>
+
+      {/* Memory selection dialog */}
+      <Dialog open={memoryDialogOpen} onOpenChange={setMemoryDialogOpen}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-base font-medium">选择记忆库</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-1.5 mt-2 max-h-[50vh] overflow-y-auto scrollbar-thin">
+            {memoryItems.map(item => {
+              const selected = selectedMemoryIds.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleMemory(item.id)}
+                  className={cn(
+                    'w-full text-left px-4 py-3 rounded-xl border text-sm transition-all',
+                    selected
+                      ? 'border-foreground/20 bg-foreground/[0.03]'
+                      : 'border-border/30 hover:border-border/60'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className={cn(
+                        'w-5 h-5 rounded-full border flex items-center justify-center transition-all',
+                        selected ? 'border-foreground bg-foreground' : 'border-border'
+                      )}>
+                        {selected && <Check className="w-3 h-3 text-background" />}
+                      </div>
+                      <span className="font-medium text-foreground">{item.name}</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">{item.tag}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 ml-[30px]">{item.desc}</p>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex justify-end mt-3">
+            <Button
+              onClick={() => setMemoryDialogOpen(false)}
+              size="sm"
+              className="rounded-lg h-8 px-5 bg-foreground text-background hover:bg-foreground/90 text-xs"
+            >
+              确认 ({selectedMemoryIds.length})
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
