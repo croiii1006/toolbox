@@ -1,0 +1,61 @@
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Database, Tag, FolderOpen, Video } from 'lucide-react';
+
+interface PromptEditorBlockProps {
+  prompt: string;
+  onChange: (val: string) => void;
+  onConfirm: () => void;
+  onBack: () => void;
+  memoryEnabled: boolean;
+}
+
+export function PromptEditorBlock({ prompt, onChange, onConfirm, onBack, memoryEnabled }: PromptEditorBlockProps) {
+  return (
+    <div className="rounded-xl border border-border/40 bg-card/60 backdrop-blur-sm p-5 space-y-4">
+      <div className="flex items-center justify-between">
+        <h4 className="text-sm font-semibold text-foreground">生成的爆款复刻 Prompt（可编辑）</h4>
+        <Badge variant="outline" className="text-[10px]">Editable</Badge>
+      </div>
+
+      <Textarea
+        value={prompt}
+        onChange={e => onChange(e.target.value)}
+        className="min-h-[160px] rounded-xl border-border/40 bg-background text-sm font-mono leading-relaxed resize-none"
+      />
+
+      {/* Source tags */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-[10px] text-muted-foreground">来源：</span>
+        {memoryEnabled && (
+          <Badge variant="secondary" className="text-[10px] gap-1">
+            <Database className="w-2.5 h-2.5" /> 记忆库
+          </Badge>
+        )}
+        <Badge variant="secondary" className="text-[10px] gap-1">
+          <Tag className="w-2.5 h-2.5" /> 卖点
+        </Badge>
+        <Badge variant="secondary" className="text-[10px] gap-1">
+          <FolderOpen className="w-2.5 h-2.5" /> 品类
+        </Badge>
+        <Badge variant="secondary" className="text-[10px] gap-1">
+          <Video className="w-2.5 h-2.5" /> 参考视频
+        </Badge>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={onConfirm}
+          className="flex-1 rounded-xl h-10 bg-foreground text-background hover:bg-foreground/90 font-medium"
+        >
+          确认并生成
+        </Button>
+        <Button variant="outline" onClick={onBack} className="rounded-xl h-10 border-border/60">
+          返回重选视频
+        </Button>
+      </div>
+    </div>
+  );
+}
