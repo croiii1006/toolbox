@@ -1,6 +1,8 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { ArrowUp, X, ChevronDown, Check, Play, Heart, MessageSquare, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import logoDark from '@/assets/logo_dark.svg';
 import { useMemory } from '@/contexts/MemoryContext';
@@ -112,7 +114,12 @@ interface CampaignPlannerComposerProps {
 }
 
 export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: CampaignPlannerComposerProps) {
-  const { setDrawerOpen } = useMemory();
+  const { entries } = useMemory();
+  const memoryItems = useMemo(() => entries.map((e) => ({
+    id: e.id, name: e.title, desc: e.content.slice(0, 60), tag: e.category,
+  })), [entries]);
+  const [selectedMemoryIds, setSelectedMemoryIds] = useState<string[]>([]);
+  const [memoryDialogOpen, setMemoryDialogOpen] = useState(false);
   const [brandName, setBrandName] = useState(initialData?.brandName || '');
   const [goal, setGoal] = useState(initialData?.goal || '');
   const [audience, setAudience] = useState<string[]>(initialData?.audience || []);
@@ -137,6 +144,10 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
     if (!canSend || disabled) return;
     onSubmit({ brandName: brandName.trim(), goal, audience, sellingPoints, budget, channels, cycle });
   }, [canSend, disabled, brandName, goal, audience, sellingPoints, budget, channels, cycle, onSubmit]);
+
+  const toggleMemory = (id: string) => {
+    setSelectedMemoryIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
 
   const addTag = (
     value: string,
@@ -310,11 +321,11 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
                 <span className="text-[11px] font-medium">联网搜索中</span>
               </div>
               <button
-                onClick={() => setDrawerOpen(true)}
+                onClick={() => setMemoryDialogOpen(true)}
                 className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-muted/30 text-muted-foreground/60 hover:bg-foreground/5 hover:text-muted-foreground transition-colors"
               >
                 <Database className="w-3 h-3" />
-                <span className="text-[11px]">记忆库</span>
+                <span className="text-[11px]">记忆库{selectedMemoryIds.length > 0 ? ` (${selectedMemoryIds.length})` : ''}</span>
               </button>
             </div>
 
@@ -407,6 +418,54 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
           </a>
         </div>
       </div>
+      {/* Memory selection dialog */}
+      <Dialog open={memoryDialogOpen} onOpenChange={setMemoryDialogOpen}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-base font-medium">选择记忆库</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-1.5 mt-2">
+            {memoryItems.map(item => {
+              const selected = selectedMemoryIds.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleMemory(item.id)}
+                  className={cn(
+                    'w-full text-left px-4 py-3 rounded-xl border text-sm transition-all',
+                    selected
+                      ? 'border-foreground/20 bg-foreground/[0.03]'
+                      : 'border-border/30 hover:border-border/60'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className={cn(
+                        'w-5 h-5 rounded-full border flex items-center justify-center transition-all',
+                        selected ? 'border-foreground bg-foreground' : 'border-border'
+                      )}>
+                        {selected && <Check className="w-3 h-3 text-background" />}
+                      </div>
+                      <span className="font-medium text-foreground">{item.name}</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">{item.tag}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 ml-[30px]">{item.desc}</p>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex justify-end mt-3">
+            <Button
+              onClick={() => setMemoryDialogOpen(false)}
+              size="sm"
+              className="rounded-lg h-8 px-5 bg-foreground text-background hover:bg-foreground/90 text-xs"
+            >
+              确认 ({selectedMemoryIds.length})
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
