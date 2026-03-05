@@ -110,20 +110,6 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
     URL.revokeObjectURL(url);
   };
 
-  const handleImport = () => {
-    const input = document.createElement('input');
-    input.type = 'file';input.accept = '.json';
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      try {
-        const text = await file.text();
-        const data = JSON.parse(text) as MemoryEntry[];
-        if (Array.isArray(data)) importEntries(data);
-      } catch {/* ignore */}
-    };
-    input.click();
-  };
 
   const categoryCounts = useMemo(() => {
     const map: Record<string, number> = { all: entries.length };
