@@ -216,10 +216,6 @@ export function TikTokReportResults({ category, sellingPoints, onBack, onReplica
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <span className="text-sm text-muted-foreground">共 {MOCK_VIDEOS.length} 个结果</span>
-            <Button variant="outline" size="sm" onClick={onRefresh} className="rounded-lg gap-1.5 text-xs">
-              <RefreshCw className="w-3.5 h-3.5" />
-              换一批
-            </Button>
           </div>
         </div>
       </div>
