@@ -109,7 +109,7 @@ export function PreviewVideoGen() {
   );
 }
 
-/** Mini UI mockup for TikTok解决方案 */
+/** Mini UI mockup for TikTok解决方案 - chat style */
 export function PreviewTikTok() {
   return (
     <div className="flex flex-col gap-1.5 h-full text-[6px]">
@@ -120,14 +120,26 @@ export function PreviewTikTok() {
         </div>
         <span className="text-muted-foreground text-[5px]">增长方案</span>
       </div>
-      <div className="flex gap-1 flex-1 min-h-0">
-        <div className="flex flex-col gap-1 flex-1">
-          <div className="rounded-md bg-gradient-to-br from-[hsl(170,60%,88%)] to-[hsl(190,55%,82%)] flex-1" />
-          <div className="rounded-md bg-gradient-to-br from-[hsl(340,65%,90%)] to-[hsl(10,70%,85%)] flex-1" />
+      <div className="flex flex-col gap-1 flex-1 min-h-0 overflow-hidden">
+        {/* User message */}
+        <div className="flex justify-end">
+          <div className="rounded-lg rounded-tr-sm bg-accent/15 px-2 py-1 max-w-[75%]">
+            <span className="text-foreground">帮我做一个美妆TikTok方案</span>
+          </div>
         </div>
-        <div className="flex flex-col gap-1 flex-1">
-          <div className="rounded-md bg-gradient-to-br from-[hsl(45,85%,88%)] to-[hsl(25,80%,80%)] flex-[0.7]" />
-          <div className="rounded-md bg-gradient-to-br from-[hsl(220,60%,90%)] to-[hsl(250,50%,85%)] flex-[1.3]" />
+        {/* AI reply */}
+        <div className="flex justify-start">
+          <div className="rounded-lg rounded-tl-sm bg-muted/60 px-2 py-1 max-w-[80%]">
+            <span className="text-foreground font-medium">✦ 选题方向</span>
+            <p className="text-muted-foreground mt-0.5 leading-relaxed">平价好物测评 · 妆教合集…</p>
+          </div>
+        </div>
+        {/* AI reply 2 */}
+        <div className="flex justify-start">
+          <div className="rounded-lg rounded-tl-sm bg-muted/60 px-2 py-1 max-w-[80%]">
+            <span className="text-foreground font-medium">✦ 脚本大纲</span>
+            <p className="text-muted-foreground mt-0.5 leading-relaxed">开头3s hook → 产品展示…</p>
+          </div>
         </div>
       </div>
     </div>
