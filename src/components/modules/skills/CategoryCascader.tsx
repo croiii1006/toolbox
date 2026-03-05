@@ -200,14 +200,37 @@ function CascaderColumn({
   );
 }
 
+// Flatten tree into searchable paths
+function flattenTree(nodes: CategoryNode[], prefix: string[] = []): string[] {
+  const results: string[] = [];
+  for (const node of nodes) {
+    const path = [...prefix, node.label];
+    if (!node.children || node.children.length === 0) {
+      results.push(path.join(' > '));
+    } else {
+      results.push(path.join(' > '));
+      results.push(...flattenTree(node.children, path));
+    }
+  }
+  return results;
+}
+
 export function CategoryCascader({ data, value, onChange, placeholder = '选择品类', className }: CategoryCascaderProps) {
   const [open, setOpen] = useState(false);
   const [selectedPath, setSelectedPath] = useState<CategoryNode[]>([]);
+  const [search, setSearch] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const allPaths = useMemo(() => flattenTree(data), [data]);
+  const filteredPaths = useMemo(() => {
+    if (!search.trim()) return [];
+    const q = search.toLowerCase();
+    return allPaths.filter(p => p.toLowerCase().includes(q));
+  }, [search, allPaths]);
 
   // Parse value into path on mount
   useEffect(() => {
     if (value) {
-      // Try to reconstruct path from value string (e.g. "美妆个护 > 彩妆 > 口红")
       const parts = value.split(' > ');
       const path: CategoryNode[] = [];
       let current = data;
@@ -222,12 +245,19 @@ export function CategoryCascader({ data, value, onChange, placeholder = '选择�
     }
   }, []);
 
+  // Focus search on open
+  useEffect(() => {
+    if (open) {
+      setSearch('');
+      setTimeout(() => searchInputRef.current?.focus(), 50);
+    }
+  }, [open]);
+
   const handleSelect = (node: CategoryNode, level: number) => {
     const newPath = [...selectedPath.slice(0, level), node];
     setSelectedPath(newPath);
 
     if (!node.children || node.children.length === 0) {
-      // Leaf node selected - commit
       const pathStr = newPath.map((n) => n.label).join(' > ');
       onChange?.(pathStr);
       setOpen(false);
@@ -235,8 +265,12 @@ export function CategoryCascader({ data, value, onChange, placeholder = '选择�
   };
 
   const handleHover = (node: CategoryNode, level: number) => {
-    // Expand path on hover without committing
     setSelectedPath((prev) => [...prev.slice(0, level), node]);
+  };
+
+  const handleSearchSelect = (pathStr: string) => {
+    onChange?.(pathStr);
+    setOpen(false);
   };
 
   const displayValue = value || (selectedPath.length > 0 ? selectedPath.map(n => n.label).join(' > ') : '');
@@ -260,34 +294,68 @@ export function CategoryCascader({ data, value, onChange, placeholder = '选择�
         sideOffset={8}
         className="p-0 rounded-xl shadow-lg w-auto max-w-[540px]"
       >
-        <div className="flex">
-          {/* Level 0 */}
-          <CascaderColumn
-            items={data}
-            selectedLabel={selectedPath[0]?.label}
-            onSelect={(node) => handleSelect(node, 0)}
-            onHover={(node) => handleHover(node, 0)}
-          />
-          {/* Level 1 */}
-          {selectedPath[0]?.children && selectedPath[0].children.length > 0 && (
-            <CascaderColumn
-              items={selectedPath[0].children}
-              selectedLabel={selectedPath[1]?.label}
-              onSelect={(node) => handleSelect(node, 1)}
-              onHover={(node) => handleHover(node, 1)}
+        {/* Search box */}
+        <div className="px-3 py-2 border-b border-border/20">
+          <div className="flex items-center gap-2 px-2 h-8 rounded-lg bg-muted/30 border border-border/20">
+            <Search className="w-3.5 h-3.5 text-muted-foreground/50 shrink-0" />
+            <input
+              ref={searchInputRef}
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="搜索品类..."
+              className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
             />
-          )}
-          {/* Level 2 */}
-          {selectedPath[1]?.children && selectedPath[1].children.length > 0 && (
-            <CascaderColumn
-              items={selectedPath[1].children}
-              selectedLabel={selectedPath[2]?.label}
-              onSelect={(node) => handleSelect(node, 2)}
-              onHover={(node) => handleHover(node, 2)}
-              isLast
-            />
-          )}
+          </div>
         </div>
+
+        {search.trim() ? (
+          /* Search results */
+          <div className="max-h-[320px] overflow-y-auto py-1 scrollbar-thin">
+            {filteredPaths.length === 0 ? (
+              <p className="text-xs text-muted-foreground/50 text-center py-6">无匹配结果</p>
+            ) : (
+              filteredPaths.slice(0, 20).map(path => (
+                <button
+                  key={path}
+                  onClick={() => handleSearchSelect(path)}
+                  className={cn(
+                    'w-full text-left px-4 py-2.5 text-xs transition-colors hover:bg-muted/30',
+                    value === path ? 'bg-muted/60 text-foreground font-medium' : 'text-foreground/80'
+                  )}
+                >
+                  {path}
+                </button>
+              ))
+            )}
+          </div>
+        ) : (
+          /* Cascader columns */
+          <div className="flex">
+            <CascaderColumn
+              items={data}
+              selectedLabel={selectedPath[0]?.label}
+              onSelect={(node) => handleSelect(node, 0)}
+              onHover={(node) => handleHover(node, 0)}
+            />
+            {selectedPath[0]?.children && selectedPath[0].children.length > 0 && (
+              <CascaderColumn
+                items={selectedPath[0].children}
+                selectedLabel={selectedPath[1]?.label}
+                onSelect={(node) => handleSelect(node, 1)}
+                onHover={(node) => handleHover(node, 1)}
+              />
+            )}
+            {selectedPath[1]?.children && selectedPath[1].children.length > 0 && (
+              <CascaderColumn
+                items={selectedPath[1].children}
+                selectedLabel={selectedPath[2]?.label}
+                onSelect={(node) => handleSelect(node, 2)}
+                onHover={(node) => handleHover(node, 2)}
+                isLast
+              />
+            )}
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );
