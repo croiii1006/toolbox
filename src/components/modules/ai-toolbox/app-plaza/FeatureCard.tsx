@@ -2,14 +2,14 @@ import { ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
 
 interface FeatureCardProps {
-  icon: ReactNode;
+  title: string;
   title: string;
   description: string;
   preview: ReactNode;
   onClick: () => void;
 }
 
-export function FeatureCard({ icon, title, description, preview, onClick }: FeatureCardProps) {
+export function FeatureCard({ title, description, preview, onClick }: FeatureCardProps) {
   return (
     <div
       onClick={onClick}
@@ -17,9 +17,6 @@ export function FeatureCard({ icon, title, description, preview, onClick }: Feat
     >
       {/* Left: text */}
       <div className="flex flex-col justify-center gap-3 p-6 pr-4 flex-1 min-w-0">
-        <div className="flex items-center justify-center size-9 rounded-xl bg-accent/10 text-accent shrink-0">
-          {icon}
-        </div>
         <div>
           <h3 className="text-base font-medium text-foreground leading-snug">{title}</h3>
           <p className="text-xs text-muted-foreground font-light mt-1.5 leading-relaxed line-clamp-2">{description}</p>
