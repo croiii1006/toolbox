@@ -145,7 +145,10 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
     onSubmit({ brandName: brandName.trim(), goal, audience, sellingPoints, budget, channels, cycle });
   }, [canSend, disabled, brandName, goal, audience, sellingPoints, budget, channels, cycle, onSubmit]);
 
-  const addTag = (
+  const toggleMemory = (id: string) => {
+    setSelectedMemoryIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
     value: string,
     list: string[],
     setList: React.Dispatch<React.SetStateAction<string[]>>,
