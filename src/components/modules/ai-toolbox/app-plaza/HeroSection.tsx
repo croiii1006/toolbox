@@ -130,25 +130,22 @@ function ShowcaseCard({
 
 function FlowPill({
   label,
-  icon,
   active,
   onClick,
 }: {
   label: string;
-  icon?: string;
   active?: boolean;
   onClick: () => void;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-5 py-2.5 rounded-full border text-xs font-medium transition-all duration-200 shrink-0 ${
+      className={`px-5 py-2.5 rounded-full border text-xs font-medium transition-all duration-200 shrink-0 ${
         active
           ? 'bg-foreground text-background border-foreground'
           : 'border-border/40 bg-card/80 backdrop-blur-sm text-foreground/70 hover:text-foreground hover:border-border/60 hover:bg-muted/30'
       }`}
     >
-      {icon && <img src={icon} alt="" className={`w-4 h-4 object-contain ${active ? 'invert' : 'dark:invert'}`} />}
       {label}
     </button>
   );
