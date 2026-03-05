@@ -424,7 +424,7 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
           <DialogHeader>
             <DialogTitle className="text-base font-medium">选择记忆库</DialogTitle>
           </DialogHeader>
-          <div className="space-y-1.5 mt-2">
+          <div className="space-y-1.5 mt-2 max-h-[50vh] overflow-y-auto scrollbar-thin">
             {memoryItems.map(item => {
               const selected = selectedMemoryIds.includes(item.id);
               return (
