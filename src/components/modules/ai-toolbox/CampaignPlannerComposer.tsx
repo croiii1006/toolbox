@@ -149,6 +149,7 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
     setSelectedMemoryIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
 
+  const addTag = (
     value: string,
     list: string[],
     setList: React.Dispatch<React.SetStateAction<string[]>>,
