@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { ArrowUp, X, ChevronDown, Check, Search, Play, Heart, MessageSquare } from 'lucide-react';
+import { ArrowUp, X, ChevronDown, Check, Play, Heart, MessageSquare } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import logoDark from '@/assets/logo_dark.svg';
@@ -121,7 +121,7 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
   const [channels, setChannels] = useState<string[]>(initialData?.channels || ['抖音', '小红书']);
   const [cycle, setCycle] = useState(initialData?.cycle || '');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [platform, setPlatform] = useState<'xiaohongshu' | 'douyin' | 'web' | null>(null);
+  
   const [showGoalPicker, setShowGoalPicker] = useState(false);
   const [showBudgetPicker, setShowBudgetPicker] = useState(false);
   const [showCyclePicker, setShowCyclePicker] = useState(false);
@@ -300,37 +300,13 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
           {/* Bottom toolbar */}
           <div className="flex items-center justify-between px-5 py-3 border-t border-border/20">
             <div className="flex items-center gap-1.5 text-[11px]">
-              {(['xiaohongshu', 'douyin', 'web'] as const).map(p => {
-                const label = p === 'xiaohongshu' ? '小红书' : p === 'douyin' ? '抖音' : '联网搜索';
-                const comingSoon = p === 'xiaohongshu' || p === 'douyin';
-                const isSelected = platform === p;
-                const btn = (
-                  <button
-                    key={p}
-                    onClick={() => !comingSoon && setPlatform(isSelected ? null : p)}
-                    className={cn(
-                      'px-2.5 py-1 rounded-full transition-all flex items-center gap-1',
-                      isSelected
-                        ? 'bg-accent/10 border border-accent/20 text-accent font-medium'
-                        : comingSoon
-                          ? 'bg-muted/30 text-muted-foreground/40 cursor-not-allowed'
-                          : 'bg-muted/30 text-muted-foreground/60 hover:bg-foreground/5 hover:text-muted-foreground'
-                    )}
-                  >
-                    {p === 'web' && <Search className="w-3 h-3" />}
-                    {label}
-                  </button>
-                );
-                if (comingSoon) {
-                  return (
-                    <Tooltip key={p}>
-                      <TooltipTrigger asChild>{btn}</TooltipTrigger>
-                      <TooltipContent side="top" className="text-xs">Coming soon</TooltipContent>
-                    </Tooltip>
-                  );
-                }
-                return btn;
-              })}
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/8 text-accent/80">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent/60 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent/80" />
+                </span>
+                <span className="text-[11px] font-medium">联网搜索中</span>
+              </div>
             </div>
 
             <button
