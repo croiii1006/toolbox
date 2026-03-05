@@ -1,6 +1,8 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { ArrowUp, X, ChevronDown, Check, Play, Heart, MessageSquare, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import logoDark from '@/assets/logo_dark.svg';
 import { useMemory } from '@/contexts/MemoryContext';
@@ -112,7 +114,12 @@ interface CampaignPlannerComposerProps {
 }
 
 export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: CampaignPlannerComposerProps) {
-  const { setDrawerOpen } = useMemory();
+  const { entries } = useMemory();
+  const memoryItems = useMemo(() => entries.map((e) => ({
+    id: e.id, name: e.title, desc: e.content.slice(0, 60), tag: e.category,
+  })), [entries]);
+  const [selectedMemoryIds, setSelectedMemoryIds] = useState<string[]>([]);
+  const [memoryDialogOpen, setMemoryDialogOpen] = useState(false);
   const [brandName, setBrandName] = useState(initialData?.brandName || '');
   const [goal, setGoal] = useState(initialData?.goal || '');
   const [audience, setAudience] = useState<string[]>(initialData?.audience || []);
@@ -310,11 +317,11 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
                 <span className="text-[11px] font-medium">联网搜索中</span>
               </div>
               <button
-                onClick={() => setDrawerOpen(true)}
+                onClick={() => setMemoryDialogOpen(true)}
                 className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-muted/30 text-muted-foreground/60 hover:bg-foreground/5 hover:text-muted-foreground transition-colors"
               >
                 <Database className="w-3 h-3" />
-                <span className="text-[11px]">记忆库</span>
+                <span className="text-[11px]">记忆库{selectedMemoryIds.length > 0 ? ` (${selectedMemoryIds.length})` : ''}</span>
               </button>
             </div>
 
