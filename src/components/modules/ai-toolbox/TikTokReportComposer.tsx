@@ -97,6 +97,7 @@ export function TikTokReportComposer({ onSubmit, disabled }: TikTokReportCompose
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  onBlur={() => { if (inputValue.trim()) addSellingPoint(inputValue); }}
                   placeholder={sellingPoints.length === 0 ? '输入卖点，回车添加' : '添加卖点...'}
                   className="h-6 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none w-[120px]" />
                 
