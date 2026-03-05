@@ -3,7 +3,6 @@ import { ChevronRight } from 'lucide-react';
 
 interface FeatureCardProps {
   icon: ReactNode;
-  index: string;
   title: string;
   description: string;
   preview: ReactNode;
