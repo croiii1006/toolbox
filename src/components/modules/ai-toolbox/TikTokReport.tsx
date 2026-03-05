@@ -42,9 +42,6 @@ export function TikTokReport({ onNavigate }: TikTokReportProps) {
     onNavigate?.('replicate-video');
   };
 
-  const handleRefresh = () => {
-    console.log('Refresh videos for:', { category, sellingPoints });
-  };
 
   const handleRestoreHistory = (item: { category: string; sellingPoints: string[] }) => {
     setCategory(item.category);
@@ -59,7 +56,6 @@ export function TikTokReport({ onNavigate }: TikTokReportProps) {
         sellingPoints={sellingPoints}
         onBack={handleBack}
         onReplicate={handleReplicate}
-        onRefresh={handleRefresh}
       />
     );
   }

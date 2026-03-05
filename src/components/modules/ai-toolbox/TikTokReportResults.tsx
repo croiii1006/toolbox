@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, ChevronLeft, ChevronRight, X, Play, Bookmark, BookmarkCheck } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, X, Play, Bookmark, BookmarkCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TikTokVideoCard, type TikTokVideo } from './TikTokVideoCard';
 import { cn } from '@/lib/utils';
@@ -77,10 +77,9 @@ interface TikTokReportResultsProps {
   sellingPoints: string[];
   onBack: () => void;
   onReplicate: (videoId: string) => void;
-  onRefresh?: () => void;
 }
 
-export function TikTokReportResults({ category, sellingPoints, onBack, onReplicate, onRefresh }: TikTokReportResultsProps) {
+export function TikTokReportResults({ category, sellingPoints, onBack, onReplicate }: TikTokReportResultsProps) {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const { saveVideo, unsaveVideo, isVideoSaved } = useTikTokInspiration();
 
