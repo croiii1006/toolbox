@@ -806,7 +806,6 @@ export function TextToImage({ onNavigate }: TextToImageProps) {
                   <Database className="h-3.5 w-3.5" />
                   {isZh ? '记忆库' : 'Memory'}{selectedMemoryIds.length > 0 ? ` (${selectedMemoryIds.length})` : ''}
                 </Button>
-                </Button>
               </div>
               
               {/* Send Button */}
