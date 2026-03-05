@@ -1,5 +1,12 @@
 import { motion } from 'framer-motion';
-import { Zap, Shield, History, Play, Heart, MessageSquare } from 'lucide-react';
+import { Zap, Shield, History, Play, Heart, MessageSquare, BarChart3, Lightbulb, Image, Video, Globe } from 'lucide-react';
+import { FeatureCard } from './FeatureCard';
+
+import expertAnalyst from '@/assets/expert-analyst.png';
+import expertStrategist from '@/assets/expert-strategist.png';
+import textToImage from '@/assets/text-to-image.png';
+import referenceToVideo from '@/assets/reference-to-video.png';
+import ecommerceAssets from '@/assets/ecommerce-assets.png';
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 const fadeUp = (i: number) => ({
@@ -8,14 +15,44 @@ const fadeUp = (i: number) => ({
 });
 
 const BRAND_FLOW = [
-  { label: '市场洞察', targetId: 'brand-health' },
-  { label: '策划方案', targetId: 'campaign-planner' },
-  { label: '图片生成', targetId: 'text-to-image' },
-  { label: '视频生成', targetId: 'reference-to-video' },
+  {
+    label: '市场洞察',
+    targetId: 'brand-health',
+    desc: '整合宏观趋势、竞品动态与人群画像，快速生成深度洞察报告',
+    icon: <BarChart3 className="size-5" />,
+    image: expertAnalyst,
+  },
+  {
+    label: '策划方案',
+    targetId: 'campaign-planner',
+    desc: '基于洞察数据自动生成营销策划方案，涵盖策略、排期与预算',
+    icon: <Lightbulb className="size-5" />,
+    image: expertStrategist,
+  },
+  {
+    label: '图片生成',
+    targetId: 'text-to-image',
+    desc: '通过文字描述批量生成电商场景图、封面图与风格化素材',
+    icon: <Image className="size-5" />,
+    image: textToImage,
+  },
+  {
+    label: '视频生成',
+    targetId: 'reference-to-video',
+    desc: '从脚本到分镜到成片，AI 辅助完成视频全流程制作',
+    icon: <Video className="size-5" />,
+    image: referenceToVideo,
+  },
 ];
 
 const SKILLS_FLOW = [
-  { label: 'TikTok解决方案', targetId: 'skills' },
+  {
+    label: 'TikTok解决方案',
+    targetId: 'skills',
+    desc: '从选题到脚本到素材清单，生成完整可执行的 TikTok 增长方案',
+    icon: <Globe className="size-5" />,
+    image: ecommerceAssets,
+  },
 ];
 
 const SHOWCASE_CARDS = [
@@ -128,29 +165,6 @@ function ShowcaseCard({
   );
 }
 
-function FlowPill({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-5 py-2.5 rounded-full border text-xs font-medium transition-all duration-200 shrink-0 ${
-        active
-          ? 'bg-foreground text-background border-foreground'
-          : 'border-border/40 bg-card/80 backdrop-blur-sm text-foreground/70 hover:text-foreground hover:border-border/60 hover:bg-muted/30'
-      }`}
-    >
-      {label}
-    </button>
-  );
-}
-
 interface HeroSectionProps {
   onNavigate: (itemId: string) => void;
   onScrollTo: (anchor: string) => void;
@@ -196,13 +210,16 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
         {/* 品牌营销全链路 */}
         <motion.div variants={fadeUp(3)} initial="hidden" animate="visible" className="mt-12">
-          <h2 className="text-lg font-normal text-foreground/60 mb-4">品牌营销全链路</h2>
-          <div className="flex items-center gap-3 overflow-x-auto pb-2">
+          <h2 className="text-lg font-normal text-foreground/60 mb-5">品牌营销全链路</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {BRAND_FLOW.map((step, i) => (
-              <FlowPill
+              <FeatureCard
                 key={i}
-                label={step.label}
-                active={i === 0}
+                icon={step.icon}
+                index={String(i + 1).padStart(2, '0')}
+                title={step.label}
+                description={step.desc}
+                previewImage={step.image}
                 onClick={() => onNavigate(step.targetId)}
               />
             ))}
@@ -211,13 +228,16 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
         {/* AI营销Skills */}
         <motion.div variants={fadeUp(4)} initial="hidden" animate="visible" className="mt-10">
-          <h2 className="text-lg font-normal text-foreground/60 mb-4">AI营销Skills</h2>
-          <div className="flex items-center gap-3 overflow-x-auto pb-2">
+          <h2 className="text-lg font-normal text-foreground/60 mb-5">AI营销Skills</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {SKILLS_FLOW.map((step, i) => (
-              <FlowPill
+              <FeatureCard
                 key={i}
-                label={step.label}
-                active={i === 0}
+                icon={step.icon}
+                index={String(BRAND_FLOW.length + i + 1).padStart(2, '0')}
+                title={step.label}
+                description={step.desc}
+                previewImage={step.image}
                 onClick={() => onNavigate(step.targetId)}
               />
             ))}
