@@ -60,6 +60,9 @@ export function TikTokVideoCard({ video, onReplicate, onPreview }: TikTokVideoCa
           <Play className="w-10 h-10 text-foreground/15" />
         )}
 
+        {/* Bottom fade overlay */}
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+
         {/* Duration - bottom left */}
         <div className="absolute bottom-2 left-2 bg-foreground/80 text-background text-[10px] font-mono px-1.5 py-0.5 rounded-md">
           {video.durationText}
