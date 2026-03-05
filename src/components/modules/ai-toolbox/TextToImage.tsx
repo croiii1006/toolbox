@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { 
   Download, 
   Share2, 
@@ -16,7 +16,9 @@ import {
   RatioIcon,
   X,
   Copy,
-  Clipboard
+  Clipboard,
+  Database,
+  Check
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,12 +28,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { InfiniteCanvas } from './InfiniteCanvas';
 import { ImageCapsule, type SelectedImage } from './ImageCapsule';
 import { toast } from 'sonner';
+import { useMemory } from '@/contexts/MemoryContext';
 
 interface ChatMessage {
   id: string;
