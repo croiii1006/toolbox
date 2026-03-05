@@ -212,7 +212,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               <FeatureCard
                 key={i}
                 icon={step.icon}
-                index={String(i + 1).padStart(2, '0')}
+                
                 title={step.label}
                 description={step.desc}
                 preview={step.preview}
@@ -230,7 +230,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               <FeatureCard
                 key={i}
                 icon={step.icon}
-                index={String(BRAND_FLOW.length + i + 1).padStart(2, '0')}
+                
                 title={step.label}
                 description={step.desc}
                 preview={step.preview}
