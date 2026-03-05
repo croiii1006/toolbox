@@ -164,8 +164,19 @@ export function TextToImage({ onNavigate }: TextToImageProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [copiedImage, setCopiedImage] = useState<CanvasImage | null>(null);
   const [highlightedImageId, setHighlightedImageId] = useState<string | null>(null);
-  const [chatPanelWidth, setChatPanelWidth] = useState(30); // 百分比宽度，默认35%
+  const [chatPanelWidth, setChatPanelWidth] = useState(30);
   const [isResizing, setIsResizing] = useState(false);
+  const [selectedMemoryIds, setSelectedMemoryIds] = useState<string[]>([]);
+  const [memoryDialogOpen, setMemoryDialogOpen] = useState(false);
+
+  const { entries } = useMemory();
+  const memoryItems = useMemo(() => entries.map((e) => ({
+    id: e.id, name: e.title, desc: e.content.slice(0, 60), tag: e.category,
+  })), [entries]);
+
+  const toggleMemory = useCallback((id: string) => {
+    setSelectedMemoryIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  }, []);
 
   const workModes = [
     { id: 'text-to-image', label: isZh ? '文生图' : 'Text to Image' },
