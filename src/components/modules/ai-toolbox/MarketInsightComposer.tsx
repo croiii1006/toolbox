@@ -151,6 +151,7 @@ export function MarketInsightComposer({ onSubmit, disabled, initialData }: Marke
                   value={competitorInput}
                   onChange={(e) => setCompetitorInput(e.target.value)}
                   onKeyDown={handleCompetitorKeyDown}
+                  onBlur={() => { if (competitorInput.trim()) addCompetitor(competitorInput); }}
                   placeholder={competitors.length === 0 ? '输入竞品，回车添加' : '添加竞品...'}
                   className="h-6 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none w-[120px]" />
                 
