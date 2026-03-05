@@ -215,6 +215,20 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           </div>
         </motion.div>
 
+        {/* AI营销Skills */}
+        <motion.div variants={fadeUp(4)} initial="hidden" animate="visible" className="mt-10">
+          <h2 className="text-lg font-semibold text-foreground mb-4">AI营销Skills</h2>
+          <div className="flex items-center gap-3 overflow-x-auto pb-2">
+            {SKILLS_FLOW.map((step, i) => (
+              <FlowPill
+                key={i}
+                label={step.label}
+                active={i === 0}
+                onClick={() => onNavigate(step.targetId)}
+              />
+            ))}
+          </div>
+        </motion.div>
 
         {/* 案例 */}
         <motion.div variants={fadeUp(5)} initial="hidden" animate="visible" className="mt-14">
