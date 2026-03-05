@@ -117,25 +117,25 @@ const sidebarConfig: Record<ModuleType, SidebarSection[]> = {
     {
       id: 'app-plaza',
       titleKey: 'sidebar.appPlaza',
-      icon: <LayoutGrid className="w-4 h-4" />,
+      icon: <img src={pixelAppPlaza} alt="" className="w-4 h-4 object-contain dark:invert" />,
       isGroupHeader: true,
     },
     {
       id: 'brand-health',
       titleKey: 'sidebar.marketInsights',
-      icon: <TrendingUp className="w-4 h-4" />,
+      icon: <img src={pixelMarketInsights} alt="" className="w-4 h-4 object-contain dark:invert" />,
       isGroupHeader: true,
     },
     {
       id: 'campaign-planner',
       titleKey: 'sidebar.planningScheme',
-      icon: <Megaphone className="w-4 h-4" />,
+      icon: <img src={pixelCampaign} alt="" className="w-4 h-4 object-contain dark:invert" />,
       isGroupHeader: true,
     },
     {
       id: 'tiktok-report',
       titleKey: 'sidebar.tiktokReport',
-      icon: <Video className="w-4 h-4" />,
+      icon: <img src={pixelTiktokReport} alt="" className="w-4 h-4 object-contain dark:invert" />,
       isGroupHeader: true,
     },
     {
@@ -146,9 +146,9 @@ const sidebarConfig: Record<ModuleType, SidebarSection[]> = {
         {
           titleKey: '',
           items: [
-            { id: 'text-to-image', labelKey: 'sidebar.imageGeneration', icon: <ImageIcon className="w-4 h-4" /> },
-            { id: 'text-to-video', labelKey: 'sidebar.videoGeneration', icon: <Video className="w-4 h-4" /> },
-            { id: 'replicate-video', labelKey: 'sidebar.videoReplication', icon: <Copy className="w-4 h-4" /> },
+            { id: 'text-to-image', labelKey: 'sidebar.imageGeneration', icon: <img src={pixelImageGen} alt="" className="w-4 h-4 object-contain dark:invert" /> },
+            { id: 'text-to-video', labelKey: 'sidebar.videoGeneration', icon: <img src={pixelVideoGen} alt="" className="w-4 h-4 object-contain dark:invert" /> },
+            { id: 'replicate-video', labelKey: 'sidebar.videoReplication', icon: <img src={pixelReplicate} alt="" className="w-4 h-4 object-contain dark:invert" /> },
           ],
         },
       ],
@@ -161,7 +161,7 @@ const sidebarConfig: Record<ModuleType, SidebarSection[]> = {
         {
           titleKey: '',
           items: [
-            { id: 'skills', labelKey: 'sidebar.tiktokSolution', icon: <Zap className="w-4 h-4" /> },
+            { id: 'skills', labelKey: 'sidebar.tiktokSolution', icon: <img src={pixelSkills} alt="" className="w-4 h-4 object-contain dark:invert" /> },
           ],
         },
       ],
