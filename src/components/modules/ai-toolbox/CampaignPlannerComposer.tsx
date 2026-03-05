@@ -1,8 +1,9 @@
 import { useState, useRef, useCallback } from 'react';
-import { ArrowUp, X, ChevronDown, Check, Play, Heart, MessageSquare } from 'lucide-react';
+import { ArrowUp, X, ChevronDown, Check, Play, Heart, MessageSquare, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import logoDark from '@/assets/logo_dark.svg';
+import { useMemory } from '@/contexts/MemoryContext';
 
 /* ─── Types ─── */
 export interface CampaignPayload {
@@ -111,6 +112,7 @@ interface CampaignPlannerComposerProps {
 }
 
 export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: CampaignPlannerComposerProps) {
+  const { setDrawerOpen } = useMemory();
   const [brandName, setBrandName] = useState(initialData?.brandName || '');
   const [goal, setGoal] = useState(initialData?.goal || '');
   const [audience, setAudience] = useState<string[]>(initialData?.audience || []);
@@ -299,7 +301,7 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
 
           {/* Bottom toolbar */}
           <div className="flex items-center justify-between px-5 py-3 border-t border-border/20">
-            <div className="flex items-center gap-1.5 text-[11px]">
+            <div className="flex items-center gap-2 text-[11px]">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/8 text-accent/80">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent/60 opacity-75" />
@@ -307,6 +309,13 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
                 </span>
                 <span className="text-[11px] font-medium">联网搜索中</span>
               </div>
+              <button
+                onClick={() => setDrawerOpen(true)}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-muted/30 text-muted-foreground/60 hover:bg-foreground/5 hover:text-muted-foreground transition-colors"
+              >
+                <Database className="w-3 h-3" />
+                <span className="text-[11px]">记忆库</span>
+              </button>
             </div>
 
             <button
