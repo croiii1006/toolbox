@@ -139,7 +139,7 @@ const sidebarConfig: Record<ModuleType, SidebarSection[]> = {
         {
           titleKey: '',
           items: [
-            { id: 'tiktok-report', labelKey: 'sidebar.tiktokReport', icon: <Video className="w-4 h-4" /> },
+            { id: 'tiktok-report', labelKey: 'sidebar.tiktokReport', icon: <BarChart3 className="w-4 h-4" /> },
           ],
         },
       ],
