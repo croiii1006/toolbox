@@ -1,16 +1,9 @@
 import { useModule } from '@/contexts/ModuleContext';
 import { ModuleType } from '@/types/modules';
 import {
-  LayoutGrid,
-  TrendingUp,
-  Megaphone,
-  ImageIcon,
-  Video,
-  Copy,
   ChevronDown,
   PanelLeftClose,
   PanelLeft,
-  Zap,
   LayoutDashboard,
   PenTool,
   History,
@@ -23,6 +16,14 @@ import {
   Wallet,
   User,
 } from 'lucide-react';
+import pixelAppPlaza from '@/assets/pixel-app-plaza.png';
+import pixelMarketInsights from '@/assets/pixel-market-insights.png';
+import pixelCampaign from '@/assets/pixel-campaign.png';
+import pixelTiktokReport from '@/assets/pixel-tiktok-report.png';
+import pixelImageGen from '@/assets/pixel-image-gen.png';
+import pixelVideoGen from '@/assets/pixel-video-gen.png';
+import pixelReplicate from '@/assets/pixel-replicate.png';
+import pixelSkills from '@/assets/pixel-skills.png';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
