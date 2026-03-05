@@ -58,14 +58,12 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
   const handleFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const text = await file.text();
     try {
-      const text = await file.text();
-      // Try JSON array import
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed)) {
         importEntries(parsed);
       } else {
-        // Single object
         addEntry({
           title: parsed.title || file.name.replace(/\.[^/.]+$/, ''),
           content: parsed.content || text,
@@ -74,7 +72,6 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
         });
       }
     } catch {
-      // Plain text file — create entry from file content
       addEntry({
         title: file.name.replace(/\.[^/.]+$/, ''),
         content: text,
@@ -82,7 +79,6 @@ export function MemoryLibraryDrawer({ open, onOpenChange }: Props) {
         tags: [],
       });
     }
-    // Reset input so same file can be re-selected
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
