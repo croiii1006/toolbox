@@ -54,9 +54,6 @@ export function TikTokVideoCard({ video, onReplicate, onPreview }: TikTokVideoCa
         onClick={() => onPreview?.()}
         className={cn('relative aspect-[9/16] bg-gradient-to-br flex items-center justify-center cursor-pointer shrink-0', coverColors[colorIdx])}
       >
-        {/* Bottom fade overlay */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-card to-transparent z-[1] pointer-events-none" />
-
         {video.videoUrl ? (
           <video src={video.videoUrl} muted={muted} className="absolute inset-0 w-full h-full object-cover" />
         ) : (
