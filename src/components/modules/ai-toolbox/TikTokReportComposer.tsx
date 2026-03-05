@@ -52,7 +52,7 @@ export function TikTokReportComposer({ onSubmit, disabled }: TikTokReportCompose
         {/* Title */}
         <div className="text-center mb-10">
           <h1 className="text-2xl md:text-3xl font-normal text-foreground tracking-tight">
-            TikTok 爆款视频报告
+            TikTok 爆款视频匹配
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">选择品类并添加卖点，一键替你收集TikTok爆款视频
 
