@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { ArrowUp, X, Play, Heart, MessageSquare, Globe, Search } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ArrowUp, X, Play, Heart, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CategoryCascader, CATEGORY_TREE } from '@/components/modules/skills/CategoryCascader';
 import logoDark from '@/assets/logo_dark.svg';
@@ -45,7 +44,6 @@ export function MarketInsightComposer({ onSubmit, disabled, initialData }: Marke
   const [category, setCategory] = useState(initialData?.category || '');
   const [competitors, setCompetitors] = useState<string[]>(initialData?.competitors || []);
   const [competitorInput, setCompetitorInput] = useState('');
-  const [platform, setPlatform] = useState<'xiaohongshu' | 'douyin' | 'web' | null>(null);
   const competitorInputRef = useRef<HTMLInputElement>(null);
 
   const canSend = brandName.trim() && category.trim() && competitors.length > 0;
