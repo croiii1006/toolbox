@@ -418,6 +418,54 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
           </a>
         </div>
       </div>
+      {/* Memory selection dialog */}
+      <Dialog open={memoryDialogOpen} onOpenChange={setMemoryDialogOpen}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-base font-medium">选择记忆库</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-1.5 mt-2">
+            {memoryItems.map(item => {
+              const selected = selectedMemoryIds.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleMemory(item.id)}
+                  className={cn(
+                    'w-full text-left px-4 py-3 rounded-xl border text-sm transition-all',
+                    selected
+                      ? 'border-foreground/20 bg-foreground/[0.03]'
+                      : 'border-border/30 hover:border-border/60'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className={cn(
+                        'w-5 h-5 rounded-full border flex items-center justify-center transition-all',
+                        selected ? 'border-foreground bg-foreground' : 'border-border'
+                      )}>
+                        {selected && <Check className="w-3 h-3 text-background" />}
+                      </div>
+                      <span className="font-medium text-foreground">{item.name}</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">{item.tag}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 ml-[30px]">{item.desc}</p>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex justify-end mt-3">
+            <Button
+              onClick={() => setMemoryDialogOpen(false)}
+              size="sm"
+              className="rounded-lg h-8 px-5 bg-foreground text-background hover:bg-foreground/90 text-xs"
+            >
+              确认 ({selectedMemoryIds.length})
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
