@@ -132,10 +132,17 @@ const sidebarConfig: Record<ModuleType, SidebarSection[]> = {
       isGroupHeader: true,
     },
     {
-      id: 'tiktok-report',
-      titleKey: 'sidebar.tiktokReport',
-      icon: <Video className="w-4 h-4" />,
+      titleKey: 'sidebar.toolbox',
       isGroupHeader: true,
+      defaultOpen: true,
+      subgroups: [
+        {
+          titleKey: '',
+          items: [
+            { id: 'tiktok-report', labelKey: 'sidebar.tiktokReport', icon: <Video className="w-4 h-4" /> },
+          ],
+        },
+      ],
     },
     {
       titleKey: 'sidebar.materialGeneration',
