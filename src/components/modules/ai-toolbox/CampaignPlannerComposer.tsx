@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { ArrowUp, X, ChevronDown, Check, Play, Heart, MessageSquare } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import logoDark from '@/assets/logo_dark.svg';
 
