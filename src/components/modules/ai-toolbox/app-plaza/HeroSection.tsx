@@ -16,12 +16,6 @@ const BRAND_FLOW = [
 
 const SKILLS_FLOW = [
   { label: 'TikTok解决方案', targetId: 'skills' },
-  { label: '策划方案', targetId: 'campaign-planner' },
-  { label: 'tk爆款视频报告', targetId: 'tiktok-report' },
-  { label: '图片生成', targetId: 'text-to-image' },
-  { label: '视频生成', targetId: 'reference-to-video' },
-  { label: '视频复刻', targetId: 'replicate-video' },
-  { label: 'tk解决方案', targetId: 'skills' },
 ];
 
 const SHOWCASE_CARDS = [
