@@ -199,7 +199,14 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   };
 
   const handleInspirationSelect = (video: InspirationVideo) => {
-    toast.success(`已选择灵感视频: ${video.title}`);
+    // Set video as the reference (对标视频) via TikTok link
+    setTiktokLink(`https://www.tiktok.com/@user/video/${video.id}`);
+    // Clear any uploaded file since we're using a link now
+    setStyleVideoFile(null);
+    setStyleVideoUrl(null);
+    toast.success(`已将「${video.title}」设为对标视频`);
+    // Scroll to top so user can see the composer
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (viewMode === 'conversation') {
