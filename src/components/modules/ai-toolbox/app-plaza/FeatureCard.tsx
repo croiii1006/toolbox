@@ -9,7 +9,7 @@ interface FeatureCardProps {
   onClick: () => void;
 }
 
-export function FeatureCard({ icon, index, title, description, preview, onClick }: FeatureCardProps) {
+export function FeatureCard({ icon, title, description, preview, onClick }: FeatureCardProps) {
   return (
     <div
       onClick={onClick}
@@ -17,11 +17,8 @@ export function FeatureCard({ icon, index, title, description, preview, onClick 
     >
       {/* Left: text */}
       <div className="flex flex-col justify-center gap-3 p-6 pr-4 flex-1 min-w-0">
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center size-9 rounded-xl bg-accent/10 text-accent shrink-0">
-            {icon}
-          </div>
-          <span className="text-xs text-muted-foreground font-light">{index}</span>
+        <div className="flex items-center justify-center size-9 rounded-xl bg-accent/10 text-accent shrink-0">
+          {icon}
         </div>
         <div>
           <h3 className="text-base font-medium text-foreground leading-snug">{title}</h3>
