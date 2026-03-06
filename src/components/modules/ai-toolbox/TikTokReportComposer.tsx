@@ -109,11 +109,7 @@ export function TikTokReportComposer({ onSubmit, disabled }: TikTokReportCompose
 
           {/* Bottom toolbar */}
           <div className="flex items-center justify-between px-5 py-3 border-t border-border/20">
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/50">
-              {!category && <span className="bg-muted/30 px-2 py-0.5 rounded-full">需选择品类</span>}
-              {sellingPoints.length === 0 && <span className="bg-muted/30 px-2 py-0.5 rounded-full">需添加卖点</span>}
-              {canSend && <span className="text-foreground/40">准备就绪</span>}
-            </div>
+            <div />
 
             <button
               onClick={handleSend}
