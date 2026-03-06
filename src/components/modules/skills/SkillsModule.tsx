@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useMemory } from '@/contexts/MemoryContext';
 import { useSkillsEngine, CandidateVideo } from './useSkillsEngine';
@@ -11,7 +11,7 @@ import { ResultPreviewBlock } from './ResultPreviewBlock';
 import { TaskDetailPanel } from './TaskDetailPanel';
 
 import { ChatInputBar } from './ChatInputBar';
-import { Loader2, Zap, CheckCircle2, SkipForward, RefreshCw, ArrowLeft, Clapperboard, PartyPopper, Search, ListChecks, Check, ChevronRight } from 'lucide-react';
+import { Loader2, Zap, CheckCircle2, SkipForward, RefreshCw, ArrowLeft, Clapperboard, PartyPopper, Search, ListChecks, Check, ChevronRight, X } from 'lucide-react';
 
 export function SkillsModule() {
   const {
@@ -46,9 +46,10 @@ export function SkillsModule() {
 
   const activeTask = state.tasks.find((t) => t.id === state.activeTaskId);
 
+  const [videoPanelOpen, setVideoPanelOpen] = useState(false);
   // Determine if right panel should show
   const hasVideoCandidates = state.candidateVideos.length > 0;
-  const showRightPanel = activeTask || hasVideoCandidates;
+  const showRightPanel = activeTask || (hasVideoCandidates && videoPanelOpen);
 
   const handleSend = (text: string, image?: string | null, category?: string, memoryIds?: string[]) => {
     if (!state.setupCompleted && (image || text)) {
@@ -131,7 +132,8 @@ export function SkillsModule() {
           <VideoCandidateCollapsible
             key={msg.id}
             videos={state.candidateVideos}
-            onShowPanel={() => setActiveTaskId(null)}
+            onShowPanel={() => { setActiveTaskId(null); setVideoPanelOpen(true); }}
+            active={!activeTask && hasVideoCandidates && videoPanelOpen}
           />
         );
       case 'video-gen-status': {
@@ -294,6 +296,12 @@ export function SkillsModule() {
           <div className="h-full flex flex-col bg-background">
                 <div className="px-5 py-4 border-b border-border/20 flex items-center justify-between shrink-0">
                   <span className="text-sm font-medium text-foreground">爆款参考视频</span>
+                  <button
+                    onClick={() => setVideoPanelOpen(false)}
+                    className="p-1 rounded-md hover:bg-muted/30 transition-colors"
+                  >
+                    <X className="w-4 h-4 text-muted-foreground" />
+                  </button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-5">
                   <VideoCandidateRow
