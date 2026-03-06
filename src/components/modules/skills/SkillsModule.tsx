@@ -4,6 +4,7 @@ import { useMemory } from '@/contexts/MemoryContext';
 import { useSkillsEngine, CandidateVideo } from './useSkillsEngine';
 import { SetupSummary } from './SetupSummary';
 import { ChecklistCard } from './ChecklistCard';
+import { VideoCandidateCollapsible } from './VideoCandidateCollapsible';
 import { VideoCandidateRow } from './VideoCandidateRow';
 import { PromptEditorBlock } from './PromptEditorBlock';
 import { ResultPreviewBlock } from './ResultPreviewBlock';
