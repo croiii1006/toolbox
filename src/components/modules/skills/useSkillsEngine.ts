@@ -219,7 +219,7 @@ export function useSkillsEngine() {
         status: setup.memoryEnabled ? 'queued' : 'skipped',
         progress: 0, logs: [], children: [
           { id: 'task-memory-connect', title: '连接记忆库', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '记忆专家', avatar: 'memory', role: '记忆管理专家' } },
-          { id: 'task-memory-retrieve', title: '检索相关记忆', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '爬虫专家', avatar: 'crawler', role: '数据爬取专家' } },
+          { id: 'task-memory-retrieve', title: '检索相关记忆', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '检索专家', avatar: 'search', role: '信息检索专家' } },
           { id: 'task-memory-context', title: '构建上下文向量', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '数据专家', avatar: 'analyst', role: '数据分析专家' } },
         ],
         moduleChain: ['MemoryRetriever', 'VectorDB', 'ContextBuilder'],
@@ -362,12 +362,12 @@ export function useSkillsEngine() {
         addTaskLog('task-memory', '记忆专家完成连接记忆库 → 已建立安全连接');
 
         // Sub 2: Retrieve
-        updateChild('task-memory', 'task-memory-retrieve', { status: 'running', title: '爬虫专家正在检索相关记忆' });
-        addTaskLog('task-memory', '爬虫专家正在检索相关记忆...');
+        updateChild('task-memory', 'task-memory-retrieve', { status: 'running', title: '检索专家正在检索相关记忆' });
+        addTaskLog('task-memory', '检索专家正在检索相关记忆...');
         await subDelay();
         const memoryCount = setup.selectedMemoryIds.length || 4;
-        updateChild('task-memory', 'task-memory-retrieve', { status: 'done', progress: 100, title: '爬虫专家完成检索相关记忆' });
-        addTaskLog('task-memory', `爬虫专家完成检索相关记忆 → 命中 ${memoryCount} 条相关记忆`);
+        updateChild('task-memory', 'task-memory-retrieve', { status: 'done', progress: 100, title: '检索专家完成检索相关记忆' });
+        addTaskLog('task-memory', `检索专家完成检索相关记忆 → 命中 ${memoryCount} 条相关记忆`);
 
         // Sub 3: Context
         updateChild('task-memory', 'task-memory-context', { status: 'running', title: '数据专家正在构建上下文向量' });

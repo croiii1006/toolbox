@@ -12,6 +12,7 @@ import expertVideo from '@/assets/expert-video.png';
 import expertDesigner from '@/assets/expert-designer.png';
 import expertStrategist from '@/assets/expert-strategist.png';
 import expertAnalyst from '@/assets/expert-analyst.png';
+import expertSearch from '@/assets/expert-search.png';
 import pixelCheck from '@/assets/pixel-check.png';
 import pixelWait from '@/assets/pixel-wait.png';
 
@@ -22,6 +23,7 @@ const expertAvatars: Record<string, string> = {
   designer: expertDesigner,
   strategist: expertStrategist,
   analyst: expertAnalyst,
+  search: expertSearch,
 };
 
 interface TaskDetailPanelProps {
