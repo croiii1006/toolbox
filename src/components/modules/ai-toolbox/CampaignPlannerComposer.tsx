@@ -408,8 +408,9 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
         </div>
 
         
-
-        {/* Case Cards */}
+      </div>
+      {/* Case Cards - full width */}
+      <div className="w-full max-w-5xl mt-8">
         <CampaignCaseSection />
       </div>
       {/* Memory selection dialog */}
