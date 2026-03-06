@@ -320,17 +320,25 @@ export function useSkillsEngine() {
     const submittedAt = now();
 
     (async () => {
-      // ─── Phase 0: Show full checklist immediately ───
+      // ─── Phase 0: Build checklist one by one ───
       addMessage({ type: 'video-gen-status', content: '正在为您编写待办清单...' });
       await pause(800);
 
-      // Add all tasks at once
+      // Show checklist container first (empty)
       setState(prev => ({
         ...prev,
-        tasks: tasks,
         messages: [...prev.messages, { id: checklistId, type: 'checklist', content: '' }],
       }));
-      await pause(600);
+
+      // Add tasks one by one with delay
+      for (let i = 0; i < tasks.length; i++) {
+        setState(prev => ({
+          ...prev,
+          tasks: [...prev.tasks, tasks[i]],
+        }));
+        await pause(400);
+      }
+      await pause(400);
 
       // ─── Task 1: Memory ───
       if (setup.memoryEnabled) {
