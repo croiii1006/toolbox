@@ -14,7 +14,7 @@ export function AppPlaza({ onNavigate }: AppPlazaProps) {
   }, []);
 
   return (
-    <div ref={scrollRef} className="min-h-full bg-background overflow-y-auto scrollbar-thin">
+    <div ref={scrollRef} className="min-h-full overflow-y-auto scrollbar-thin" style={{ background: 'radial-gradient(ellipse at 20% 20%, hsla(25, 100%, 92%, 0.6) 0%, transparent 50%), radial-gradient(ellipse at 80% 60%, hsla(340, 80%, 92%, 0.5) 0%, transparent 50%), radial-gradient(ellipse at 50% 90%, hsla(0, 0%, 100%, 1) 0%, transparent 60%), hsl(0, 0%, 100%)' }}>
       <div className="px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto w-full">
         <HeroSection onNavigate={onNavigate} onScrollTo={scrollTo} />
         <div className="h-16" />
