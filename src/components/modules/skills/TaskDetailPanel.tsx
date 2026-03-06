@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { SkillTask, CandidateVideo } from './useSkillsEngine';
-import { VideoCandidateRow } from './VideoCandidateRow';
+
 
 
 import expertMemory from '@/assets/expert-memory.png';
