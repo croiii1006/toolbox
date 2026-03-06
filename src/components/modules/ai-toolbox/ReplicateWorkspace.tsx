@@ -406,9 +406,6 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                 ) : inspirationVideo ? (
                 <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 group">
                     <div className={cn("absolute inset-0 bg-gradient-to-br", inspirationVideo.coverGradient)} />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Play className="w-6 h-6 text-white/80" />
-                    </div>
                     <button
                     className="absolute top-1 right-1 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors opacity-0 group-hover:opacity-100"
                     onClick={() => setInspirationVideo(null)}>
