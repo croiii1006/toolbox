@@ -17,9 +17,11 @@ import {
   Maximize2,
   ChevronDown,
   ChevronLeft,
-  ChevronRight } from
+  ChevronRight,
+  History } from
 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useTikTokInspiration } from '@/contexts/TikTokInspirationContext';
 import { useReplicatePrefill } from '@/contexts/ReplicatePrefillContext';
 import { cn } from '@/lib/utils';
