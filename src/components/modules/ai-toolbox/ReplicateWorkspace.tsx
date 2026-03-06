@@ -17,8 +17,8 @@ import {
   Maximize2,
   ChevronDown,
   ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+  ChevronRight } from
+'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useTikTokInspiration } from '@/contexts/TikTokInspirationContext';
 import { useReplicatePrefill } from '@/contexts/ReplicatePrefillContext';
@@ -374,7 +374,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 
   // ── Composer view (initial) ──
   return (
-    <div className="flex flex-col items-center min-h-[calc(100vh-56px)] p-6 md:p-8 pt-[80px]">
+    <div className="flex flex-col items-center min-h-[calc(100vh-56px)] p-6 md:p-8 pt-[80px] my-[30px]">
       <div className="w-full max-w-2xl animate-fade-in">
         {/* Title */}
         <div className="text-center mb-10">
@@ -393,7 +393,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
               {/* ── LEFT: Video Upload / TK Link ── */}
               <div className="shrink-0">
                 <input ref={videoInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
-                {styleVideoUrl ? (
+                {styleVideoUrl ?
                 <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 bg-muted/30 group">
                     <video src={styleVideoUrl} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -407,8 +407,8 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                     <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-1.5 py-0.5 text-[10px] text-white truncate">
                       {styleVideoFile?.name}
                     </div>
-                  </div>
-                ) : inspirationVideo ? (
+                  </div> :
+                inspirationVideo ?
                 <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 group">
                     <div className={cn("absolute inset-0 bg-gradient-to-br", inspirationVideo.coverGradient)} />
                     <button
@@ -416,23 +416,23 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                     onClick={() => setInspirationVideo(null)}>
                       <X className="w-3 h-3" />
                     </button>
-                  </div>
-                ) : (
+                  </div> :
+
                 <button
                   onClick={() => !tiktokLink.trim() && videoInputRef.current?.click()}
                   disabled={!!tiktokLink.trim()}
                   className={cn(
                     "w-[120px] h-[100px] border-2 border-dashed rounded-xl flex flex-col items-center justify-center gap-1.5 transition-colors",
-                    tiktokLink.trim()
-                      ? "border-border/20 bg-muted/10 cursor-not-allowed opacity-40"
-                      : "border-border/40 hover:border-foreground/20 hover:bg-muted/20"
+                    tiktokLink.trim() ?
+                    "border-border/20 bg-muted/10 cursor-not-allowed opacity-40" :
+                    "border-border/40 hover:border-foreground/20 hover:bg-muted/20"
                   )}>
                     <Plus className="w-5 h-5 text-muted-foreground/60" />
                     <span className="text-[11px] text-muted-foreground/60 leading-tight text-center px-1">
                       上传对标视频
                     </span>
                   </button>
-                )}
+                }
               </div>
 
               {/* ── RIGHT: Selling Points ── */}
@@ -481,14 +481,14 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 
               <div className={cn(
                 "flex items-center gap-1.5 transition-opacity",
-                (styleVideoFile || inspirationVideo) ? "opacity-40 pointer-events-none" : ""
+                styleVideoFile || inspirationVideo ? "opacity-40 pointer-events-none" : ""
               )}>
                   <Link className="w-3.5 h-3.5 text-muted-foreground/50" />
                   <input
                   value={tiktokLink}
                   onChange={(e) => setTiktokLink(e.target.value)}
                   disabled={!!(styleVideoFile || inspirationVideo)}
-                  placeholder={(styleVideoFile || inspirationVideo) ? "已选择视频，链接不可用" : "粘贴 TikTok 链接..."}
+                  placeholder={styleVideoFile || inspirationVideo ? "已选择视频，链接不可用" : "粘贴 TikTok 链接..."}
                   className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none disabled:cursor-not-allowed" />
                 
                 </div>
@@ -542,18 +542,18 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
               videos={savedVideos.map((sv) => ({ id: sv.id, title: sv.title, views: sv.views, likes: sv.likes, coverGradient: sv.coverGradient, source: 'saved' as const }))}
               onSelect={handleInspirationSelect}
               renderOverlay={(video) => {
-                const sv = savedVideos.find(s => s.id === video.id);
+                const sv = savedVideos.find((s) => s.id === video.id);
                 if (!sv) return null;
                 return (
                   <button
-                    onClick={(e) => { e.stopPropagation(); unsaveVideo(sv.videoId); toast.success('已从灵感库移除'); }}
-                    className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]"
-                  >
+                    onClick={(e) => {e.stopPropagation();unsaveVideo(sv.videoId);toast.success('已从灵感库移除');}}
+                    className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]">
+                    
                     <X className="w-3 h-3" />
-                  </button>
-                );
-              }}
-            /> :
+                  </button>);
+
+              }} /> :
+
             <div className="text-center py-12 text-sm text-muted-foreground">
                 <Bookmark className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
                 <p>暂无保存的灵感视频</p>
@@ -573,12 +573,12 @@ const INSPO_PER_PAGE = 3;
 function PaginatedInspirationGrid({
   videos,
   onSelect,
-  renderOverlay,
-}: {
-  videos: InspirationVideo[];
-  onSelect: (video: InspirationVideo) => void;
-  renderOverlay?: (video: InspirationVideo) => React.ReactNode;
-}) {
+  renderOverlay
+
+
+
+
+}: {videos: InspirationVideo[];onSelect: (video: InspirationVideo) => void;renderOverlay?: (video: InspirationVideo) => React.ReactNode;}) {
   const [expanded, setExpanded] = useState(false);
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(videos.length / INSPO_PER_PAGE);
@@ -588,63 +588,63 @@ function PaginatedInspirationGrid({
   return (
     <div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {previewVideos.map((video) => (
-          <div key={video.id} className="relative">
+        {previewVideos.map((video) =>
+        <div key={video.id} className="relative">
             <InspirationCard video={video} onSelect={onSelect} />
             {renderOverlay?.(video)}
           </div>
-        ))}
+        )}
       </div>
 
-      {expanded && (
-        <div className="mt-4">
+      {expanded &&
+      <div className="mt-4">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {pagedVideos.map((video) => (
-              <div key={video.id} className="relative">
+            {pagedVideos.map((video) =>
+          <div key={video.id} className="relative">
                 <InspirationCard video={video} onSelect={onSelect} />
                 {renderOverlay?.(video)}
               </div>
-            ))}
+          )}
           </div>
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-3 mt-4">
+          {totalPages > 1 &&
+        <div className="flex items-center justify-center gap-3 mt-4">
               <button
-                onClick={() => setPage(p => Math.max(0, p - 1))}
-                disabled={page === 0}
-                className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              >
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+            className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+            
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <span className="text-xs text-muted-foreground">{page + 1} / {totalPages}</span>
               <button
-                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
-                disabled={page === totalPages - 1}
-                className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              >
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={page === totalPages - 1}
+            className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+            
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-          )}
+        }
         </div>
-      )}
+      }
 
-      {videos.length > INSPO_PER_PAGE && (
-        <button
-          onClick={() => { setExpanded(!expanded); setPage(0); }}
-          className="flex items-center gap-1 mx-auto mt-4 text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
+      {videos.length > INSPO_PER_PAGE &&
+      <button
+        onClick={() => {setExpanded(!expanded);setPage(0);}}
+        className="flex items-center gap-1 mx-auto mt-4 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        
           {expanded ? '收起' : '查看更多'}
           <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
         </button>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
 
 function InspirationCard({
   video,
   onSelect
-}: {video: InspirationVideo; onSelect: (video: InspirationVideo) => void;}) {
+}: {video: InspirationVideo;onSelect: (video: InspirationVideo) => void;}) {
   const [previewOpen, setPreviewOpen] = useState(false);
 
   return (
@@ -656,10 +656,10 @@ function InspirationCard({
         <div className={cn('aspect-video bg-gradient-to-br flex items-center justify-center relative', video.coverGradient)}>
           <Play className="w-8 h-8 text-white/70 group-hover:text-white transition-colors" />
           <button
-            onClick={(e) => { e.stopPropagation(); setPreviewOpen(true); }}
+            onClick={(e) => {e.stopPropagation();setPreviewOpen(true);}}
             className="absolute bottom-1.5 left-1.5 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-[5]"
-            title="预览视频"
-          >
+            title="预览视频">
+            
             <Maximize2 className="w-3 h-3" />
           </button>
           <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 bg-black/50 rounded-full px-2 py-0.5">
@@ -696,6 +696,6 @@ function InspirationCard({
           </div>
         </DialogContent>
       </Dialog>
-    </>
-  );
+    </>);
+
 }
