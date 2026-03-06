@@ -190,6 +190,19 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   const handleSend = useCallback(async () => {
     if (!canSend) return;
 
+    // Save to history
+    const newItem: ReplicateHistoryItem = {
+      id: crypto.randomUUID(),
+      sellingPoints,
+      tiktokLink: tiktokLink.trim() || undefined,
+      videoName: styleVideoFile?.name || undefined,
+      inspirationTitle: inspirationVideo?.title || undefined,
+      date: new Date().toISOString(),
+    };
+    const updated = [newItem, ...history].slice(0, 20);
+    setHistory(updated);
+    saveReplicateHistory(updated);
+
     setViewMode('conversation');
     setIsExtracting(true);
     setExtractedPromptText('');
