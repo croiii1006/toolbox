@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
-import { ArrowUp, X, ChevronDown, Check, Database } from 'lucide-react';
+import { ArrowUp, X, ChevronDown, ChevronLeft, ChevronRight, Check, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
