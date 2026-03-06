@@ -163,7 +163,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                 onClick={() => handleCategoryChange(cat.id)}
                 className={`px-3 py-1 rounded-md text-xs transition-colors ${
                   activeCaseCategory === cat.id
-                    ? 'text-foreground font-medium bg-muted/60'
+                    ? 'text-orange-600 font-medium bg-orange-50 dark:text-orange-400 dark:bg-orange-950/30'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
