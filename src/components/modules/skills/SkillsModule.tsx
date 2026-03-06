@@ -131,8 +131,7 @@ export function SkillsModule() {
           <VideoCandidateCollapsible
             key={msg.id}
             videos={state.candidateVideos}
-            onSelect={handleVideoSelect}
-            selectedVideoId={state.selectedVideo?.id}
+            onShowPanel={() => setActiveTaskId(null)}
           />
         );
       case 'video-gen-status': {
