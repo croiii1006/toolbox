@@ -1,10 +1,10 @@
-import { X, Clock, Check, Loader2, ChevronRight, Monitor, Smartphone } from 'lucide-react';
+import { X, Clock, Check, Loader2, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { SkillTask, CandidateVideo } from './useSkillsEngine';
 import { VideoCandidateRow } from './VideoCandidateRow';
-import { useState } from 'react';
+
 
 import expertMemory from '@/assets/expert-memory.png';
 import expertCrawler from '@/assets/expert-crawler.png';
@@ -34,7 +34,7 @@ interface TaskDetailPanelProps {
 }
 
 export function TaskDetailPanel({ task, onClose, videoCandidates, selectedVideoId, onVideoSelect, onVideoRefresh }: TaskDetailPanelProps) {
-  const [view, setView] = useState<'desktop' | 'mobile'>('desktop');
+  
 
   // Progress calculation
   const totalSteps = task.moduleChain?.length || 1;
@@ -77,25 +77,7 @@ export function TaskDetailPanel({ task, onClose, videoCandidates, selectedVideoI
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <button
-            onClick={() => setView('desktop')}
-            className={cn(
-              'p-1.5 rounded-md transition-colors',
-              view === 'desktop' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            <Monitor className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setView('mobile')}
-            className={cn(
-              'p-1.5 rounded-md transition-colors',
-              view === 'mobile' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            <Smartphone className="w-4 h-4" />
-          </button>
-          <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7 ml-1">
+          <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7">
             <X className="w-4 h-4" />
           </Button>
         </div>
