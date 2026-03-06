@@ -11,7 +11,6 @@ interface VideoCandidateRowProps {
   videos: CandidateVideo[];
   onSelect: (video: CandidateVideo) => void;
   onPreview?: (video: CandidateVideo) => void;
-  onRefresh: () => void;
   selectedVideoId?: string | null;
 }
 
@@ -23,7 +22,7 @@ const coverColors = [
   'from-rose-200 to-rose-100',
 ];
 
-export function VideoCandidateRow({ videos, onSelect, onPreview, onRefresh, selectedVideoId }: VideoCandidateRowProps) {
+export function VideoCandidateRow({ videos, onSelect, onPreview, selectedVideoId }: VideoCandidateRowProps) {
   const [detailVideo, setDetailVideo] = useState<CandidateVideo | null>(null);
   const [detailIndex, setDetailIndex] = useState(0);
   const [fullscreenVideo, setFullscreenVideo] = useState<CandidateVideo | null>(null);
@@ -51,12 +50,6 @@ export function VideoCandidateRow({ videos, onSelect, onPreview, onRefresh, sele
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-end">
-        <Button variant="ghost" size="sm" onClick={onRefresh} className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground">
-          <RefreshCw className="w-3 h-3" />
-          换一批
-        </Button>
-      </div>
       <div className="grid grid-cols-3 gap-2.5">
         {displayVideos.map((video, i) => (
           <div
