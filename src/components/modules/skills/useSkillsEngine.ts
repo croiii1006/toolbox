@@ -508,13 +508,13 @@ export function useSkillsEngine() {
     setStatus(`✅ 我已经记录了你的选择「${video.title}」。`);
 
     // Permanent message before subtask list
-    const addMessage = (msg: { type: string; content: string }) => {
+    const addPermanentMsg = (content: string) => {
       setState(prev => ({
         ...prev,
-        messages: [...prev.messages, { id: `msg-${Date.now()}-${Math.random()}`, ...msg }],
+        messages: [...prev.messages, { id: `msg-${Date.now()}-${Math.random()}`, type: 'video-gen-status' as const, content }],
       }));
     };
-    addMessage({ type: 'video-gen-status', content: '现在为你反推提示词' });
+    addPermanentMsg('现在为你反推提示词');
 
     // Update existing reverse prompt task to running
     const rpTaskId = 'task-reverse-prompt';
