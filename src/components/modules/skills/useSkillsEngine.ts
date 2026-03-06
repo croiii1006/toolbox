@@ -251,15 +251,6 @@ export function useSkillsEngine() {
     // Persistent status message that overwrites throughout the flow
     const statusMsgId = `msg-status-${Date.now()}`;
 
-    setState(prev => ({
-      ...prev,
-      tasks,
-      messages: [
-        ...prev.messages,
-        { id: checklistId, type: 'checklist', content: '' },
-      ],
-    }));
-
     // Helper to update a child task
     const updateChild = (parentId: string, childId: string, updates: Partial<SkillTask>) => {
       setState(prev => ({
@@ -309,6 +300,27 @@ export function useSkillsEngine() {
     const submittedAt = now();
 
     (async () => {
+      // ─── Phase 0: Build checklist one by one ───
+      addMessage({ type: 'video-gen-status', content: '正在为您编写待办清单...' });
+      await pause(800);
+
+      // Add tasks one by one with delay
+      for (let i = 0; i < tasks.length; i++) {
+        setState(prev => ({
+          ...prev,
+          tasks: [...prev.tasks, tasks[i]],
+        }));
+        // Show checklist after first task is added
+        if (i === 0) {
+          setState(prev => ({
+            ...prev,
+            messages: [...prev.messages, { id: checklistId, type: 'checklist', content: '' }],
+          }));
+        }
+        await pause(400);
+      }
+      await pause(400);
+
       // ─── Task 1: Memory ───
       if (setup.memoryEnabled) {
         // Permanent intro message
