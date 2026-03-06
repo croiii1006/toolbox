@@ -391,102 +391,29 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
 
         
 
-        {/* Case Categories & Card */}
-        <div className="mt-8 space-y-4">
-          {/* Category tabs */}
-          <div className="flex items-center gap-2 justify-center flex-wrap">
+        {/* Case Cards */}
+        <div className="mt-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {CASE_CATEGORIES.map(cat => (
-              <button
+              <a
                 key={cat.id}
-                onClick={() => setActiveCaseCategory(cat.id)}
-                className={cn(
-                  'px-3 py-1 rounded-md text-xs transition-all',
-                  activeCaseCategory === cat.id
-                    ? 'text-foreground font-medium bg-muted/60'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
+                href={cat.url}
+                target="_blank"
+                rel="noreferrer"
+                className="group relative rounded-lg border border-border/40 overflow-hidden cursor-pointer hover:border-border transition-colors"
               >
-                {cat.label}
-              </button>
+                <div className="aspect-[4/3] bg-muted/30 overflow-hidden">
+                  <img src={cat.thumbnail} alt={cat.cardTitle} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-3">
+                  <p className="text-xs font-medium truncate">{cat.cardTitle}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2">{cat.cardDesc}</p>
+                </div>
+                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-xs font-medium text-foreground/80">{cat.hoverText}</span>
+                </div>
+              </a>
             ))}
-          </div>
-
-          {/* Case card */}
-          <div className="flex justify-center">
-            {(() => {
-              const cat = CASE_CATEGORIES.find(c => c.id === activeCaseCategory) || CASE_CATEGORIES[0];
-              return (
-                <a
-                  href={cat.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block relative group w-full max-w-[350px] cursor-pointer"
-                >
-                  {/* Shadow */}
-                  <div className="absolute -right-3 -bottom-3 h-[70%] w-[70%] rounded-[50px] bg-[radial-gradient(60%_60%_at_100%_100%,rgba(0,0,0,0.18),rgba(0,0,0,0))] blur-[16px] z-0" aria-hidden="true" />
-
-                  {/* Main card */}
-                  <div className="relative overflow-hidden bg-muted/40 dark:bg-muted/20 rounded-[20px] backdrop-blur-[5px] z-10 border border-border/20">
-                    {/* Floating mini report card */}
-                    <div className="absolute flex items-center justify-center right-[-14px] top-[2px] w-[113px] z-10 transition-transform duration-300 ease-out group-hover:translate-x-[-8px] group-hover:translate-y-[-6px]">
-                      <div className="flex-none rotate-[-6deg] transition-transform duration-300 ease-out group-hover:rotate-[-4deg]">
-                        <div className="bg-background overflow-hidden rounded-[4px] shadow-[0px_2px_20px_0px_rgba(35,35,35,0.2)] w-[100px] h-[130px] relative">
-                          <div className="flex items-center gap-[3px] px-[6px] py-[4px]">
-                            <div className="w-[3px] h-[3px] rounded-full bg-destructive" />
-                            <div className="w-[3px] h-[3px] rounded-full bg-amber-400" />
-                            <div className="w-[3px] h-[3px] rounded-full bg-emerald-400" />
-                          </div>
-                          <div className="flex items-start gap-[4px] px-[6px] pt-[2px] pb-[4px]">
-                            <div className="flex flex-col gap-[4px] flex-1 min-w-0">
-                              <p className="font-semibold leading-normal line-clamp-1 text-[6px] text-foreground">{cat.cardTitle}</p>
-                              <div className="flex items-center gap-[2px]">
-                                <div className="w-[7px] h-[7px] rounded-full overflow-hidden bg-muted">
-                                  <img alt="OranAI" src={logoDark} className="w-full h-full object-contain" />
-                                </div>
-                                <p className="font-medium leading-normal text-[5px] text-muted-foreground truncate">OranAI</p>
-                              </div>
-                              <div className="flex items-center gap-[2.667px]">
-                                <div className="flex items-center gap-px">
-                                  <Play className="w-[4px] h-[4px] text-muted-foreground fill-muted-foreground" />
-                                  <p className="font-medium text-[4px] text-muted-foreground">{cat.stats.views}</p>
-                                </div>
-                                <div className="flex items-center gap-px">
-                                  <Heart className="w-[4px] h-[4px] text-muted-foreground" />
-                                  <p className="font-medium text-[4px] text-muted-foreground">{cat.stats.likes}</p>
-                                </div>
-                                <div className="flex items-center gap-px">
-                                  <MessageSquare className="w-[4px] h-[4px] text-muted-foreground" />
-                                  <p className="font-medium text-[4px] text-muted-foreground">{cat.stats.comments}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="relative h-[90px] rounded-[4px] mx-[6px] mb-[6px] overflow-hidden">
-                            <img alt="" className="absolute inset-0 max-w-none object-cover w-full h-full" src={cat.thumbnail} />
-                          </div>
-                          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-muted to-transparent" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Hover overlay */}
-                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-[20px] bg-foreground/55 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      <p className="text-background text-[12px] leading-[1.4] font-medium">{cat.hoverText}</p>
-                    </div>
-
-                    {/* Bottom text area */}
-                    <div className="relative h-[150px]">
-                      <div className="absolute left-0 bottom-0 flex flex-col gap-[6px] items-start justify-end p-[18px] py-[13px] w-full">
-                        <div className="relative shrink-0 w-[232px] whitespace-pre-wrap mb-0 group-hover:opacity-0 transition-opacity duration-200">
-                          <p className="font-medium leading-[1.35] text-[16px] text-foreground">{cat.cardTitle}</p>
-                          <p className="mt-[8px] font-normal leading-[1.35] text-[12px] text-muted-foreground">{cat.cardDesc}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              );
-            })()}
           </div>
         </div>
       </div>
