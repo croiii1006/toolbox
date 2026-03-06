@@ -533,11 +533,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
           </div>
 
           <TabsContent value="trending" className="mt-0">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {MOCK_TRENDING.map((video) =>
-              <InspirationCard key={video.id} video={video} onSelect={handleInspirationSelect} />
-              )}
-            </div>
+            <PaginatedInspirationGrid videos={MOCK_TRENDING} onSelect={handleInspirationSelect} />
           </TabsContent>
 
           <TabsContent value="saved" className="mt-0">
