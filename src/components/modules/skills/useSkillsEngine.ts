@@ -313,6 +313,7 @@ export function useSkillsEngine() {
       if (setup.memoryEnabled) {
         // Show subtask list
         setState(prev => ({
+          ...prev,
           messages: [...prev.messages, { id: `msg-subtasks-memory-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-memory' }],
         }));
 
