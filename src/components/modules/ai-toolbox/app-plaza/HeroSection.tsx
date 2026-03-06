@@ -97,19 +97,7 @@ function ShowcaseCard({
 
 
 }: {card: (typeof SHOWCASE_CARDS)[0];onNavigate: (id: string) => void;}) {
-  return (
-    <div
-      onClick={() => onNavigate(card.targetId)}
-      className="block relative group w-full max-w-[350px] h-[210px] cursor-pointer">
-      
-      <div
-        className="absolute -right-3 -bottom-3 h-[70%] w-[70%] rounded-[50px] blur-[16px] z-0"
-        style={{
-          background: 'radial-gradient(60% 60% at 100% 100%, rgba(0,0,0,0.18), rgba(0,0,0,0))'
-        }}
-        aria-hidden="true" />
-      
-      
+  return;
 
 
 
@@ -148,16 +136,28 @@ function ShowcaseCard({
 
 
 
-      
-      <div className="absolute bottom-0 left-0 w-full z-20 pointer-events-none">
-        <div className="flex flex-col gap-[6px] items-start justify-end p-[18px] py-[13px] w-full">
-          <div className="relative shrink-0 max-w-[232px] whitespace-pre-wrap group-hover:opacity-0 transition-opacity duration-200">
-            <p className="font-medium leading-[1.35] text-[16px] text-foreground">{card.title}</p>
-            <p className="mt-[8px] font-normal leading-[1.35] text-[12px] text-muted-foreground">{card.desc}</p>
-          </div>
-        </div>
-      </div>
-    </div>);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
