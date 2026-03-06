@@ -239,11 +239,6 @@ export function useSkillsEngine() {
         input: `品类: ${setup.category}, 卖点: ${setup.sellingPoints.slice(0, 50)}`,
         expert: { name: '爬虫', avatar: 'crawler', role: '' },
       },
-      {
-        id: 'task-wait-select', title: '等待用户选择参考视频',
-        status: 'queued', progress: 0, logs: [], children: [],
-        expert: { name: '策略', avatar: 'strategist', role: '' },
-      },
     ];
 
     // Add checklist message
@@ -300,24 +295,16 @@ export function useSkillsEngine() {
     const submittedAt = now();
 
     (async () => {
-      // ─── Phase 0: Build checklist one by one ───
+      // ─── Phase 0: Show checklist with all tasks at once ───
       addMessage({ type: 'video-gen-status', content: '正在为您编写待办清单...' });
       await pause(800);
 
-      // Add tasks one by one with delay
-      for (let i = 0; i < tasks.length; i++) {
-        setState(prev => ({
-          ...prev,
-          tasks: [...prev.tasks, tasks[i]],
-        }));
-        // Show checklist after first task is added
-        if (i === 0) {
-          setState(prev => ({
-            ...prev,
-            messages: [...prev.messages, { id: checklistId, type: 'checklist', content: '' }],
-          }));
-        }
-        await pause(400);
+      setState(prev => ({
+        ...prev,
+        tasks: [...prev.tasks, ...tasks],
+        messages: [...prev.messages, { id: checklistId, type: 'checklist', content: '' }],
+      }));
+      await pause(600);
       }
       await pause(400);
 
