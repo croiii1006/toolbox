@@ -161,7 +161,7 @@ export function SkillsModule() {
             prompt={state.generatedPrompt}
             onChange={updatePrompt}
             onConfirm={confirmGenerate}
-            onBack={() => {}}
+            onBack={() => { setActiveTaskId(null); setVideoPanelOpen(true); }}
             memoryEnabled={state.setup.memoryEnabled} />);
 
 
