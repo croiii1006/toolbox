@@ -212,7 +212,7 @@ export function useSkillsEngine() {
       ],
     }));
 
-    // Create initial tasks
+    // Create initial tasks — merge generate-list into crawl
     const tasks: SkillTask[] = [
       {
         id: 'task-memory', title: '调用记忆库',
@@ -232,19 +232,12 @@ export function useSkillsEngine() {
           { id: 'task-crawl-spider', title: '启动 TikTok 爬虫', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '爬虫专家', avatar: 'crawler', role: '数据爬取专家' } },
           { id: 'task-crawl-analyze', title: '分析卖点匹配度', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '数据专家', avatar: 'analyst', role: '数据分析专家' } },
           { id: 'task-crawl-rank', title: '排序生成 Top 20', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '策略专家', avatar: 'strategist', role: '策略专家' } },
+          { id: 'task-crawl-cover', title: '提取视频封面', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
+          { id: 'task-crawl-meta', title: '提取元数据', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '数据专家', avatar: 'analyst', role: '数据分析专家' } },
         ],
-        moduleChain: ['TikTokCrawler', 'ContentAnalyzer', 'RankingEngine'],
+        moduleChain: ['TikTokCrawler', 'ContentAnalyzer', 'RankingEngine', 'ThumbnailGen', 'MetadataExtractor'],
         input: `品类: ${setup.category}, 卖点: ${setup.sellingPoints.slice(0, 50)}`,
         expert: { name: '爬虫', avatar: 'crawler', role: '' },
-      },
-      {
-        id: 'task-generate-list', title: '生成候选视频预览列表',
-        status: 'queued', progress: 0, logs: [], children: [
-          { id: 'task-gen-cover', title: '提取视频封面', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
-          { id: 'task-gen-meta', title: '提取元数据', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '数据专家', avatar: 'analyst', role: '数据分析专家' } },
-        ],
-        moduleChain: ['VideoMatcher', 'ThumbnailGen', 'MetadataExtractor'],
-        expert: { name: '分析', avatar: 'analyst', role: '' },
       },
       {
         id: 'task-wait-select', title: '等待用户选择参考视频',
@@ -255,6 +248,8 @@ export function useSkillsEngine() {
 
     // Add checklist message
     const checklistId = `msg-checklist-${Date.now()}`;
+    // Persistent status message that overwrites throughout the flow
+    const statusMsgId = `msg-status-${Date.now()}`;
 
     setState(prev => ({
       ...prev,
@@ -277,7 +272,6 @@ export function useSkillsEngine() {
     };
 
     // Delay helpers
-    // Fixed steps: random 1.5–3.5s feel
     const randDelay = () => {
       const ms = 1500 + Math.random() * 2000;
       return new Promise<void>(r => {
@@ -285,7 +279,6 @@ export function useSkillsEngine() {
         streamTimers.current.push(t);
       });
     };
-    // Sub-step within a fixed step: random 1–2s
     const subDelay = () => {
       const ms = 1000 + Math.random() * 1000;
       return new Promise<void>(r => {
@@ -293,7 +286,6 @@ export function useSkillsEngine() {
         streamTimers.current.push(t);
       });
     };
-    // Backend-dependent steps: longer 3–6s
     const backendDelay = () => {
       const ms = 3000 + Math.random() * 3000;
       return new Promise<void>(r => {
@@ -301,34 +293,53 @@ export function useSkillsEngine() {
         streamTimers.current.push(t);
       });
     };
-    // Short pause between phases
     const pause = (ms = 600) => new Promise<void>(r => {
       const t = window.setTimeout(r, ms);
       streamTimers.current.push(t);
     });
+
+    // Helper: set status (overwrite single message)
+    const setStatus = (content: string) => {
+      setState(prev => {
+        const exists = prev.messages.some(m => m.id === statusMsgId);
+        if (exists) {
+          return { ...prev, messages: prev.messages.map(m => m.id === statusMsgId ? { ...m, content } : m) };
+        }
+        return { ...prev, messages: [...prev.messages, { id: statusMsgId, type: 'video-gen-status' as const, content }] };
+      });
+    };
 
     const submittedAt = now();
 
     (async () => {
       // ─── Task 1: Memory ───
       if (setup.memoryEnabled) {
-        // Start immediately at submission time
+        // Show intro status + subtask list simultaneously
+        setStatus('正在为您调用记忆库.....');
+        setState(prev => ({
+          ...prev,
+          messages: [...prev.messages, { id: `msg-subtasks-memory-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-memory' }],
+        }));
+
         updateTask('task-memory', { status: 'running', startAt: submittedAt });
-        addTaskLog('task-memory', '记忆专家开始连接记忆库...');
 
         // Sub 1: Connect
+        await pause(400);
         updateChild('task-memory', 'task-memory-connect', { status: 'running', title: '记忆专家正在连接记忆库' });
+        addTaskLog('task-memory', '记忆专家正在连接记忆库...');
         await subDelay();
         updateChild('task-memory', 'task-memory-connect', { status: 'done', progress: 100, title: '记忆专家完成连接记忆库' });
         addTaskLog('task-memory', '记忆专家完成连接记忆库 → 已建立安全连接');
+        setStatus('已连接记忆库，正在检索相关记忆...');
 
-        // Sub 2: Retrieve — this is where real memory count comes from
+        // Sub 2: Retrieve
         updateChild('task-memory', 'task-memory-retrieve', { status: 'running', title: '爬虫专家正在检索相关记忆' });
         addTaskLog('task-memory', '爬虫专家正在检索相关记忆...');
         await subDelay();
         const memoryCount = setup.selectedMemoryIds.length || 4;
         updateChild('task-memory', 'task-memory-retrieve', { status: 'done', progress: 100, title: '爬虫专家完成检索相关记忆' });
         addTaskLog('task-memory', `爬虫专家完成检索相关记忆 → 命中 ${memoryCount} 条相关记忆`);
+        setStatus(`已检索到 ${memoryCount} 条相关记忆，正在构建上下文向量...`);
 
         // Sub 3: Context
         updateChild('task-memory', 'task-memory-context', { status: 'running', title: '数据专家正在构建上下文向量' });
@@ -339,38 +350,40 @@ export function useSkillsEngine() {
 
         const memEndAt = now();
         updateTask('task-memory', { status: 'done', progress: 100, endAt: memEndAt, output: `已检索 ${memoryCount} 条记忆，构建上下文完成` });
-        await pause(400);
-        streamText(`✅ 我已经完成了记忆库调用，共检索到 ${memoryCount} 条相关记忆并构建了上下文。现在让我为你抓取同品类的 TikTok 爆款视频。`, () => {});
-        setState(prev => ({
-          ...prev,
-          messages: [...prev.messages, { id: `msg-subtasks-memory-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-memory' }],
-        }));
+        setStatus(`✅ 我已经完成了记忆库调用，共检索到 ${memoryCount} 条相关记忆并构建了上下文。现在让我为你抓取同品类的 TikTok 爆款视频。`);
+        await pause(800);
       } else {
-        await pause(500);
-        streamText('⏭️ 记忆库已关闭，跳过此步骤。现在让我为你抓取同品类的 TikTok 爆款视频。', () => {});
+        setStatus('⏭️ 记忆库已关闭，跳过此步骤。现在让我为你抓取同品类的 TikTok 爆款视频。');
         updateTask('task-memory', { status: 'skipped', endAt: now() });
+        await pause(800);
       }
 
-      // ─── Task 2: Crawl (backend-dependent, longer waits) ───
-      await pause(800);
+      // ─── Task 2: Crawl (merged with generate-list) ───
       const crawlStartAt = now();
       updateTask('task-crawl', { status: 'running', startAt: crawlStartAt });
       addTaskLog('task-crawl', '爬虫专家启动 TikTok 爬虫...');
 
+      // Show crawl subtask list
+      setState(prev => ({
+        ...prev,
+        messages: [...prev.messages, { id: `msg-subtasks-crawl-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-crawl' }],
+      }));
+
       // Sub 1: Spider — backend dependent
       updateChild('task-crawl', 'task-crawl-spider', { status: 'running', title: '爬虫专家正在启动 TikTok 爬虫' });
+      setStatus('正在启动 TikTok 爬虫，抓取同品类视频...');
       await backendDelay();
-      addTaskLog('task-crawl', `爬虫专家定位品类: ${setup.category}，关键词: ${setup.sellingPoints.slice(0, 30)}`);
-      await pause(500);
       updateChild('task-crawl', 'task-crawl-spider', { status: 'done', progress: 100, title: '爬虫专家完成启动 TikTok 爬虫' });
       addTaskLog('task-crawl', '爬虫专家完成抓取 → 共获取 142 条视频数据');
+      setStatus('已抓取 142 条视频数据，正在分析卖点匹配度...');
 
-      // Sub 2: Analyze
+      // Sub 2: Analyze — backend dependent
       updateChild('task-crawl', 'task-crawl-analyze', { status: 'running', title: '数据专家正在分析卖点匹配度' });
       addTaskLog('task-crawl', '数据专家正在分析卖点匹配度...');
       await backendDelay();
       updateChild('task-crawl', 'task-crawl-analyze', { status: 'done', progress: 100, title: '数据专家完成分析卖点匹配度' });
       addTaskLog('task-crawl', '数据专家完成分析 → 平均匹配度 73.2%，高匹配 28 条');
+      setStatus('已完成匹配度分析，正在排序生成 Top 20...');
 
       // Sub 3: Rank — fixed step
       updateChild('task-crawl', 'task-crawl-rank', { status: 'running', title: '策略专家正在排序生成 Top 20' });
@@ -378,38 +391,28 @@ export function useSkillsEngine() {
       await randDelay();
       updateChild('task-crawl', 'task-crawl-rank', { status: 'done', progress: 100, title: '策略专家完成排序生成 Top 20' });
       addTaskLog('task-crawl', '策略专家完成排序 → Top 20 候选已生成');
+      setStatus('已生成 Top 20 候选，正在提取视频封面...');
+
+      // Sub 4: Cover — fixed step
+      updateChild('task-crawl', 'task-crawl-cover', { status: 'running', title: '视频专家正在提取视频封面' });
+      addTaskLog('task-crawl', '视频专家正在提取视频封面...');
+      await randDelay();
+      updateChild('task-crawl', 'task-crawl-cover', { status: 'done', progress: 100, title: '视频专家完成提取视频封面' });
+      addTaskLog('task-crawl', '视频专家完成封面提取 → 20 张高清封面已缓存');
+      setStatus('已提取封面，正在提取元数据...');
+
+      // Sub 5: Meta — fixed step
+      updateChild('task-crawl', 'task-crawl-meta', { status: 'running', title: '数据专家正在提取元数据' });
+      addTaskLog('task-crawl', '数据专家正在提取元数据...');
+      await subDelay();
+      updateChild('task-crawl', 'task-crawl-meta', { status: 'done', progress: 100, title: '数据专家完成提取元数据' });
+      addTaskLog('task-crawl', '数据专家完成元数据提取 → 含播放量、点赞、评论、转发等维度');
 
       updateTask('task-crawl', { status: 'done', progress: 100, endAt: now(), output: '抓取 142 条，Top 20 已排序' });
-      await pause(400);
-      streamText('✅ 我已经完成了爆款视频抓取，从 142 条视频中筛选出 Top 20。现在让我为你生成候选视频预览列表。', () => {});
-      setState(prev => ({
-        ...prev,
-        messages: [...prev.messages, { id: `msg-subtasks-crawl-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-crawl' }],
-      }));
+      setStatus('✅ 我已经完成了爆款视频抓取，从 142 条视频中筛选出 Top 20。现在让我为你生成候选视频预览列表。');
+      await pause(1500);
 
-      // ─── Task 3: Generate list (fixed steps) ───
-      await pause(800);
-      const genListStartAt = now();
-      updateTask('task-generate-list', { status: 'running', startAt: genListStartAt });
-
-      // Sub 1 & 2: parallel
-      updateChild('task-generate-list', 'task-gen-cover', { status: 'running', title: '视频专家正在提取视频封面' });
-      updateChild('task-generate-list', 'task-gen-meta', { status: 'running', title: '数据专家正在提取元数据' });
-      addTaskLog('task-generate-list', '视频专家与数据专家并行提取封面与元数据...');
-      await randDelay();
-      updateChild('task-generate-list', 'task-gen-cover', { status: 'done', progress: 100, title: '视频专家完成提取视频封面' });
-      addTaskLog('task-generate-list', '视频专家完成封面提取 → 20 张高清封面已缓存');
-      await subDelay();
-      updateChild('task-generate-list', 'task-gen-meta', { status: 'done', progress: 100, title: '数据专家完成提取元数据' });
-      addTaskLog('task-generate-list', '数据专家完成元数据提取 → 含播放量、点赞、评论、转发等维度');
-
-      updateTask('task-generate-list', { status: 'done', progress: 100, endAt: now() });
-      await pause(400);
-      streamText('✅ 我已经完成了候选视频预览列表的生成。现在请你从以下视频中选择一条作为复刻参考：', () => {});
-      setState(prev => ({
-        ...prev,
-        messages: [...prev.messages, { id: `msg-subtasks-genlist-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-generate-list' }],
-      }));
+      setStatus('✅ 我已经完成了候选视频预览列表的生成。现在请你从以下视频中选择一条作为复刻参考：');
 
       // Show video candidates
       const videos = mockVideos();
@@ -422,10 +425,10 @@ export function useSkillsEngine() {
         ],
       }));
 
-      // Task 4: Wait for user
+      // Task 3: Wait for user
       updateTask('task-wait-select', { status: 'running', startAt: now() });
       addTaskLog('task-wait-select', '等待用户选择参考视频...');
-      
+
       setState(prev => ({ ...prev, isProcessing: false }));
     })();
   }, [streamText, updateTask, addTaskLog]);
@@ -463,7 +466,20 @@ export function useSkillsEngine() {
     setState(prev => ({ ...prev, selectedVideo: video, isProcessing: true }));
     updateTask('task-wait-select', { status: 'done', progress: 100, endAt: now(), output: `已选择: ${video.title}` });
 
-    streamText(`✅ 我已经记录了你的选择「${video.title}」。现在让我为你反推提示词。`, () => {});
+    // Persistent status message for this phase
+    const statusMsgId = `msg-select-status-${Date.now()}`;
+
+    const setStatus = (content: string) => {
+      setState(prev => {
+        const exists = prev.messages.some(m => m.id === statusMsgId);
+        if (exists) {
+          return { ...prev, messages: prev.messages.map(m => m.id === statusMsgId ? { ...m, content } : m) };
+        }
+        return { ...prev, messages: [...prev.messages, { id: statusMsgId, type: 'video-gen-status' as const, content }] };
+      });
+    };
+
+    setStatus(`✅ 我已经记录了你的选择「${video.title}」。现在让我为你反推提示词。`);
 
     // Add reverse prompt task with children
     const rpTaskId = 'task-reverse-prompt';
@@ -507,7 +523,9 @@ export function useSkillsEngine() {
     };
 
     (async () => {
-      await pause(500);
+      await pause(800);
+
+      // Show subtask list immediately
       setState(prev => ({
         ...prev,
         messages: [...prev.messages, { id: `msg-subtasks-rp-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-reverse-prompt' }],
@@ -516,15 +534,18 @@ export function useSkillsEngine() {
       // Frame analysis — fixed step
       await pause(400);
       updateRPChild('rp-frame', { status: 'running', title: '视频专家正在分析视频帧' });
+      setStatus('正在分析视频帧...');
       await randDelay();
       updateRPChild('rp-frame', { status: 'done', progress: 100, title: '视频专家完成视频帧分析' });
       addTaskLog(rpTaskId, '视频专家完成视频帧分析 → 提取 48 个关键帧，识别 5 个场景段');
+      setStatus('已完成视频帧分析，正在提取风格特征...');
 
       // Style extraction — fixed step
       updateRPChild('rp-style', { status: 'running', title: '设计专家正在提取风格特征' });
       await randDelay();
       updateRPChild('rp-style', { status: 'done', progress: 100, title: '设计专家完成风格特征提取' });
       addTaskLog(rpTaskId, '设计专家完成风格特征提取 → 暖色调、近景特写、快节奏剪辑');
+      setStatus('已完成风格特征提取，正在生成提示词...');
 
       // Prompt generation — backend dependent
       updateRPChild('rp-prompt', { status: 'running', title: '策略专家正在生成提示词' });
@@ -536,8 +557,7 @@ export function useSkillsEngine() {
 
       const mockPrompt = `【爆款复刻 Prompt】\n\n镜头风格：近景特写 + 俯拍切换，暖色调滤镜\n节奏：快节奏剪辑，BGM 节拍同步\n内容结构：\n1. 开场 - 产品白底展示，旋转 360°（0-3s）\n2. 使用场景 - 手部特写展示质感（3-8s）\n3. 效果对比 - 使用前后对比（8-15s）\n4. 口播种草 - 真人出镜，口述卖点（15-25s）\n5. 结尾 CTA - 点击链接，限时优惠（25-30s）\n\n关键词：${state.setup.sellingPoints.slice(0, 30)}\n品类：${state.setup.category}\n参考来源：${video.title}`;
 
-      await pause(400);
-      streamText('✅ 我已经完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：', () => {});
+      setStatus('✅ 我已经完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：');
       await pause(500);
 
       setState(prev => ({
