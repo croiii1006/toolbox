@@ -207,7 +207,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredCases.map((card, i) =>
-            <ShowcaseCard key={card.targetId} card={card} onNavigate={onNavigate} />
+            <ShowcaseCard key={`${card.category}-${i}`} card={card} onNavigate={onNavigate} />
             )}
           </div>
         </motion.div>
