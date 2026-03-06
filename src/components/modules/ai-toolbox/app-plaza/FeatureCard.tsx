@@ -15,7 +15,7 @@ export function FeatureCard({ title, description, preview, onClick }: FeatureCar
       onClick={onClick}
       whileHover={{ scale: 1.03, y: -4 }}
       whileTap={{ scale: 0.98 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
       className="group relative flex items-stretch rounded-2xl border border-border/20 bg-background/40 backdrop-blur-xl overflow-hidden cursor-pointer transition-colors duration-300 hover:border-border/40 hover:shadow-soft-lg hover:bg-background/60 min-h-[140px]">
       
       {/* Left: text */}
