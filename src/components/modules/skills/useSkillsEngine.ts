@@ -298,14 +298,11 @@ export function useSkillsEngine() {
       streamTimers.current.push(t);
     });
 
-    // Helper: set status (overwrite single message)
+    // Helper: set status (always moves to end of messages)
     const setStatus = (content: string) => {
       setState(prev => {
-        const exists = prev.messages.some(m => m.id === statusMsgId);
-        if (exists) {
-          return { ...prev, messages: prev.messages.map(m => m.id === statusMsgId ? { ...m, content } : m) };
-        }
-        return { ...prev, messages: [...prev.messages, { id: statusMsgId, type: 'video-gen-status' as const, content }] };
+        const filtered = prev.messages.filter(m => m.id !== statusMsgId);
+        return { ...prev, messages: [...filtered, { id: statusMsgId, type: 'video-gen-status' as const, content }] };
       });
     };
 
@@ -471,11 +468,8 @@ export function useSkillsEngine() {
 
     const setStatus = (content: string) => {
       setState(prev => {
-        const exists = prev.messages.some(m => m.id === statusMsgId);
-        if (exists) {
-          return { ...prev, messages: prev.messages.map(m => m.id === statusMsgId ? { ...m, content } : m) };
-        }
-        return { ...prev, messages: [...prev.messages, { id: statusMsgId, type: 'video-gen-status' as const, content }] };
+        const filtered = prev.messages.filter(m => m.id !== statusMsgId);
+        return { ...prev, messages: [...filtered, { id: statusMsgId, type: 'video-gen-status' as const, content }] };
       });
     };
 
