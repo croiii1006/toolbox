@@ -23,7 +23,7 @@ const expertAvatars: Record<string, string> = {
   designer: expertDesigner,
   strategist: expertStrategist,
   analyst: expertAnalyst,
-  search: expertSearch,
+  search: expertSearch
 };
 
 interface TaskDetailPanelProps {
@@ -34,7 +34,7 @@ interface TaskDetailPanelProps {
 }
 
 export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect }: TaskDetailPanelProps) {
-  
+
 
   // Progress calculation
   const totalSteps = task.moduleChain?.length || 1;
@@ -46,31 +46,31 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
       <div className="px-5 py-4 border-b border-border/20 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           {/* Task pixel icon - no border, flat */}
-          {task.expert && expertAvatars[task.expert.avatar] ? (
-            <div className="w-10 h-10 shrink-0">
-              <img src={expertAvatars[task.expert.avatar]} alt={task.expert.name} className="w-full h-full object-contain" />
-            </div>
-          ) : (
-            <div className="w-7 h-7 shrink-0 flex items-center justify-center">
+          {task.expert && expertAvatars[task.expert.avatar] ?
+          <div className="w-10 h-10 shrink-0">
+              
+            </div> :
+
+          <div className="w-7 h-7 shrink-0 flex items-center justify-center">
               <span className="text-sm">⚙️</span>
             </div>
-          )}
+          }
           <div>
             <h3 className="text-sm font-medium text-foreground">{task.title}</h3>
             <div className="flex items-center gap-2 mt-0.5">
               <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-                {task.status === 'running' && (
-                  <>
+                {task.status === 'running' &&
+                <>
                     <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                     当前进度 {completedSteps}/{totalSteps}
                   </>
-                )}
-                {task.status === 'done' && (
-                  <>
+                }
+                {task.status === 'done' &&
+                <>
                     <Check className="w-3 h-3" />
                     已完成
                   </>
-                )}
+                }
                 {task.status === 'queued' && '排队中'}
               </span>
             </div>
@@ -86,15 +86,15 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
       <ScrollArea className="flex-1">
         <div className="p-5 space-y-5">
           {/* Input section */}
-          {task.input && (
-            <div>
+          {task.input &&
+          <div>
               <p className="text-sm text-foreground leading-relaxed">{task.input}</p>
             </div>
-          )}
+          }
 
           {/* Output section - bullet point style like Kimi */}
-          {task.output && (
-            <div className="space-y-2">
+          {task.output &&
+          <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                 <span>📄</span>
                 <span>输出结果</span>
@@ -106,71 +106,71 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
                 </p>
               </div>
             </div>
-          )}
+          }
 
 
 
           {/* Sub-tasks */}
-          {task.children.length > 0 && (
-            <div>
+          {task.children.length > 0 &&
+          <div>
               <p className="text-xs text-muted-foreground mb-2">子任务</p>
               <div className="space-y-0">
-                {task.children.map(child => {
-                  const childExpert = child.expert;
-                  const avatarSrc = childExpert ? expertAvatars[childExpert.avatar] : undefined;
-                  return (
-                    <div key={child.id} className="flex items-center gap-3 px-3 py-3 border-b border-border/10 last:border-b-0">
+                {task.children.map((child) => {
+                const childExpert = child.expert;
+                const avatarSrc = childExpert ? expertAvatars[childExpert.avatar] : undefined;
+                return (
+                  <div key={child.id} className="flex items-center gap-3 px-3 py-3 border-b border-border/10 last:border-b-0">
                       {/* Left: expert pixel icon */}
-                      {avatarSrc ? (
-                        <div className={cn(
-                          'w-6 h-6 shrink-0 transition-opacity',
-                          child.status === 'queued' && 'opacity-30',
-                        )}>
+                      {avatarSrc ?
+                    <div className={cn(
+                      'w-6 h-6 shrink-0 transition-opacity',
+                      child.status === 'queued' && 'opacity-30'
+                    )}>
                           <img src={avatarSrc} alt={childExpert?.name || ''} className="w-full h-full object-contain" />
-                        </div>
-                      ) : (
-                        <div className="w-6 h-6 shrink-0" />
-                      )}
+                        </div> :
+
+                    <div className="w-6 h-6 shrink-0" />
+                    }
 
                       {/* Title */}
                       <span className={cn(
-                        'text-sm flex-1',
-                        child.status === 'done' && 'text-foreground/70',
-                        child.status === 'running' && 'text-foreground',
-                        child.status === 'queued' && 'text-muted-foreground/50',
-                      )}>{child.title}</span>
+                      'text-sm flex-1',
+                      child.status === 'done' && 'text-foreground/70',
+                      child.status === 'running' && 'text-foreground',
+                      child.status === 'queued' && 'text-muted-foreground/50'
+                    )}>{child.title}</span>
 
                       {/* Right: pixel status icon */}
                       <div className="w-4 h-4 shrink-0">
-                        {child.status === 'done' ? (
-                          <img src={pixelCheck} alt="done" className="w-full h-full object-contain" />
-                        ) : child.status === 'running' ? (
-                          <img src={pixelWait} alt="running" className="w-full h-full object-contain animate-pulse" />
-                        ) : (
-                          <img src={pixelWait} alt="queued" className="w-full h-full object-contain opacity-20" />
-                        )}
+                        {child.status === 'done' ?
+                      <img src={pixelCheck} alt="done" className="w-full h-full object-contain" /> :
+                      child.status === 'running' ?
+                      <img src={pixelWait} alt="running" className="w-full h-full object-contain animate-pulse" /> :
+
+                      <img src={pixelWait} alt="queued" className="w-full h-full object-contain opacity-20" />
+                      }
                       </div>
-                    </div>
-                  );
-                })}
+                    </div>);
+
+              })}
               </div>
             </div>
-          )}
+          }
 
           {/* Logs */}
-          {task.logs.length > 0 && (
-            <div>
+          {task.logs.length > 0 &&
+          <div>
               <p className="text-xs text-muted-foreground mb-2">日志</p>
               <div className="space-y-0.5 font-mono text-xs">
-                {task.logs.map((log, i) => (
-                  <div key={i} className="flex items-start gap-2 py-0.5">
+                {task.logs.map((log, i) =>
+              <div key={i} className="flex items-start gap-2 py-0.5">
                     <span className="text-muted-foreground/40 shrink-0">{log.time}</span>
                     <span className="text-foreground/70">{log.message}</span>
                   </div>
-                ))}
+              )}
               </div>
             </div>
-          )}
+          }
 
           {/* Time info */}
           <div className="flex items-center gap-4 text-[11px] text-muted-foreground/50 pt-2 border-t border-border/10">
@@ -182,44 +182,44 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
       </ScrollArea>
 
       {/* Bottom expert avatars */}
-      {task.children.length > 0 && (
-        <div className="px-5 py-3 border-t border-border/20 flex items-center gap-5">
+      {task.children.length > 0 &&
+      <div className="px-5 py-3 border-t border-border/20 flex items-center gap-5">
           {task.children.map((child) => {
-            const childExpert = child.expert;
-            const avatarSrc = childExpert ? expertAvatars[childExpert.avatar] : undefined;
+          const childExpert = child.expert;
+          const avatarSrc = childExpert ? expertAvatars[childExpert.avatar] : undefined;
 
-            return (
-              <div key={child.id} className="flex flex-col items-center gap-1.5">
+          return (
+            <div key={child.id} className="flex flex-col items-center gap-1.5">
                 {/* Pixel icon - no border, flat */}
                 <div className={cn(
-                  'w-10 h-10 shrink-0 relative transition-all duration-300',
-                  child.status === 'queued' && 'opacity-30',
-                  child.status === 'running' && 'animate-pulse',
-                )}>
-                  {avatarSrc ? (
-                    <img src={avatarSrc} alt={childExpert?.name || ''} className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="text-lg">{child.title.slice(0, 1)}</span>
-                  )}
+                'w-10 h-10 shrink-0 relative transition-all duration-300',
+                child.status === 'queued' && 'opacity-30',
+                child.status === 'running' && 'animate-pulse'
+              )}>
+                  {avatarSrc ?
+                <img src={avatarSrc} alt={childExpert?.name || ''} className="w-full h-full object-contain" /> :
+
+                <span className="text-lg">{child.title.slice(0, 1)}</span>
+                }
                   {/* Done checkmark overlay */}
-                  {child.status === 'done' && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4">
+                  {child.status === 'done' &&
+                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4">
                       <img src={pixelCheck} alt="done" className="w-full h-full object-contain" />
                     </div>
-                  )}
+                }
                 </div>
                 <span className={cn(
-                  'text-[10px] font-light',
-                  child.status === 'done' ? 'text-foreground/60' : 
-                  child.status === 'running' ? 'text-foreground' : 'text-muted-foreground/40',
-                )}>
+                'text-[10px] font-light',
+                child.status === 'done' ? 'text-foreground/60' :
+                child.status === 'running' ? 'text-foreground' : 'text-muted-foreground/40'
+              )}>
                   {childExpert?.name || (child.status === 'done' ? '已完成' : child.status === 'running' ? '执行中' : '等待')}
                 </span>
-              </div>
-            );
-          })}
+              </div>);
+
+        })}
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
