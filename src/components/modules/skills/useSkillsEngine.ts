@@ -276,105 +276,135 @@ export function useSkillsEngine() {
       }));
     };
 
-    // Simulate task progression
-    const delay = (ms: number) => new Promise<void>(r => {
+    // Delay helpers
+    // Fixed steps: random 1.5–3.5s feel
+    const randDelay = () => {
+      const ms = 1500 + Math.random() * 2000;
+      return new Promise<void>(r => {
+        const t = window.setTimeout(r, ms);
+        streamTimers.current.push(t);
+      });
+    };
+    // Sub-step within a fixed step: random 1–2s
+    const subDelay = () => {
+      const ms = 1000 + Math.random() * 1000;
+      return new Promise<void>(r => {
+        const t = window.setTimeout(r, ms);
+        streamTimers.current.push(t);
+      });
+    };
+    // Backend-dependent steps: longer 3–6s
+    const backendDelay = () => {
+      const ms = 3000 + Math.random() * 3000;
+      return new Promise<void>(r => {
+        const t = window.setTimeout(r, ms);
+        streamTimers.current.push(t);
+      });
+    };
+    // Short pause between phases
+    const pause = (ms = 600) => new Promise<void>(r => {
       const t = window.setTimeout(r, ms);
       streamTimers.current.push(t);
     });
 
+    const submittedAt = now();
+
     (async () => {
-      // Task 1: Memory
+      // ─── Task 1: Memory ───
       if (setup.memoryEnabled) {
-        await delay(500);
-        updateTask('task-memory', { status: 'running', startAt: now() });
+        // Start immediately at submission time
+        updateTask('task-memory', { status: 'running', startAt: submittedAt });
         addTaskLog('task-memory', '记忆专家开始连接记忆库...');
 
         // Sub 1: Connect
         updateChild('task-memory', 'task-memory-connect', { status: 'running', title: '记忆专家正在连接记忆库' });
-        await delay(800);
+        await subDelay();
         updateChild('task-memory', 'task-memory-connect', { status: 'done', progress: 100, title: '记忆专家完成连接记忆库' });
         addTaskLog('task-memory', '记忆专家完成连接记忆库 → 已建立安全连接');
 
-        // Sub 2: Retrieve
+        // Sub 2: Retrieve — this is where real memory count comes from
         updateChild('task-memory', 'task-memory-retrieve', { status: 'running', title: '爬虫专家正在检索相关记忆' });
         addTaskLog('task-memory', '爬虫专家正在检索相关记忆...');
-        await delay(1000);
+        await subDelay();
+        const memoryCount = setup.selectedMemoryIds.length || 4;
         updateChild('task-memory', 'task-memory-retrieve', { status: 'done', progress: 100, title: '爬虫专家完成检索相关记忆' });
-        addTaskLog('task-memory', '爬虫专家完成检索相关记忆 → 命中 23 条相关记忆');
+        addTaskLog('task-memory', `爬虫专家完成检索相关记忆 → 命中 ${memoryCount} 条相关记忆`);
 
         // Sub 3: Context
         updateChild('task-memory', 'task-memory-context', { status: 'running', title: '数据专家正在构建上下文向量' });
         addTaskLog('task-memory', '数据专家正在构建上下文向量...');
-        await delay(800);
+        await subDelay();
         updateChild('task-memory', 'task-memory-context', { status: 'done', progress: 100, title: '数据专家完成构建上下文向量' });
         addTaskLog('task-memory', '数据专家完成构建上下文向量 → 生成 512 维特征向量');
 
-        updateTask('task-memory', { status: 'done', progress: 100, endAt: now(), output: '已检索 23 条记忆，构建上下文完成' });
-        await delay(200);
-        streamText('✅ 我已经完成了记忆库调用，共检索到 23 条相关记忆并构建了上下文。现在让我为你抓取同品类的 TikTok 爆款视频。', () => {});
-        // Insert subtask list
+        const memEndAt = now();
+        updateTask('task-memory', { status: 'done', progress: 100, endAt: memEndAt, output: `已检索 ${memoryCount} 条记忆，构建上下文完成` });
+        await pause(400);
+        streamText(`✅ 我已经完成了记忆库调用，共检索到 ${memoryCount} 条相关记忆并构建了上下文。现在让我为你抓取同品类的 TikTok 爆款视频。`, () => {});
         setState(prev => ({
           ...prev,
           messages: [...prev.messages, { id: `msg-subtasks-memory-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-memory' }],
         }));
       } else {
-        await delay(300);
+        await pause(500);
         streamText('⏭️ 记忆库已关闭，跳过此步骤。现在让我为你抓取同品类的 TikTok 爆款视频。', () => {});
         updateTask('task-memory', { status: 'skipped', endAt: now() });
       }
 
-      // Task 2: Crawl
-      await delay(600);
-      updateTask('task-crawl', { status: 'running', startAt: now() });
+      // ─── Task 2: Crawl (backend-dependent, longer waits) ───
+      await pause(800);
+      const crawlStartAt = now();
+      updateTask('task-crawl', { status: 'running', startAt: crawlStartAt });
       addTaskLog('task-crawl', '爬虫专家启动 TikTok 爬虫...');
 
-      // Sub 1: Spider
+      // Sub 1: Spider — backend dependent
       updateChild('task-crawl', 'task-crawl-spider', { status: 'running', title: '爬虫专家正在启动 TikTok 爬虫' });
-      await delay(800);
+      await backendDelay();
       addTaskLog('task-crawl', `爬虫专家定位品类: ${setup.category}，关键词: ${setup.sellingPoints.slice(0, 30)}`);
-      await delay(800);
+      await pause(500);
       updateChild('task-crawl', 'task-crawl-spider', { status: 'done', progress: 100, title: '爬虫专家完成启动 TikTok 爬虫' });
       addTaskLog('task-crawl', '爬虫专家完成抓取 → 共获取 142 条视频数据');
 
       // Sub 2: Analyze
       updateChild('task-crawl', 'task-crawl-analyze', { status: 'running', title: '数据专家正在分析卖点匹配度' });
       addTaskLog('task-crawl', '数据专家正在分析卖点匹配度...');
-      await delay(1000);
+      await backendDelay();
       updateChild('task-crawl', 'task-crawl-analyze', { status: 'done', progress: 100, title: '数据专家完成分析卖点匹配度' });
       addTaskLog('task-crawl', '数据专家完成分析 → 平均匹配度 73.2%，高匹配 28 条');
 
-      // Sub 3: Rank
+      // Sub 3: Rank — fixed step
       updateChild('task-crawl', 'task-crawl-rank', { status: 'running', title: '策略专家正在排序生成 Top 20' });
       addTaskLog('task-crawl', '策略专家正在按匹配度排序...');
-      await delay(600);
+      await randDelay();
       updateChild('task-crawl', 'task-crawl-rank', { status: 'done', progress: 100, title: '策略专家完成排序生成 Top 20' });
       addTaskLog('task-crawl', '策略专家完成排序 → Top 20 候选已生成');
 
       updateTask('task-crawl', { status: 'done', progress: 100, endAt: now(), output: '抓取 142 条，Top 20 已排序' });
-      await delay(200);
+      await pause(400);
       streamText('✅ 我已经完成了爆款视频抓取，从 142 条视频中筛选出 Top 20。现在让我为你生成候选视频预览列表。', () => {});
       setState(prev => ({
         ...prev,
         messages: [...prev.messages, { id: `msg-subtasks-crawl-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-crawl' }],
       }));
 
-      // Task 3: Generate list
-      await delay(500);
-      updateTask('task-generate-list', { status: 'running', startAt: now() });
+      // ─── Task 3: Generate list (fixed steps) ───
+      await pause(800);
+      const genListStartAt = now();
+      updateTask('task-generate-list', { status: 'running', startAt: genListStartAt });
 
-      // Sub 1: Cover (parallel with Sub 2)
+      // Sub 1 & 2: parallel
       updateChild('task-generate-list', 'task-gen-cover', { status: 'running', title: '视频专家正在提取视频封面' });
       updateChild('task-generate-list', 'task-gen-meta', { status: 'running', title: '数据专家正在提取元数据' });
       addTaskLog('task-generate-list', '视频专家与数据专家并行提取封面与元数据...');
-      await delay(800);
+      await randDelay();
       updateChild('task-generate-list', 'task-gen-cover', { status: 'done', progress: 100, title: '视频专家完成提取视频封面' });
       addTaskLog('task-generate-list', '视频专家完成封面提取 → 20 张高清封面已缓存');
-      await delay(400);
+      await subDelay();
       updateChild('task-generate-list', 'task-gen-meta', { status: 'done', progress: 100, title: '数据专家完成提取元数据' });
       addTaskLog('task-generate-list', '数据专家完成元数据提取 → 含播放量、点赞、评论、转发等维度');
 
       updateTask('task-generate-list', { status: 'done', progress: 100, endAt: now() });
-      await delay(200);
+      await pause(400);
       streamText('✅ 我已经完成了候选视频预览列表的生成。现在请你从以下视频中选择一条作为复刻参考：', () => {});
       setState(prev => ({
         ...prev,
@@ -454,7 +484,15 @@ export function useSkillsEngine() {
       }],
     }));
 
-    const delay = (ms: number) => new Promise<void>(r => {
+    const randDelay = () => new Promise<void>(r => {
+      const t = window.setTimeout(r, 1500 + Math.random() * 2000);
+      streamTimers.current.push(t);
+    });
+    const backendDelay = () => new Promise<void>(r => {
+      const t = window.setTimeout(r, 3000 + Math.random() * 3000);
+      streamTimers.current.push(t);
+    });
+    const pause = (ms = 600) => new Promise<void>(r => {
       const t = window.setTimeout(r, ms);
       streamTimers.current.push(t);
     });
@@ -469,26 +507,28 @@ export function useSkillsEngine() {
     };
 
     (async () => {
-      // Show subtask checklist immediately after the selection text
-      await delay(400);
+      await pause(500);
       setState(prev => ({
         ...prev,
         messages: [...prev.messages, { id: `msg-subtasks-rp-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-reverse-prompt' }],
       }));
 
-      await delay(400);
+      // Frame analysis — fixed step
+      await pause(400);
       updateRPChild('rp-frame', { status: 'running', title: '视频专家正在分析视频帧' });
-      await delay(1000);
+      await randDelay();
       updateRPChild('rp-frame', { status: 'done', progress: 100, title: '视频专家完成视频帧分析' });
       addTaskLog(rpTaskId, '视频专家完成视频帧分析 → 提取 48 个关键帧，识别 5 个场景段');
 
+      // Style extraction — fixed step
       updateRPChild('rp-style', { status: 'running', title: '设计专家正在提取风格特征' });
-      await delay(800);
+      await randDelay();
       updateRPChild('rp-style', { status: 'done', progress: 100, title: '设计专家完成风格特征提取' });
       addTaskLog(rpTaskId, '设计专家完成风格特征提取 → 暖色调、近景特写、快节奏剪辑');
 
+      // Prompt generation — backend dependent
       updateRPChild('rp-prompt', { status: 'running', title: '策略专家正在生成提示词' });
-      await delay(1000);
+      await backendDelay();
       updateRPChild('rp-prompt', { status: 'done', progress: 100, title: '策略专家完成提示词生成' });
       addTaskLog(rpTaskId, '策略专家完成提示词生成 → 包含镜头、节奏、结构等 6 个维度');
 
@@ -496,12 +536,10 @@ export function useSkillsEngine() {
 
       const mockPrompt = `【爆款复刻 Prompt】\n\n镜头风格：近景特写 + 俯拍切换，暖色调滤镜\n节奏：快节奏剪辑，BGM 节拍同步\n内容结构：\n1. 开场 - 产品白底展示，旋转 360°（0-3s）\n2. 使用场景 - 手部特写展示质感（3-8s）\n3. 效果对比 - 使用前后对比（8-15s）\n4. 口播种草 - 真人出镜，口述卖点（15-25s）\n5. 结尾 CTA - 点击链接，限时优惠（25-30s）\n\n关键词：${state.setup.sellingPoints.slice(0, 30)}\n品类：${state.setup.category}\n参考来源：${video.title}`;
 
-      // Completion text after all subtasks done
-      await delay(300);
+      await pause(400);
       streamText('✅ 我已经完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：', () => {});
-      await delay(400);
+      await pause(500);
 
-      // Editable prompt editor last
       setState(prev => ({
         ...prev,
         generatedPrompt: mockPrompt,
@@ -542,7 +580,15 @@ export function useSkillsEngine() {
 
     streamText('🎬 开始生成复刻视频，3 个子任务将依次执行...', () => {});
 
-    const delay = (ms: number) => new Promise<void>(r => {
+    const randDelay = () => new Promise<void>(r => {
+      const t = window.setTimeout(r, 1500 + Math.random() * 2000);
+      streamTimers.current.push(t);
+    });
+    const backendDelay = () => new Promise<void>(r => {
+      const t = window.setTimeout(r, 3000 + Math.random() * 3000);
+      streamTimers.current.push(t);
+    });
+    const pause = (ms = 600) => new Promise<void>(r => {
       const t = window.setTimeout(r, ms);
       streamTimers.current.push(t);
     });
@@ -557,28 +603,30 @@ export function useSkillsEngine() {
     };
 
     (async () => {
-      // Scene rendering
-      await delay(1000);
+      // Scene rendering — backend dependent (video generation)
+      await backendDelay();
       addTaskLog(genTaskId, '设计专家渲染场景 1/5...');
-      await delay(800);
+      await pause(800);
       addTaskLog(genTaskId, '设计专家渲染场景 2/5...');
-      await delay(600);
+      await pause(800);
+      addTaskLog(genTaskId, '设计专家渲染场景 3/5...');
+      await pause(600);
       updateGenChild('sub-scene', { status: 'done', progress: 100, title: '设计专家完成渲染场景' });
       addTaskLog(genTaskId, '设计专家完成场景渲染 → 5 个场景段，总时长 30s');
       streamText('✅ 我已经完成了场景渲染。现在让我为你合成音频。', () => {});
 
-      // Audio synthesis
+      // Audio synthesis — fixed step
       updateGenChild('sub-audio', { status: 'running', title: '视频专家正在合成音频' });
       addTaskLog(genTaskId, '视频专家正在合成音频...');
-      await delay(1200);
+      await randDelay();
       updateGenChild('sub-audio', { status: 'done', progress: 100, title: '视频专家完成合成音频' });
       addTaskLog(genTaskId, '视频专家完成音频合成 → BGM 节拍同步，时长 30s');
       streamText('✅ 我已经完成了音频合成。现在让我为你进行最终的视频合成。', () => {});
 
-      // Video compose
+      // Video compose — backend dependent
       updateGenChild('sub-compose', { status: 'running', title: '记忆专家正在合成视频' });
       addTaskLog(genTaskId, '记忆专家正在合成视频...');
-      await delay(1500);
+      await backendDelay();
       updateGenChild('sub-compose', { status: 'done', progress: 100, title: '记忆专家完成合成视频' });
       addTaskLog(genTaskId, '记忆专家完成视频合成 → 1080p，30s，质量检测通过');
       addTaskLog(genTaskId, '质量检测通过 → 画面清晰度 98%，音画同步率 99.2%');
@@ -591,18 +639,15 @@ export function useSkillsEngine() {
         } : t),
       }));
 
-      // Text first
       streamText('🎉 我已经完成了所有任务！复刻视频已生成，你可以预览、下载或保存到项目中。', () => {});
-      await delay(300);
+      await pause(400);
 
-      // Subtask list after text
       setState(prev => ({
         ...prev,
         messages: [...prev.messages, { id: `msg-subtasks-gen-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-generate-video' }],
       }));
-      await delay(200);
+      await pause(300);
 
-      // Result preview after subtask list
       setState(prev => ({
         ...prev,
         resultVideo: { url: '', cover: '' },
