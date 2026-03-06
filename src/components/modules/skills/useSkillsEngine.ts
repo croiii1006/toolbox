@@ -492,7 +492,36 @@ export function useSkillsEngine() {
 
   // Select a video -> Flow C
   const selectVideo = useCallback((video: CandidateVideo) => {
-    setState(prev => ({ ...prev, selectedVideo: video, isProcessing: true }));
+    // Detect if this is a re-selection (reverse-prompt task was already done)
+    const isReselect = state.tasks.find(t => t.id === 'task-reverse-prompt')?.status === 'done';
+
+    // Reset reverse-prompt task and children to queued state
+    setState(prev => ({
+      ...prev,
+      selectedVideo: video,
+      isProcessing: true,
+      tasks: prev.tasks.map(t => {
+        if (t.id === 'task-reverse-prompt') {
+          return {
+            ...t,
+            status: 'queued' as TaskStatus,
+            progress: 0,
+            startAt: undefined,
+            endAt: undefined,
+            logs: [],
+            output: undefined,
+            children: t.children.map(c => ({
+              ...c,
+              status: 'queued' as TaskStatus,
+              progress: 0,
+              // Reset titles to original
+              title: c.id === 'rp-frame' ? '视频帧分析' : c.id === 'rp-style' ? '风格特征提取' : '提示词生成',
+            })),
+          };
+        }
+        return t;
+      }),
+    }));
     updateTask('task-wait-select', { status: 'done', progress: 100, endAt: now(), output: `已选择: ${video.title}` });
 
     // Persistent status message for this phase
@@ -514,7 +543,7 @@ export function useSkillsEngine() {
         messages: [...prev.messages, { id: `msg-${Date.now()}-${Math.random()}`, type: 'video-gen-status' as const, content }],
       }));
     };
-    addPermanentMsg('现在为你反推提示词');
+    addPermanentMsg(isReselect ? '现在为你重新反推提示词' : '现在为你反推提示词');
 
     // Update existing reverse prompt task to running
     const rpTaskId = 'task-reverse-prompt';
@@ -581,7 +610,7 @@ export function useSkillsEngine() {
 
       const mockPrompt = `【爆款复刻 Prompt】\n\n镜头风格：近景特写 + 俯拍切换，暖色调滤镜\n节奏：快节奏剪辑，BGM 节拍同步\n内容结构：\n1. 开场 - 产品白底展示，旋转 360°（0-3s）\n2. 使用场景 - 手部特写展示质感（3-8s）\n3. 效果对比 - 使用前后对比（8-15s）\n4. 口播种草 - 真人出镜，口述卖点（15-25s）\n5. 结尾 CTA - 点击链接，限时优惠（25-30s）\n\n关键词：${state.setup.sellingPoints.slice(0, 30)}\n品类：${state.setup.category}\n参考来源：${video.title}`;
 
-      setStatus('✅ 我已经完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：');
+      setStatus(isReselect ? '✅ 我已经重新完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：' : '✅ 我已经完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：');
       await pause(500);
 
       setState(prev => ({
@@ -594,7 +623,7 @@ export function useSkillsEngine() {
         ],
       }));
     })();
-  }, [state.setup, streamText, updateTask, addTaskLog]);
+  }, [state.setup, state.tasks, streamText, updateTask, addTaskLog]);
 
   // Update prompt
   const updatePrompt = useCallback((prompt: string) => {
