@@ -1,4 +1,4 @@
-import { Play, Download, RefreshCw, Copy } from 'lucide-react';
+import { Play, Download, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function ResultPreviewBlock() {
@@ -28,9 +28,6 @@ export function ResultPreviewBlock() {
         </Button>
         <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs border-border/50">
           <RefreshCw className="w-3.5 h-3.5" /> 再次生成
-        </Button>
-        <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs border-border/50">
-          <Copy className="w-3.5 h-3.5" /> 复制 Prompt
         </Button>
       </div>
     </div>

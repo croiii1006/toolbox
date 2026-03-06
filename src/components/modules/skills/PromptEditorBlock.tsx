@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Database, Tag, FolderOpen, Video } from 'lucide-react';
+import { Database, Tag, FolderOpen, Video, Copy, Check } from 'lucide-react';
 
 interface PromptEditorBlockProps {
   prompt: string;
@@ -12,11 +13,28 @@ interface PromptEditorBlockProps {
 }
 
 export function PromptEditorBlock({ prompt, onChange, onConfirm, onBack, memoryEnabled }: PromptEditorBlockProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
     <div className="rounded-xl border border-border/40 bg-card/60 backdrop-blur-sm p-5 space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-semibold text-foreground">生成的爆款复刻 Prompt（可编辑）</h4>
-        <Badge variant="outline" className="text-[10px]">Editable</Badge>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleCopy}
+            className="p-1 rounded-md hover:bg-muted/40 transition-colors text-muted-foreground hover:text-foreground"
+            title="复制 Prompt"
+          >
+            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+          </button>
+          <Badge variant="outline" className="text-[10px]">Editable</Badge>
+        </div>
       </div>
 
       <Textarea
