@@ -115,7 +115,10 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   const { savedVideos, unsaveVideo } = useTikTokInspiration();
   const { consumePrefill } = useReplicatePrefill();
 
-  /* ── Input Side ── */
+  /* ── History ── */
+  const [history, setHistory] = useState<ReplicateHistoryItem[]>(loadReplicateHistory);
+
+
   const [styleVideoFile, setStyleVideoFile] = useState<File | null>(null);
   const [styleVideoUrl, setStyleVideoUrl] = useState<string | null>(null);
   const [inspirationVideo, setInspirationVideo] = useState<InspirationVideo | null>(null);
