@@ -17,11 +17,9 @@ import {
   Maximize2,
   ChevronDown,
   ChevronLeft,
-  ChevronRight,
-  History } from
+  ChevronRight } from
 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useTikTokInspiration } from '@/contexts/TikTokInspirationContext';
 import { useReplicatePrefill } from '@/contexts/ReplicatePrefillContext';
 import { cn } from '@/lib/utils';
@@ -65,29 +63,7 @@ const DEFAULT_SETTINGS: ReplicateSettings = {
   aspectRatio: '16:9'
 };
 
-/* ─── History ─── */
-interface ReplicateHistoryItem {
-  id: string;
-  sellingPoints: string[];
-  tiktokLink?: string;
-  videoName?: string;
-  inspirationTitle?: string;
-  date: string;
-}
-
-const REPLICATE_HISTORY_KEY = 'replicate-video-history';
-
-function loadReplicateHistory(): ReplicateHistoryItem[] {
-  try {
-    const raw = localStorage.getItem(REPLICATE_HISTORY_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
-}
-
-function saveReplicateHistory(items: ReplicateHistoryItem[]) {
-  localStorage.setItem(REPLICATE_HISTORY_KEY, JSON.stringify(items));
-}
-
+/* ─── Mock trending data ─── */
 interface InspirationVideo {
   id: string;
   title: string;
@@ -115,10 +91,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   const { savedVideos, unsaveVideo } = useTikTokInspiration();
   const { consumePrefill } = useReplicatePrefill();
 
-  /* ── History ── */
-  const [history, setHistory] = useState<ReplicateHistoryItem[]>(loadReplicateHistory);
-
-
+  /* ── Input Side ── */
   const [styleVideoFile, setStyleVideoFile] = useState<File | null>(null);
   const [styleVideoUrl, setStyleVideoUrl] = useState<string | null>(null);
   const [inspirationVideo, setInspirationVideo] = useState<InspirationVideo | null>(null);
@@ -190,19 +163,6 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   const handleSend = useCallback(async () => {
     if (!canSend) return;
 
-    // Save to history
-    const newItem: ReplicateHistoryItem = {
-      id: crypto.randomUUID(),
-      sellingPoints,
-      tiktokLink: tiktokLink.trim() || undefined,
-      videoName: styleVideoFile?.name || undefined,
-      inspirationTitle: inspirationVideo?.title || undefined,
-      date: new Date().toISOString(),
-    };
-    const updated = [newItem, ...history].slice(0, 20);
-    setHistory(updated);
-    saveReplicateHistory(updated);
-
     setViewMode('conversation');
     setIsExtracting(true);
     setExtractedPromptText('');
@@ -245,23 +205,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
     }
   };
 
-  const handleRestoreHistory = (item: ReplicateHistoryItem) => {
-    setSellingPoints(item.sellingPoints);
-    if (item.tiktokLink) setTiktokLink(item.tiktokLink);
-    else setTiktokLink('');
-    setStyleVideoFile(null);
-    setStyleVideoUrl(null);
-    setInspirationVideo(null);
-    toast.success('已恢复历史记录');
-  };
-
-  const handleDeleteHistory = (id: string) => {
-    const updated = history.filter(h => h.id !== id);
-    setHistory(updated);
-    saveReplicateHistory(updated);
-  };
-
-
+  const handleInspirationSelect = (video: InspirationVideo) => {
     setInspirationVideo(video);
     setStyleVideoFile(null);
     setStyleVideoUrl(null);
@@ -431,56 +375,6 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   // ── Composer view (initial) ──
   return (
     <div className="flex flex-col items-center min-h-[calc(100vh-56px)] p-6 md:p-8 pt-[80px] my-[30px]">
-      {/* History button - top right */}
-      <div className="w-full max-w-2xl flex justify-end mb-2">
-        <Sheet>
-          <SheetTrigger asChild>
-            <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1.5 rounded-lg hover:bg-muted/40">
-              <History className="w-3.5 h-3.5" />
-              <span>历史记录</span>
-            </button>
-          </SheetTrigger>
-          <SheetContent className="w-80 sm:w-96">
-            <SheetHeader>
-              <SheetTitle className="text-base font-medium">历史记录</SheetTitle>
-            </SheetHeader>
-            <div className="mt-4 space-y-3">
-              {history.map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => handleRestoreHistory(item)}
-                  className="w-full text-left p-3 rounded-xl border border-border/30 hover:border-border/60 hover:bg-muted/20 transition-all group relative"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-foreground">
-                      {item.inspirationTitle || item.videoName || item.tiktokLink || '复刻视频'}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground">
-                      {new Date(item.date).toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-                  <div className="flex gap-1 mt-1.5 flex-wrap">
-                    {item.sellingPoints.slice(0, 3).map(s => (
-                      <span key={s} className="text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded-full">{s}</span>
-                    ))}
-                  </div>
-                  <button
-                    onClick={e => { e.stopPropagation(); handleDeleteHistory(item.id); }}
-                    className="absolute top-3 right-10 opacity-0 group-hover:opacity-100 p-1 rounded-full hover:bg-muted/40 transition-all"
-                  >
-                    <X className="w-3.5 h-3.5 text-muted-foreground/50" />
-                  </button>
-                  <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 shrink-0" />
-                </button>
-              ))}
-              {history.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-8">暂无历史记录</p>
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-
       <div className="w-full max-w-2xl animate-fade-in">
         {/* Title */}
         <div className="text-center mb-10">
