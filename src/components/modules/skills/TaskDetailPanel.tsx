@@ -180,22 +180,24 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
 
           return (
             <div key={child.id} className="flex flex-col items-center gap-1.5">
+                {/* Status icon above avatar */}
+                <div className="h-4 flex items-center justify-center">
+                  {child.status === 'done' ?
+                    <img src={pixelCheck} alt="done" className="w-4 h-4 object-contain" /> :
+                  child.status === 'running' ?
+                    <img src={pixelWait} alt="running" className="w-4 h-4 object-contain animate-pulse" /> :
+                    <div className="w-4 h-4" />
+                  }
+                </div>
                 {/* Pixel icon - no border, flat */}
                 <div className={cn(
-                'w-10 h-10 shrink-0 relative transition-all duration-300',
+                'w-10 h-10 shrink-0 transition-all duration-300',
                 child.status === 'queued' && 'opacity-30',
                 child.status === 'running' && 'animate-pulse'
               )}>
                   {avatarSrc ?
                 <img src={avatarSrc} alt={childExpert?.name || ''} className="w-full h-full object-contain" /> :
-
                 <span className="text-lg">{child.title.slice(0, 1)}</span>
-                }
-                  {/* Done checkmark overlay */}
-                  {child.status === 'done' &&
-                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4">
-                      <img src={pixelCheck} alt="done" className="w-full h-full object-contain" />
-                    </div>
                 }
                 </div>
                 <span className={cn(
