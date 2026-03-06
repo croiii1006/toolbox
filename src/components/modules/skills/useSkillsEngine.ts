@@ -610,7 +610,7 @@ export function useSkillsEngine() {
 
       const mockPrompt = `【爆款复刻 Prompt】\n\n镜头风格：近景特写 + 俯拍切换，暖色调滤镜\n节奏：快节奏剪辑，BGM 节拍同步\n内容结构：\n1. 开场 - 产品白底展示，旋转 360°（0-3s）\n2. 使用场景 - 手部特写展示质感（3-8s）\n3. 效果对比 - 使用前后对比（8-15s）\n4. 口播种草 - 真人出镜，口述卖点（15-25s）\n5. 结尾 CTA - 点击链接，限时优惠（25-30s）\n\n关键词：${state.setup.sellingPoints.slice(0, 30)}\n品类：${state.setup.category}\n参考来源：${video.title}`;
 
-      setStatus('✅ 我已经完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：');
+      setStatus(isReselect ? '✅ 我已经重新完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：' : '✅ 我已经完成了提示词反推。你可以编辑后点击「确认并生成」，让我为你制作复刻视频：');
       await pause(500);
 
       setState(prev => ({
