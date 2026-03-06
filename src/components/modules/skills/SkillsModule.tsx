@@ -47,7 +47,6 @@ export function SkillsModule() {
   const activeTask = state.tasks.find((t) => t.id === state.activeTaskId);
 
   const [videoPanelOpen, setVideoPanelOpen] = useState(false);
-  const [promptDismissed, setPromptDismissed] = useState(false);
   // Determine if right panel should show
   const hasVideoCandidates = state.candidateVideos.length > 0;
   const showRightPanel = activeTask || (hasVideoCandidates && videoPanelOpen);
@@ -68,7 +67,6 @@ export function SkillsModule() {
   };
 
   const handleVideoSelect = (video: CandidateVideo) => {
-    setPromptDismissed(false);
     selectVideo(video);
   };
 
@@ -162,10 +160,9 @@ export function SkillsModule() {
             key={msg.id}
             prompt={state.generatedPrompt}
             onChange={updatePrompt}
-            onConfirm={() => { setPromptDismissed(false); confirmGenerate(); }}
-            onBack={() => { setActiveTaskId(null); setVideoPanelOpen(true); setPromptDismissed(true); }}
-            memoryEnabled={state.setup.memoryEnabled}
-            disabled={promptDismissed} />);
+            onConfirm={confirmGenerate}
+            onBack={() => { setActiveTaskId(null); setVideoPanelOpen(true); }}
+            memoryEnabled={state.setup.memoryEnabled} />);
 
 
       case 'result-preview':
