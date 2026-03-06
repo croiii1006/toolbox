@@ -149,6 +149,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
     const url = URL.createObjectURL(file);
     setStyleVideoFile(file);
     setStyleVideoUrl(url);
+    setInspirationVideo(null);
     setTiktokLink('');
     toast.success('对标视频已上传');
     e.target.value = '';
