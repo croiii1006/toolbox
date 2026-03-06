@@ -311,6 +311,9 @@ export function useSkillsEngine() {
     (async () => {
       // ─── Task 1: Memory ───
       if (setup.memoryEnabled) {
+        // Permanent intro message
+        addMessage({ type: 'video-gen-status', content: '正在为您调用记忆库.....' });
+
         // Show subtask list
         setState(prev => ({
           ...prev,
@@ -326,7 +329,6 @@ export function useSkillsEngine() {
         await subDelay();
         updateChild('task-memory', 'task-memory-connect', { status: 'done', progress: 100, title: '记忆专家完成连接记忆库' });
         addTaskLog('task-memory', '记忆专家完成连接记忆库 → 已建立安全连接');
-        
 
         // Sub 2: Retrieve
         updateChild('task-memory', 'task-memory-retrieve', { status: 'running', title: '爬虫专家正在检索相关记忆' });
@@ -335,7 +337,6 @@ export function useSkillsEngine() {
         const memoryCount = setup.selectedMemoryIds.length || 4;
         updateChild('task-memory', 'task-memory-retrieve', { status: 'done', progress: 100, title: '爬虫专家完成检索相关记忆' });
         addTaskLog('task-memory', `爬虫专家完成检索相关记忆 → 命中 ${memoryCount} 条相关记忆`);
-        
 
         // Sub 3: Context
         updateChild('task-memory', 'task-memory-context', { status: 'running', title: '数据专家正在构建上下文向量' });
@@ -346,10 +347,11 @@ export function useSkillsEngine() {
 
         const memEndAt = now();
         updateTask('task-memory', { status: 'done', progress: 100, endAt: memEndAt, output: `已检索 ${memoryCount} 条记忆，构建上下文完成` });
-        setStatus(`✅ 我已经完成了记忆库调用，共检索到 ${memoryCount} 条相关记忆并构建了上下文。现在让我为你抓取同品类的 TikTok 爆款视频。`);
+        // Permanent completion message
+        addMessage({ type: 'video-gen-status', content: `✅ 我已经完成了记忆库调用，共检索到 ${memoryCount} 条相关记忆并构建了上下文。现在让我为你抓取同品类的 TikTok 爆款视频。` });
         await pause(800);
       } else {
-        setStatus('⏭️ 记忆库已关闭，跳过此步骤。现在让我为你抓取同品类的 TikTok 爆款视频。');
+        addMessage({ type: 'video-gen-status', content: '⏭️ 记忆库已关闭，跳过此步骤。现在让我为你抓取同品类的 TikTok 爆款视频。' });
         updateTask('task-memory', { status: 'skipped', endAt: now() });
         await pause(800);
       }
