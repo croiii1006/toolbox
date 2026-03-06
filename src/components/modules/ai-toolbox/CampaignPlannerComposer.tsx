@@ -174,6 +174,7 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
   const [channels, setChannels] = useState<string[]>(initialData?.channels || ['抖音', '小红书']);
   const [cycle, setCycle] = useState(initialData?.cycle || '');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [activeCaseCategory, setActiveCaseCategory] = useState(CASE_CATEGORIES[0].id);
 
   const [showGoalPicker, setShowGoalPicker] = useState(false);
   const [showBudgetPicker, setShowBudgetPicker] = useState(false);
