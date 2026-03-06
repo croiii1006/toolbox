@@ -14,8 +14,11 @@ import {
   Flame,
   Bookmark,
   FolderOpen,
-  Maximize2 } from
-'lucide-react';
+  Maximize2,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useTikTokInspiration } from '@/contexts/TikTokInspirationContext';
 import { useReplicatePrefill } from '@/contexts/ReplicatePrefillContext';
