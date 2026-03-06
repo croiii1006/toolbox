@@ -244,6 +244,26 @@ export function useSkillsEngine() {
         status: 'queued', progress: 0, logs: [], children: [],
         expert: { name: '策略', avatar: 'strategist', role: '' },
       },
+      {
+        id: 'task-reverse-prompt', title: '反推提示词（Reverse Prompt）',
+        status: 'queued', progress: 0, logs: [], children: [
+          { id: 'rp-frame', title: '视频帧分析', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
+          { id: 'rp-style', title: '风格特征提取', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
+          { id: 'rp-prompt', title: '提示词生成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '策略专家', avatar: 'strategist', role: '策略专家' } },
+        ],
+        moduleChain: ['VideoAnalyzer', 'PromptExtractor', 'StyleMatcher'],
+        expert: { name: '提示词', avatar: 'video', role: '' },
+      },
+      {
+        id: 'task-generate-video', title: '爆款视频正在生成',
+        status: 'queued', progress: 0, logs: [], children: [
+          { id: 'sub-scene', title: '设计专家正在渲染场景', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
+          { id: 'sub-audio', title: '音频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
+          { id: 'sub-compose', title: '视频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '记忆专家', avatar: 'memory', role: '记忆管理专家' } },
+        ],
+        moduleChain: ['SceneRenderer', 'AudioSynthesizer', 'VideoComposer', 'QualityChecker'],
+        expert: { name: '视频', avatar: 'designer', role: '' },
+      },
     ];
 
     // Add checklist message
@@ -479,24 +499,13 @@ export function useSkillsEngine() {
 
     setStatus(`✅ 我已经记录了你的选择「${video.title}」。现在让我为你反推提示词。`);
 
-    // Add reverse prompt task with children
+    // Update existing reverse prompt task to running
     const rpTaskId = 'task-reverse-prompt';
-    setState(prev => ({
-      ...prev,
-      tasks: [...prev.tasks, {
-        id: rpTaskId, title: '反推提示词（Reverse Prompt）',
-        status: 'running', progress: 0, startAt: now(),
-        logs: [{ time: now(), message: '开始分析视频内容...' }],
-        children: [
-          { id: 'rp-frame', title: '视频帧分析', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
-          { id: 'rp-style', title: '风格特征提取', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
-          { id: 'rp-prompt', title: '提示词生成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '策略专家', avatar: 'strategist', role: '策略专家' } },
-        ],
-        moduleChain: ['VideoAnalyzer', 'PromptExtractor', 'StyleMatcher'],
-        input: `视频: ${video.title}`,
-        expert: { name: '提示词', avatar: 'video', role: '' },
-      }],
-    }));
+    updateTask(rpTaskId, {
+      status: 'running', startAt: now(),
+      logs: [{ time: now(), message: '开始分析视频内容...' }],
+      input: `视频: ${video.title}`,
+    });
 
     const randDelay = () => new Promise<void>(r => {
       const t = window.setTimeout(r, 1500 + Math.random() * 2000);
@@ -580,20 +589,18 @@ export function useSkillsEngine() {
     setState(prev => ({ ...prev, isProcessing: true }));
 
     const genTaskId = 'task-generate-video';
+    // Update existing task to running with first child running
+    updateTask(genTaskId, {
+      status: 'running', startAt: now(),
+      logs: [{ time: now(), message: '开始渲染视频...' }],
+    });
+    // Set first child to running
     setState(prev => ({
       ...prev,
-      tasks: [...prev.tasks, {
-        id: genTaskId, title: '爆款视频正在生成',
-        status: 'running', progress: 0, startAt: now(),
-        logs: [{ time: now(), message: '开始渲染视频...' }],
-        children: [
-          { id: 'sub-scene', title: '设计专家正在渲染场景', status: 'running', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
-          { id: 'sub-audio', title: '音频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
-          { id: 'sub-compose', title: '视频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '记忆专家', avatar: 'memory', role: '记忆管理专家' } },
-        ],
-        moduleChain: ['SceneRenderer', 'AudioSynthesizer', 'VideoComposer', 'QualityChecker'],
-        expert: { name: '视频', avatar: 'designer', role: '' },
-      }],
+      tasks: prev.tasks.map(t => t.id === genTaskId ? {
+        ...t,
+        children: t.children.map((c, i) => i === 0 ? { ...c, status: 'running' } : c),
+      } : t),
     }));
 
     // Status message ID for replacing in place
