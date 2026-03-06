@@ -109,6 +109,66 @@ function TagInput({
 
 }
 
+const CAMPAIGN_CASES = SHOWCASE_CARDS.filter(c => c.category === 'campaign');
+const CASES_PER_PAGE = 4;
+
+function CampaignCaseSection() {
+  const [expanded, setExpanded] = useState(false);
+  const [page, setPage] = useState(0);
+  const totalPages = Math.ceil(CAMPAIGN_CASES.length / CASES_PER_PAGE);
+  const previewCases = CAMPAIGN_CASES.slice(0, CASES_PER_PAGE);
+  const pagedCases = CAMPAIGN_CASES.slice(page * CASES_PER_PAGE, (page + 1) * CASES_PER_PAGE);
+
+  return (
+    <div className="mt-8 w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {previewCases.map((card, i) => (
+          <ShowcaseCard key={`campaign-${i}`} card={card} onClick={() => {}} />
+        ))}
+      </div>
+
+      {expanded && (
+        <div className="mt-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {pagedCases.map((card, i) => (
+              <ShowcaseCard key={`campaign-exp-${i}`} card={card} onClick={() => {}} />
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <button
+                onClick={() => setPage(p => Math.max(0, p - 1))}
+                disabled={page === 0}
+                className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs text-muted-foreground">{page + 1} / {totalPages}</span>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                disabled={page === totalPages - 1}
+                className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {CAMPAIGN_CASES.length > CASES_PER_PAGE && (
+        <button
+          onClick={() => { setExpanded(!expanded); setPage(0); }}
+          className="flex items-center gap-1 mx-auto mt-5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {expanded ? '收起' : '查看更多'}
+          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        </button>
+      )}
+    </div>
+  );
+}
+
 interface CampaignPlannerComposerProps {
   onSubmit: (payload: CampaignPayload) => void;
   disabled?: boolean;
