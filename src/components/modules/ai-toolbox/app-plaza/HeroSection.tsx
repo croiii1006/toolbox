@@ -160,7 +160,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             {CASE_CATEGORIES.map(cat => (
               <button
                 key={cat.id}
-                onClick={() => setActiveCaseCategory(cat.id)}
+                onClick={() => handleCategoryChange(cat.id)}
                 className={`px-3 py-1 rounded-md text-xs transition-colors ${
                   activeCaseCategory === cat.id
                     ? 'text-foreground font-medium bg-muted/60'
@@ -171,11 +171,57 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               </button>
             ))}
           </div>
+
+          {/* Preview cards (always show first 4) */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredCases.map((card, i) =>
-            <ShowcaseCard key={`${card.category}-${i}`} card={card} onClick={() => onNavigate(card.targetId)} />
+            {previewCases.map((card, i) =>
+              <ShowcaseCard key={`${card.category}-${i}`} card={card} onClick={() => onNavigate(card.targetId)} />
             )}
           </div>
+
+          {/* Expanded paginated list */}
+          {expanded && (
+            <div className="mt-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                {pagedCases.map((card, i) =>
+                  <ShowcaseCard key={`${card.category}-exp-${i}`} card={card} onClick={() => onNavigate(card.targetId)} />
+                )}
+              </div>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-3 mt-6">
+                  <button
+                    onClick={() => setPage(p => Math.max(0, p - 1))}
+                    disabled={page === 0}
+                    className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-xs text-muted-foreground">
+                    {page + 1} / {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                    disabled={page === totalPages - 1}
+                    className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* View more / collapse button */}
+          {filteredCases.length > ITEMS_PER_PAGE && (
+            <button
+              onClick={() => { setExpanded(!expanded); setPage(0); }}
+              className="flex items-center gap-1 mx-auto mt-5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {expanded ? '收起' : '查看更多'}
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+            </button>
+          )}
         </motion.div>
       </div>
     </section>);
