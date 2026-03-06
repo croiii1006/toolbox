@@ -284,13 +284,8 @@ export function SkillsModule() {
           <TaskDetailPanel
             task={activeTask}
             onClose={() => setActiveTaskId(null)}
-            videoCandidates={
-            activeTask.id === 'task-crawl' || activeTask.id === 'task-wait-select' ?
-            state.candidateVideos : undefined
-            }
             selectedVideoId={state.selectedVideo?.id}
-            onVideoSelect={handleVideoSelect}
-            onVideoRefresh={refreshCandidates} /> :
+            onVideoSelect={handleVideoSelect} /> :
 
           hasVideoCandidates ?
           <div className="h-full flex flex-col bg-background">
@@ -307,7 +302,6 @@ export function SkillsModule() {
                   <VideoCandidateRow
                 videos={state.candidateVideos}
                 onSelect={handleVideoSelect}
-                onRefresh={refreshCandidates}
                 selectedVideoId={state.selectedVideo?.id} />
               
                 </div>

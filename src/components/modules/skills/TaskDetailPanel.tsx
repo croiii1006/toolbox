@@ -27,13 +27,11 @@ const expertAvatars: Record<string, string> = {
 interface TaskDetailPanelProps {
   task: SkillTask;
   onClose: () => void;
-  videoCandidates?: CandidateVideo[];
   selectedVideoId?: string | null;
   onVideoSelect?: (video: CandidateVideo) => void;
-  onVideoRefresh?: () => void;
 }
 
-export function TaskDetailPanel({ task, onClose, videoCandidates, selectedVideoId, onVideoSelect, onVideoRefresh }: TaskDetailPanelProps) {
+export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect }: TaskDetailPanelProps) {
   
 
   // Progress calculation
@@ -192,17 +190,6 @@ export function TaskDetailPanel({ task, onClose, videoCandidates, selectedVideoI
             {task.endAt && <span>结束: {task.endAt}</span>}
           </div>
 
-          {/* Video candidates - bottom of detail */}
-          {videoCandidates && videoCandidates.length > 0 && onVideoSelect && onVideoRefresh && (
-            <div className="pt-3">
-              <VideoCandidateRow
-                videos={videoCandidates}
-                onSelect={onVideoSelect!}
-                onRefresh={onVideoRefresh!}
-                selectedVideoId={selectedVideoId}
-              />
-            </div>
-          )}
         </div>
       </ScrollArea>
 
