@@ -244,6 +244,26 @@ export function useSkillsEngine() {
         status: 'queued', progress: 0, logs: [], children: [],
         expert: { name: '策略', avatar: 'strategist', role: '' },
       },
+      {
+        id: 'task-reverse-prompt', title: '反推提示词（Reverse Prompt）',
+        status: 'queued', progress: 0, logs: [], children: [
+          { id: 'rp-frame', title: '视频帧分析', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
+          { id: 'rp-style', title: '风格特征提取', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
+          { id: 'rp-prompt', title: '提示词生成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '策略专家', avatar: 'strategist', role: '策略专家' } },
+        ],
+        moduleChain: ['VideoAnalyzer', 'PromptExtractor', 'StyleMatcher'],
+        expert: { name: '提示词', avatar: 'video', role: '' },
+      },
+      {
+        id: 'task-generate-video', title: '爆款视频正在生成',
+        status: 'queued', progress: 0, logs: [], children: [
+          { id: 'sub-scene', title: '设计专家正在渲染场景', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
+          { id: 'sub-audio', title: '音频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
+          { id: 'sub-compose', title: '视频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '记忆专家', avatar: 'memory', role: '记忆管理专家' } },
+        ],
+        moduleChain: ['SceneRenderer', 'AudioSynthesizer', 'VideoComposer', 'QualityChecker'],
+        expert: { name: '视频', avatar: 'designer', role: '' },
+      },
     ];
 
     // Add checklist message
