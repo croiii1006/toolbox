@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, Shield, History, Play, Heart, MessageSquare, BarChart3, Lightbulb, Image, Video, Globe } from 'lucide-react';
 import { FeatureCard } from './FeatureCard';
@@ -51,15 +51,24 @@ const SKILLS_FLOW: {label: string;targetId: string;desc: string;icon: ReactNode;
 }];
 
 
+const CASE_CATEGORIES = [
+  { id: 'all', label: '全部' },
+  { id: 'market', label: '市场洞察' },
+  { id: 'campaign', label: '策划方案' },
+  { id: 'image', label: '图片生成' },
+  { id: 'video', label: '视频生成' },
+] as const;
+
 const SHOWCASE_CARDS = [
 {
   title: '海飞丝市场洞察深度报告',
   desc: '整合宏观趋势、全球化市场、人群画像、和竞品分析',
-  hoverText: '点击查看洞察报告案例',
+  hoverText: '点击查看市场洞察报告案例',
   image: '/haifeisi.jpg',
   miniTitle: '海飞丝市场洞察深度报告',
   stats: { plays: '1080w', likes: '28w', comments: '12w' },
-  targetId: 'brand-health'
+  targetId: 'brand-health',
+  category: 'market'
 },
 {
   title: '电商场景图批量生成',
@@ -68,7 +77,8 @@ const SHOWCASE_CARDS = [
   image: '/placeholder.svg',
   miniTitle: '电商场景图批量生成',
   stats: { plays: '860w', likes: '15w', comments: '6w' },
-  targetId: 'text-to-image'
+  targetId: 'text-to-image',
+  category: 'image'
 },
 {
   title: '短视频素材智能生成',
@@ -77,88 +87,42 @@ const SHOWCASE_CARDS = [
   image: '/placeholder.svg',
   miniTitle: '短视频素材智能生成',
   stats: { plays: '920w', likes: '22w', comments: '9w' },
-  targetId: 'reference-to-video'
+  targetId: 'reference-to-video',
+  category: 'video'
 },
 {
   title: 'TikTok 爆款方案实战',
   desc: '从选题到脚本到素材清单，完整可执行方案',
-  hoverText: '点击查看 TikTok 方案案例',
+  hoverText: '点击查看策划方案案例',
   image: '/placeholder.svg',
   miniTitle: 'TikTok 爆款方案实战',
   stats: { plays: '1200w', likes: '35w', comments: '18w' },
-  targetId: 'skills'
+  targetId: 'skills',
+  category: 'campaign'
 }];
 
 
 function ShowcaseCard({
   card,
   onNavigate
-
-
-
 }: {card: (typeof SHOWCASE_CARDS)[0];onNavigate: (id: string) => void;}) {
-  return;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  return (
+    <div
+      className="group relative rounded-lg border border-border/40 overflow-hidden cursor-pointer hover:border-border transition-colors"
+      onClick={() => onNavigate(card.targetId)}
+    >
+      <div className="aspect-[4/3] bg-muted/30 overflow-hidden">
+        <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
+      </div>
+      <div className="p-3">
+        <p className="text-xs font-medium truncate">{card.miniTitle}</p>
+        <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2">{card.desc}</p>
+      </div>
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="text-xs font-medium text-foreground/80">{card.hoverText}</span>
+      </div>
+    </div>
+  );
 }
 
 interface HeroSectionProps {
@@ -167,6 +131,10 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onNavigate }: HeroSectionProps) {
+  const [activeCaseCategory, setActiveCaseCategory] = useState<string>('all');
+  const filteredCases = activeCaseCategory === 'all'
+    ? SHOWCASE_CARDS
+    : SHOWCASE_CARDS.filter(c => c.category === activeCaseCategory);
   return (
     <section className="pt-20 pb-16 lg:pt-28 lg:pb-24 flex flex-col">
       <div className="w-full">
@@ -241,10 +209,27 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
         {/* 案例 */}
         <motion.div variants={fadeUp(5)} initial="hidden" animate="visible" className="mt-14">
-          <h2 className="text-lg font-normal text-foreground/60 mb-6">案例</h2>
+          <div className="flex items-center gap-4 mb-6">
+            <h2 className="text-lg font-normal text-foreground/60">案例</h2>
+            <div className="flex gap-1">
+              {CASE_CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCaseCategory(cat.id)}
+                  className={`px-3 py-1 rounded-md text-xs transition-colors ${
+                    activeCaseCategory === cat.id
+                      ? 'text-foreground font-medium bg-muted/60'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {SHOWCASE_CARDS.map((card, i) =>
-            <ShowcaseCard key={i} card={card} onNavigate={onNavigate} />
+            {filteredCases.map((card, i) =>
+            <ShowcaseCard key={card.targetId} card={card} onNavigate={onNavigate} />
             )}
           </div>
         </motion.div>
