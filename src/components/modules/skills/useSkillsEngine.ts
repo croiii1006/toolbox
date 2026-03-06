@@ -499,24 +499,13 @@ export function useSkillsEngine() {
 
     setStatus(`✅ 我已经记录了你的选择「${video.title}」。现在让我为你反推提示词。`);
 
-    // Add reverse prompt task with children
+    // Update existing reverse prompt task to running
     const rpTaskId = 'task-reverse-prompt';
-    setState(prev => ({
-      ...prev,
-      tasks: [...prev.tasks, {
-        id: rpTaskId, title: '反推提示词（Reverse Prompt）',
-        status: 'running', progress: 0, startAt: now(),
-        logs: [{ time: now(), message: '开始分析视频内容...' }],
-        children: [
-          { id: 'rp-frame', title: '视频帧分析', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
-          { id: 'rp-style', title: '风格特征提取', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
-          { id: 'rp-prompt', title: '提示词生成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '策略专家', avatar: 'strategist', role: '策略专家' } },
-        ],
-        moduleChain: ['VideoAnalyzer', 'PromptExtractor', 'StyleMatcher'],
-        input: `视频: ${video.title}`,
-        expert: { name: '提示词', avatar: 'video', role: '' },
-      }],
-    }));
+    updateTask(rpTaskId, {
+      status: 'running', startAt: now(),
+      logs: [{ time: now(), message: '开始分析视频内容...' }],
+      input: `视频: ${video.title}`,
+    });
 
     const randDelay = () => new Promise<void>(r => {
       const t = window.setTimeout(r, 1500 + Math.random() * 2000);
