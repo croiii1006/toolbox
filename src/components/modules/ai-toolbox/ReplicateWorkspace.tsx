@@ -65,7 +65,29 @@ const DEFAULT_SETTINGS: ReplicateSettings = {
   aspectRatio: '16:9'
 };
 
-/* ─── Mock trending data ─── */
+/* ─── History ─── */
+interface ReplicateHistoryItem {
+  id: string;
+  sellingPoints: string[];
+  tiktokLink?: string;
+  videoName?: string;
+  inspirationTitle?: string;
+  date: string;
+}
+
+const REPLICATE_HISTORY_KEY = 'replicate-video-history';
+
+function loadReplicateHistory(): ReplicateHistoryItem[] {
+  try {
+    const raw = localStorage.getItem(REPLICATE_HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function saveReplicateHistory(items: ReplicateHistoryItem[]) {
+  localStorage.setItem(REPLICATE_HISTORY_KEY, JSON.stringify(items));
+}
+
 interface InspirationVideo {
   id: string;
   title: string;
