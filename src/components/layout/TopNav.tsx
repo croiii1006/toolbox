@@ -39,7 +39,7 @@ export function TopNav() {
 
   return (
     <>
-    <header className="h-14 border-b border-border/30 bg-background/70 backdrop-blur-xl flex items-center justify-between px-4 top-0 z-50 fixed left-0 w-screen">
+    <header className="h-14 border-b border-border/20 bg-background/40 backdrop-blur-xl flex items-center justify-between px-4 top-0 z-50 fixed left-0 w-screen">
       {/* Left: Logo */}
       <div className="flex items-center gap-3">
         <img src={logoDark} alt="Oran Gen" className="w-6 h-6" />
