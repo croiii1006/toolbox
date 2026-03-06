@@ -4,6 +4,7 @@ import { useMemory } from '@/contexts/MemoryContext';
 import { useSkillsEngine, CandidateVideo } from './useSkillsEngine';
 import { SetupSummary } from './SetupSummary';
 import { ChecklistCard } from './ChecklistCard';
+import { VideoCandidateCollapsible } from './VideoCandidateCollapsible';
 import { VideoCandidateRow } from './VideoCandidateRow';
 import { PromptEditorBlock } from './PromptEditorBlock';
 import { ResultPreviewBlock } from './ResultPreviewBlock';
@@ -126,7 +127,14 @@ export function SkillsModule() {
 
         }
       case 'video-candidates':
-        return null;
+        return (
+          <VideoCandidateCollapsible
+            key={msg.id}
+            videos={state.candidateVideos}
+            onSelect={handleVideoSelect}
+            selectedVideoId={state.selectedVideo?.id}
+          />
+        );
       case 'video-gen-status': {
           const content = msg.content;
           let icon = null;
