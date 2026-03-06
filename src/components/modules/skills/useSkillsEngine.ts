@@ -495,11 +495,26 @@ export function useSkillsEngine() {
     // Detect if this is a re-selection (reverse-prompt task was already done)
     const isReselect = state.tasks.find(t => t.id === 'task-reverse-prompt')?.status === 'done';
 
-    // Reset reverse-prompt task and children to queued state
+    // Reset reverse-prompt task and children to queued state, remove old related messages
     setState(prev => ({
       ...prev,
       selectedVideo: video,
       isProcessing: true,
+      generatedPrompt: '',
+      // Remove old reverse-prompt related messages on re-select
+      messages: isReselect
+        ? prev.messages.filter(m => {
+            // Remove "现在为你反推提示词" / "现在为你重新反推提示词"
+            if (m.type === 'video-gen-status' && m.content.includes('反推提示词') && !m.content.startsWith('✅')) return false;
+            // Remove reverse-prompt subtask list
+            if (m.type === 'task-subtask-list' && m.content === 'task-reverse-prompt') return false;
+            // Remove prompt editor
+            if (m.type === 'prompt-editor') return false;
+            // Remove the completion status for reverse prompt
+            if (m.type === 'video-gen-status' && m.content.includes('完成了提示词反推')) return false;
+            return true;
+          })
+        : prev.messages,
       tasks: prev.tasks.map(t => {
         if (t.id === 'task-reverse-prompt') {
           return {
@@ -514,7 +529,6 @@ export function useSkillsEngine() {
               ...c,
               status: 'queued' as TaskStatus,
               progress: 0,
-              // Reset titles to original
               title: c.id === 'rp-frame' ? '视频帧分析' : c.id === 'rp-style' ? '风格特征提取' : '提示词生成',
             })),
           };
