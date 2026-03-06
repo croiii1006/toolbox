@@ -86,7 +86,7 @@ export function ChecklistCard({ tasks, onTaskClick, activeTaskId }: ChecklistCar
       <div>
         {tasks.map((task, idx) => {
           const hasChildren = task.children.length > 0;
-          const isExpanded = expandedTasks[task.id] ?? (task.status === 'running');
+          const isExpanded = expandedTasks[task.id] ?? false;
 
           return (
             <div key={task.id}>
