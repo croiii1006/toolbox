@@ -109,46 +109,46 @@ function ShowcaseCard({
         }}
         aria-hidden="true" />
       
-      <div className="absolute inset-0 flex items-center overflow-clip bg-muted dark:bg-[hsl(0,0%,5%)] rounded-[20px] backdrop-blur-[5px] z-10">
-        <div className="absolute flex h-[150px] items-center justify-center right-[-14px] top-[2px] w-[113px] z-10 transition-transform duration-300 ease-out group-hover:translate-x-[-8px] group-hover:translate-y-[-6px]">
-          <div className="flex-none rotate-[-6deg] transition-transform duration-300 ease-out group-hover:rotate-[-4deg]">
-            <div className="bg-background overflow-hidden rounded-[4px] shadow-[0px_2px_20px_0px_rgba(35,35,35,0.2)] w-[100px] h-[130px] relative">
-              <div className="flex items-start gap-[4px] px-[6px] pt-[6px] pb-[4px]">
-                <div className="flex flex-col gap-[4px] flex-1 min-w-0">
-                  <p className="font-semibold leading-[normal] line-clamp-1 text-[6px] text-foreground">{card.miniTitle}</p>
-                  <div className="flex items-center gap-[2px]">
-                    <div className="size-[7px] rounded-full overflow-hidden bg-muted">
-                      <img alt="OranAI" src="/favicon.ico" className="w-full h-full object-contain" />
-                    </div>
-                    <p className="font-medium leading-[normal] text-[5px] text-muted-foreground truncate">OranAI</p>
-                  </div>
-                  <div className="flex items-center gap-[2.667px]">
-                    <div className="flex items-center gap-px">
-                      <Play className="size-[4px] text-muted-foreground fill-muted-foreground" />
-                      <p className="font-medium leading-[4.85px] text-[4px] text-muted-foreground tracking-[-0.07px]">{card.stats.plays}</p>
-                    </div>
-                    <div className="flex items-center gap-px">
-                      <Heart className="size-[4px] text-muted-foreground" />
-                      <p className="font-medium leading-[normal] text-[4px] text-muted-foreground">{card.stats.likes}</p>
-                    </div>
-                    <div className="flex items-center gap-px">
-                      <MessageSquare className="size-[4px] text-muted-foreground" />
-                      <p className="font-medium leading-[normal] text-[4px] text-muted-foreground">{card.stats.comments}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="relative h-[90px] rounded-[4px] mx-[6px] mb-[6px] overflow-hidden">
-                <img alt="" className="absolute inset-0 max-w-none object-cover size-full" src={card.image} />
-              </div>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-muted to-transparent" />
-            </div>
-          </div>
-        </div>
-        <div className="absolute inset-0 z-20 flex items-center justify-center rounded-[20px] bg-foreground/55 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <p className="text-background text-[12px] leading-[1.4] font-medium">{card.hoverText}</p>
-        </div>
-      </div>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
       <div className="absolute bottom-0 left-0 w-full z-20 pointer-events-none">
         <div className="flex flex-col gap-[6px] items-start justify-end p-[18px] py-[13px] w-full">
           <div className="relative shrink-0 max-w-[232px] whitespace-pre-wrap group-hover:opacity-0 transition-opacity duration-200">
