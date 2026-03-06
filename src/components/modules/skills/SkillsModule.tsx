@@ -51,6 +51,13 @@ export function SkillsModule() {
   const hasVideoCandidates = state.candidateVideos.length > 0;
   const showRightPanel = activeTask || (hasVideoCandidates && videoPanelOpen);
 
+  // Auto-open video panel when candidates are first populated
+  useEffect(() => {
+    if (hasVideoCandidates) {
+      setVideoPanelOpen(true);
+    }
+  }, [hasVideoCandidates]);
+
   const handleSend = (text: string, image?: string | null, category?: string, memoryIds?: string[]) => {
     if (!state.setupCompleted && (image || text)) {
       completeSetup({
