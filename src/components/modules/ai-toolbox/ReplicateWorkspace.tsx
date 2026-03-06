@@ -406,8 +406,14 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                   </div> :
 
                 <button
-                  onClick={() => videoInputRef.current?.click()}
-                  className="w-[120px] h-[100px] border-2 border-dashed border-border/40 rounded-xl flex flex-col items-center justify-center gap-1.5 hover:border-foreground/20 hover:bg-muted/20 transition-colors">
+                  onClick={() => !tiktokLink.trim() && videoInputRef.current?.click()}
+                  disabled={!!tiktokLink.trim()}
+                  className={cn(
+                    "w-[120px] h-[100px] border-2 border-dashed rounded-xl flex flex-col items-center justify-center gap-1.5 transition-colors",
+                    tiktokLink.trim()
+                      ? "border-border/20 bg-muted/10 cursor-not-allowed opacity-40"
+                      : "border-border/40 hover:border-foreground/20 hover:bg-muted/20"
+                  )}>
                   
                     <Plus className="w-5 h-5 text-muted-foreground/60" />
                     <span className="text-[11px] text-muted-foreground/60 leading-tight text-center px-1">
@@ -461,13 +467,17 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                   </button>
                 </div> :
 
-              <div className="flex items-center gap-1.5">
+              <div className={cn(
+                "flex items-center gap-1.5 transition-opacity",
+                styleVideoFile ? "opacity-40 pointer-events-none" : ""
+              )}>
                   <Link className="w-3.5 h-3.5 text-muted-foreground/50" />
                   <input
                   value={tiktokLink}
                   onChange={(e) => setTiktokLink(e.target.value)}
-                  placeholder="粘贴 TikTok 链接..."
-                  className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none" />
+                  disabled={!!styleVideoFile}
+                  placeholder={styleVideoFile ? "已上传视频，链接不可用" : "粘贴 TikTok 链接..."}
+                  className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none disabled:cursor-not-allowed" />
                 
                 </div>
               }
