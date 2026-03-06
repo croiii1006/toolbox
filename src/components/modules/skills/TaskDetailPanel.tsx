@@ -45,16 +45,6 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
       {/* Header */}
       <div className="px-5 py-4 border-b border-border/20 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          {/* Task pixel icon - no border, flat */}
-          {task.expert && expertAvatars[task.expert.avatar] ?
-          <div className="w-10 h-10 shrink-0">
-              
-            </div> :
-
-          <div className="w-7 h-7 shrink-0 flex items-center justify-center">
-              <span className="text-sm">⚙️</span>
-            </div>
-          }
           <div>
             <h3 className="text-sm font-medium text-foreground">{task.title}</h3>
             <div className="flex items-center gap-2 mt-0.5">
