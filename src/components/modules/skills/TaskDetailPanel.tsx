@@ -4,7 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { SkillTask, CandidateVideo } from './useSkillsEngine';
 import { VideoCandidateRow } from './VideoCandidateRow';
-import { useState } from 'react';
+
 
 import expertMemory from '@/assets/expert-memory.png';
 import expertCrawler from '@/assets/expert-crawler.png';
