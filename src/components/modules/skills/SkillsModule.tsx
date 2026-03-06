@@ -68,6 +68,7 @@ export function SkillsModule() {
   };
 
   const handleVideoSelect = (video: CandidateVideo) => {
+    setPromptDismissed(false);
     selectVideo(video);
   };
 
