@@ -126,12 +126,6 @@ export function ChatInputBar({ onSend, disabled, memoryItems }: ChatInputBarProp
                 onChange={setCategory}
                 placeholder="选择品类"
               />
-              {selectedMemoryIds.length > 0 && (
-                <Badge variant="secondary" className="text-[10px] h-5 gap-1 font-normal">
-                  <Brain className="w-3 h-3" />
-                  {selectedMemoryIds.length} 个记忆库
-                </Badge>
-              )}
             </div>
 
             {/* Textarea */}
@@ -158,12 +152,19 @@ export function ChatInputBar({ onSend, disabled, memoryItems }: ChatInputBarProp
         <div className="flex items-center justify-between mt-2 pt-2">
           <div className="flex items-center gap-2">
             {/* Plus menu */}
-            <button
-              onClick={() => setMemoryDialogOpen(true)}
-              className="w-8 h-8 rounded-full border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-colors"
-            >
-              <Brain className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setMemoryDialogOpen(true)}
+                className="w-8 h-8 rounded-full border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+              >
+                <Brain className="w-4 h-4" />
+              </button>
+              {selectedMemoryIds.length > 0 && (
+                <span className="text-[11px] font-medium text-orange-400">
+                  {selectedMemoryIds.length} 个记忆库
+                </span>
+              )}
+            </div>
 
             {/* Credits display */}
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground/60">
