@@ -589,20 +589,18 @@ export function useSkillsEngine() {
     setState(prev => ({ ...prev, isProcessing: true }));
 
     const genTaskId = 'task-generate-video';
+    // Update existing task to running with first child running
+    updateTask(genTaskId, {
+      status: 'running', startAt: now(),
+      logs: [{ time: now(), message: '开始渲染视频...' }],
+    });
+    // Set first child to running
     setState(prev => ({
       ...prev,
-      tasks: [...prev.tasks, {
-        id: genTaskId, title: '爆款视频正在生成',
-        status: 'running', progress: 0, startAt: now(),
-        logs: [{ time: now(), message: '开始渲染视频...' }],
-        children: [
-          { id: 'sub-scene', title: '设计专家正在渲染场景', status: 'running', progress: 0, logs: [], children: [], expert: { name: '设计专家', avatar: 'designer', role: '创意制作专家' } },
-          { id: 'sub-audio', title: '音频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '视频专家', avatar: 'video', role: '视频制作专家' } },
-          { id: 'sub-compose', title: '视频合成', status: 'queued', progress: 0, logs: [], children: [], expert: { name: '记忆专家', avatar: 'memory', role: '记忆管理专家' } },
-        ],
-        moduleChain: ['SceneRenderer', 'AudioSynthesizer', 'VideoComposer', 'QualityChecker'],
-        expert: { name: '视频', avatar: 'designer', role: '' },
-      }],
+      tasks: prev.tasks.map(t => t.id === genTaskId ? {
+        ...t,
+        children: t.children.map((c, i) => i === 0 ? { ...c, status: 'running' } : c),
+      } : t),
     }));
 
     // Status message ID for replacing in place
