@@ -623,7 +623,7 @@ export function useSkillsEngine() {
         ],
       }));
     })();
-  }, [state.setup, streamText, updateTask, addTaskLog]);
+  }, [state.setup, state.tasks, streamText, updateTask, addTaskLog]);
 
   // Update prompt
   const updatePrompt = useCallback((prompt: string) => {
