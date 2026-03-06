@@ -89,6 +89,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   /* ── Input Side ── */
   const [styleVideoFile, setStyleVideoFile] = useState<File | null>(null);
   const [styleVideoUrl, setStyleVideoUrl] = useState<string | null>(null);
+  const [inspirationVideo, setInspirationVideo] = useState<InspirationVideo | null>(null);
   const [settings] = useState<ReplicateSettings>(DEFAULT_SETTINGS);
 
   /* ── UI-only state ── */
@@ -98,7 +99,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 
 
   /* ── Action & Status ── */
-  const hasVideoSource = !!(styleVideoFile || tiktokLink.trim());
+  const hasVideoSource = !!(styleVideoFile || inspirationVideo || tiktokLink.trim());
   const canSend = hasVideoSource && sellingPoints.length > 0;
   const [isExtracting, setIsExtracting] = useState(false);
   const [viewMode, setViewMode] = useState<'composer' | 'conversation'>('composer');
