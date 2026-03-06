@@ -220,7 +220,7 @@ export function ChatInputBar({ onSend, disabled, memoryItems }: ChatInputBarProp
 
       {/* Memory selection dialog */}
       <Dialog open={memoryDialogOpen} onOpenChange={setMemoryDialogOpen}>
-        <DialogContent className="sm:max-w-md rounded-2xl">
+        <DialogContent className="sm:max-w-md rounded-2xl bg-background/40 backdrop-blur-xl border-border/20">
           <DialogHeader>
             <DialogTitle className="text-base font-medium">选择记忆库</DialogTitle>
           </DialogHeader>
