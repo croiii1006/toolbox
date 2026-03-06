@@ -580,7 +580,15 @@ export function useSkillsEngine() {
 
     streamText('🎬 开始生成复刻视频，3 个子任务将依次执行...', () => {});
 
-    const delay = (ms: number) => new Promise<void>(r => {
+    const randDelay = () => new Promise<void>(r => {
+      const t = window.setTimeout(r, 1500 + Math.random() * 2000);
+      streamTimers.current.push(t);
+    });
+    const backendDelay = () => new Promise<void>(r => {
+      const t = window.setTimeout(r, 3000 + Math.random() * 3000);
+      streamTimers.current.push(t);
+    });
+    const pause = (ms = 600) => new Promise<void>(r => {
       const t = window.setTimeout(r, ms);
       streamTimers.current.push(t);
     });
@@ -595,28 +603,30 @@ export function useSkillsEngine() {
     };
 
     (async () => {
-      // Scene rendering
-      await delay(1000);
+      // Scene rendering — backend dependent (video generation)
+      await backendDelay();
       addTaskLog(genTaskId, '设计专家渲染场景 1/5...');
-      await delay(800);
+      await pause(800);
       addTaskLog(genTaskId, '设计专家渲染场景 2/5...');
-      await delay(600);
+      await pause(800);
+      addTaskLog(genTaskId, '设计专家渲染场景 3/5...');
+      await pause(600);
       updateGenChild('sub-scene', { status: 'done', progress: 100, title: '设计专家完成渲染场景' });
       addTaskLog(genTaskId, '设计专家完成场景渲染 → 5 个场景段，总时长 30s');
       streamText('✅ 我已经完成了场景渲染。现在让我为你合成音频。', () => {});
 
-      // Audio synthesis
+      // Audio synthesis — fixed step
       updateGenChild('sub-audio', { status: 'running', title: '视频专家正在合成音频' });
       addTaskLog(genTaskId, '视频专家正在合成音频...');
-      await delay(1200);
+      await randDelay();
       updateGenChild('sub-audio', { status: 'done', progress: 100, title: '视频专家完成合成音频' });
       addTaskLog(genTaskId, '视频专家完成音频合成 → BGM 节拍同步，时长 30s');
       streamText('✅ 我已经完成了音频合成。现在让我为你进行最终的视频合成。', () => {});
 
-      // Video compose
+      // Video compose — backend dependent
       updateGenChild('sub-compose', { status: 'running', title: '记忆专家正在合成视频' });
       addTaskLog(genTaskId, '记忆专家正在合成视频...');
-      await delay(1500);
+      await backendDelay();
       updateGenChild('sub-compose', { status: 'done', progress: 100, title: '记忆专家完成合成视频' });
       addTaskLog(genTaskId, '记忆专家完成视频合成 → 1080p，30s，质量检测通过');
       addTaskLog(genTaskId, '质量检测通过 → 画面清晰度 98%，音画同步率 99.2%');
@@ -629,18 +639,15 @@ export function useSkillsEngine() {
         } : t),
       }));
 
-      // Text first
       streamText('🎉 我已经完成了所有任务！复刻视频已生成，你可以预览、下载或保存到项目中。', () => {});
-      await delay(300);
+      await pause(400);
 
-      // Subtask list after text
       setState(prev => ({
         ...prev,
         messages: [...prev.messages, { id: `msg-subtasks-gen-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-generate-video' }],
       }));
-      await delay(200);
+      await pause(300);
 
-      // Result preview after subtask list
       setState(prev => ({
         ...prev,
         resultVideo: { url: '', cover: '' },
