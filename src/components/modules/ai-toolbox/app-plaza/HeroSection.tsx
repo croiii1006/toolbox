@@ -142,23 +142,21 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
         {/* 案例 */}
         <motion.div variants={fadeUp(5)} initial="hidden" animate="visible" className="mt-14">
-          <div className="flex items-center gap-4 mb-6">
-            <h2 className="text-lg font-normal text-foreground/60">案例</h2>
-            <div className="flex gap-1">
-              {CASE_CATEGORIES.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCaseCategory(cat.id)}
-                  className={`px-3 py-1 rounded-md text-xs transition-colors ${
-                    activeCaseCategory === cat.id
-                      ? 'text-foreground font-medium bg-muted/60'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
+          <h2 className="text-lg font-normal text-foreground/60 mb-3">案例</h2>
+          <div className="flex gap-1 mb-6">
+            {CASE_CATEGORIES.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCaseCategory(cat.id)}
+                className={`px-3 py-1 rounded-md text-xs transition-colors ${
+                  activeCaseCategory === cat.id
+                    ? 'text-foreground font-medium bg-muted/60'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredCases.map((card, i) =>
