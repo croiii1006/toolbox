@@ -229,7 +229,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
             <div className="rounded-xl border border-border/20 bg-muted/10 p-4 space-y-2">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Video className="w-3.5 h-3.5" />
-                <span>对标视频：{styleVideoFile?.name || tiktokLink || '—'}</span>
+                <span>对标视频：{styleVideoFile?.name || inspirationVideo?.title || tiktokLink || '—'}</span>
               </div>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="text-xs text-muted-foreground">卖点：</span>
