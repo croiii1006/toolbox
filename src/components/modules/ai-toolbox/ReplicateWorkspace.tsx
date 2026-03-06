@@ -473,7 +473,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
               }
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-xs text-muted-foreground/60">K2.5 Agent 集群</span>
+              
               <button
                 onClick={handleSend}
                 disabled={!canSend || isExtracting}
