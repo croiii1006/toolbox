@@ -57,7 +57,7 @@ export type UIMode = 'single' | 'split';
 
 export interface StreamMessage {
   id: string;
-  type: 'text' | 'setup-summary' | 'checklist' | 'video-candidates' | 'prompt-editor' | 'result-preview' | 'task-subtask-list';
+  type: 'text' | 'setup-summary' | 'checklist' | 'video-candidates' | 'prompt-editor' | 'result-preview' | 'task-subtask-list' | 'video-gen-status';
   content: string;
   isStreaming?: boolean;
 }
@@ -578,6 +578,10 @@ export function useSkillsEngine() {
       }],
     }));
 
+    // Status message ID for replacing in place
+    const statusMsgId = `msg-gen-status-${Date.now()}`;
+
+    // Add initial status message and checklist subtask list
     streamText('🎬 开始生成复刻视频，3 个子任务将依次执行...', () => {});
 
     const randDelay = () => new Promise<void>(r => {
@@ -603,6 +607,22 @@ export function useSkillsEngine() {
     };
 
     (async () => {
+      await pause(800);
+
+      // Add subtask list for the generate task
+      setState(prev => ({
+        ...prev,
+        messages: [...prev.messages, { id: `msg-subtasks-gen-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-generate-video' }],
+      }));
+
+      await pause(600);
+
+      // Add the replaceable status message — "爆款视频正在生成清单"
+      setState(prev => ({
+        ...prev,
+        messages: [...prev.messages, { id: statusMsgId, type: 'video-gen-status', content: '爆款视频正在生成清单' }],
+      }));
+
       // Scene rendering — backend dependent (video generation)
       await backendDelay();
       addTaskLog(genTaskId, '设计专家渲染场景 1/5...');
@@ -613,7 +633,9 @@ export function useSkillsEngine() {
       await pause(600);
       updateGenChild('sub-scene', { status: 'done', progress: 100, title: '设计专家完成渲染场景' });
       addTaskLog(genTaskId, '设计专家完成场景渲染 → 5 个场景段，总时长 30s');
-      streamText('✅ 我已经完成了场景渲染。现在让我为你合成音频。', () => {});
+
+      // Replace status: scene done
+      updateMessage(statusMsgId, { content: '✅ 我已经完成了场景渲染。现在让我为你合成音频。' });
 
       // Audio synthesis — fixed step
       updateGenChild('sub-audio', { status: 'running', title: '视频专家正在合成音频' });
@@ -621,7 +643,9 @@ export function useSkillsEngine() {
       await randDelay();
       updateGenChild('sub-audio', { status: 'done', progress: 100, title: '视频专家完成合成音频' });
       addTaskLog(genTaskId, '视频专家完成音频合成 → BGM 节拍同步，时长 30s');
-      streamText('✅ 我已经完成了音频合成。现在让我为你进行最终的视频合成。', () => {});
+
+      // Replace status: audio done
+      updateMessage(statusMsgId, { content: '✅ 我已经完成了音频合成。现在让我为你进行最终的视频合成。' });
 
       // Video compose — backend dependent
       updateGenChild('sub-compose', { status: 'running', title: '记忆专家正在合成视频' });
@@ -630,7 +654,7 @@ export function useSkillsEngine() {
       updateGenChild('sub-compose', { status: 'done', progress: 100, title: '记忆专家完成合成视频' });
       addTaskLog(genTaskId, '记忆专家完成视频合成 → 1080p，30s，质量检测通过');
       addTaskLog(genTaskId, '质量检测通过 → 画面清晰度 98%，音画同步率 99.2%');
-      
+
       setState(prev => ({
         ...prev,
         tasks: prev.tasks.map(t => t.id === genTaskId ? {
@@ -639,14 +663,10 @@ export function useSkillsEngine() {
         } : t),
       }));
 
-      streamText('🎉 我已经完成了所有任务！复刻视频已生成，你可以预览、下载或保存到项目中。', () => {});
-      await pause(400);
+      // Replace status: all done
+      updateMessage(statusMsgId, { content: '🎉 我已经完成了所有任务！复刻视频已生成，你可以预览、下载或保存到项目中。' });
 
-      setState(prev => ({
-        ...prev,
-        messages: [...prev.messages, { id: `msg-subtasks-gen-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-generate-video' }],
-      }));
-      await pause(300);
+      await pause(400);
 
       setState(prev => ({
         ...prev,

@@ -127,6 +127,24 @@ export function SkillsModule() {
         }
       case 'video-candidates':
         return null;
+      case 'video-gen-status': {
+          const content = msg.content;
+          let icon = null;
+          let cleanContent = content;
+          if (content.startsWith('✅')) {
+            icon = <CheckCircle2 className="w-4 h-4 text-foreground shrink-0 mt-0.5" />;
+            cleanContent = content.slice(2).trim();
+          } else if (content.startsWith('🎉')) {
+            icon = <PartyPopper className="w-4 h-4 text-foreground shrink-0 mt-0.5" />;
+            cleanContent = content.slice(2).trim();
+          }
+          return (
+            <div key={msg.id} className="flex items-start gap-2 text-sm text-foreground/80 leading-relaxed animate-fade-in">
+              {icon}
+              <span>{cleanContent}</span>
+            </div>
+          );
+        }
       case 'prompt-editor':
         return (
           <PromptEditorBlock
