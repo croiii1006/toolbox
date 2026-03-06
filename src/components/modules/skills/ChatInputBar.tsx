@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { CategoryCascader, CATEGORY_TREE } from './CategoryCascader';
+import { MemorySelectionDialog } from '@/components/modules/memory/MemorySelectionDialog';
 
 export interface MemoryItem {
   id: string;

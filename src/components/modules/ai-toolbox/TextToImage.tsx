@@ -36,6 +36,7 @@ import { InfiniteCanvas } from './InfiniteCanvas';
 import { ImageCapsule, type SelectedImage } from './ImageCapsule';
 import { toast } from 'sonner';
 import { useMemory } from '@/contexts/MemoryContext';
+import { MemorySelectionDialog } from '@/components/modules/memory/MemorySelectionDialog';
 
 interface ChatMessage {
   id: string;

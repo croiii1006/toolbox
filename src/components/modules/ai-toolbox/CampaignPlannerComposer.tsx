@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import logoDark from '@/assets/logo_dark.svg';
 import { useMemory } from '@/contexts/MemoryContext';
+import { MemorySelectionDialog } from '@/components/modules/memory/MemorySelectionDialog';
 
 /* ─── Types ─── */
 export interface CampaignPayload {
