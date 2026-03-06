@@ -441,7 +441,7 @@ export function useSkillsEngine() {
       setStatus('✅ 我已经完成了爆款视频抓取，从 142 条视频中筛选出 Top 20。现在让我为你生成候选视频预览列表。');
       await pause(1500);
 
-      setStatus('✅ 我已经完成了候选视频预览列表的生成。现在请你从以下视频中选择一条作为复刻参考：');
+      addMessage({ type: 'video-gen-status', content: '✅ 我已经完成了候选视频预览列表的生成。现在请你从以下视频中选择一条作为复刻参考：' });
 
       // Show video candidates
       const videos = mockVideos();
