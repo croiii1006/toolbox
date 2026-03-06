@@ -1,4 +1,4 @@
-import { Play, Download, RefreshCw, Copy, Save } from 'lucide-react';
+import { Play, Download, RefreshCw, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function ResultPreviewBlock() {
@@ -16,7 +16,6 @@ export function ResultPreviewBlock() {
         <div className="absolute bottom-3 right-3 text-[10px] bg-foreground/70 text-background px-2 py-0.5 rounded-md font-mono">
           0:30
         </div>
-        {/* Progress bar mock */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-border/30">
           <div className="h-full w-0 bg-foreground/60 rounded-r-full" />
         </div>
@@ -32,9 +31,6 @@ export function ResultPreviewBlock() {
         </Button>
         <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs border-border/50">
           <Copy className="w-3.5 h-3.5" /> 复制 Prompt
-        </Button>
-        <Button variant="outline" size="sm" className="rounded-lg gap-1.5 text-xs border-border/50">
-          <Save className="w-3.5 h-3.5" /> 保存到项目
         </Button>
       </div>
     </div>
