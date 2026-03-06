@@ -13,8 +13,10 @@ import {
   ArrowLeft,
   Flame,
   Bookmark,
-  FolderOpen } from
+  FolderOpen,
+  Maximize2 } from
 'lucide-react';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useTikTokInspiration } from '@/contexts/TikTokInspirationContext';
 import { useReplicatePrefill } from '@/contexts/ReplicatePrefillContext';
 import { cn } from '@/lib/utils';
