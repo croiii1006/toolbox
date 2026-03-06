@@ -305,8 +305,6 @@ export function useSkillsEngine() {
         messages: [...prev.messages, { id: checklistId, type: 'checklist', content: '' }],
       }));
       await pause(600);
-      }
-      await pause(400);
 
       // ─── Task 1: Memory ───
       if (setup.memoryEnabled) {
