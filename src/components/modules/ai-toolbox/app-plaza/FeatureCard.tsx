@@ -12,12 +12,12 @@ export function FeatureCard({ title, description, preview, onClick }: FeatureCar
   return (
     <div
       onClick={onClick}
-      className="group relative flex items-stretch rounded-2xl border border-border/20 bg-background/40 backdrop-blur-xl overflow-hidden cursor-pointer transition-all duration-300 hover:border-border/40 hover:shadow-card-hover hover:bg-background/60 min-h-[140px]">
+      className="group relative flex items-stretch rounded-2xl border border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden cursor-pointer transition-all duration-300 hover:border-border/60 hover:shadow-card-hover min-h-[140px]">
       
       {/* Left: text */}
       <div className="flex flex-col justify-center gap-2 p-4 pr-3 flex-1 min-w-0">
         <div>
-          <h3 className="text-base font-medium text-foreground leading-snug">{title}</h3>
+          <h3 className="text-base leading-snug font-light text-[#363636]">{title}</h3>
           <p className="text-xs text-muted-foreground font-light mt-1.5 leading-relaxed line-clamp-2">{description}</p>
         </div>
         <div className="flex items-center gap-1 text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
