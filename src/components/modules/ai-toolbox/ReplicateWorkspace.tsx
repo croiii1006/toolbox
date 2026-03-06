@@ -13,8 +13,8 @@ import {
   ArrowLeft,
   Flame,
   Bookmark,
-  FolderOpen,
-} from 'lucide-react';
+  FolderOpen } from
+'lucide-react';
 import { useTikTokInspiration } from '@/contexts/TikTokInspirationContext';
 import { useReplicatePrefill } from '@/contexts/ReplicatePrefillContext';
 import { cn } from '@/lib/utils';
@@ -55,7 +55,7 @@ export interface ReplicatePayload {
 const DEFAULT_SETTINGS: ReplicateSettings = {
   motionLevel: 0.5,
   outputResolution: '1080p',
-  aspectRatio: '16:9',
+  aspectRatio: '16:9'
 };
 
 /* ─── Mock trending data ─── */
@@ -69,13 +69,13 @@ interface InspirationVideo {
 }
 
 const MOCK_TRENDING: InspirationVideo[] = [
-  { id: 't1', title: '夏日防晒喷雾使用技巧', views: '120万', likes: '8.5万', coverGradient: 'from-rose-500/60 to-orange-400/60', source: 'trending' },
-  { id: 't2', title: '厨房收纳神器开箱', views: '89万', likes: '6.2万', coverGradient: 'from-blue-500/60 to-cyan-400/60', source: 'trending' },
-  { id: 't3', title: '运动耳机防水测试', views: '156万', likes: '12万', coverGradient: 'from-violet-500/60 to-purple-400/60', source: 'trending' },
-  { id: 't4', title: '宠物自动喂食器评测', views: '67万', likes: '4.8万', coverGradient: 'from-emerald-500/60 to-green-400/60', source: 'trending' },
-  { id: 't5', title: '手机支架桌面新玩法', views: '98万', likes: '7.1万', coverGradient: 'from-amber-500/60 to-yellow-400/60', source: 'trending' },
-  { id: 't6', title: '美白精华28天打卡', views: '210万', likes: '15万', coverGradient: 'from-pink-500/60 to-rose-400/60', source: 'trending' },
-];
+{ id: 't1', title: '夏日防晒喷雾使用技巧', views: '120万', likes: '8.5万', coverGradient: 'from-rose-500/60 to-orange-400/60', source: 'trending' },
+{ id: 't2', title: '厨房收纳神器开箱', views: '89万', likes: '6.2万', coverGradient: 'from-blue-500/60 to-cyan-400/60', source: 'trending' },
+{ id: 't3', title: '运动耳机防水测试', views: '156万', likes: '12万', coverGradient: 'from-violet-500/60 to-purple-400/60', source: 'trending' },
+{ id: 't4', title: '宠物自动喂食器评测', views: '67万', likes: '4.8万', coverGradient: 'from-emerald-500/60 to-green-400/60', source: 'trending' },
+{ id: 't5', title: '手机支架桌面新玩法', views: '98万', likes: '7.1万', coverGradient: 'from-amber-500/60 to-yellow-400/60', source: 'trending' },
+{ id: 't6', title: '美白精华28天打卡', views: '210万', likes: '15万', coverGradient: 'from-pink-500/60 to-rose-400/60', source: 'trending' }];
+
 
 interface ReplicateWorkspaceProps {
   onNavigate?: (itemId: string) => void;
@@ -95,7 +95,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   const [tiktokLink, setTiktokLink] = useState('');
   const [sellingPoints, setSellingPoints] = useState<string[]>([]);
   const [spInput, setSpInput] = useState('');
-  
+
 
   /* ── Action & Status ── */
   const hasVideoSource = !!(styleVideoFile || tiktokLink.trim());
@@ -164,7 +164,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
     const extractPayload: ExtractPayload = { styleVideoFile, sellingPoints, settings };
     console.log('ExtractPayload:', extractPayload);
 
-    await new Promise(r => setTimeout(r, 2500));
+    await new Promise((r) => setTimeout(r, 2500));
 
     const mockPrompt = `产品特写镜头，柔和暖色灯光，缓慢推拉运镜，背景虚化，商品居中展示。\n\n核心卖点融入：${sellingPoints.join('、')}。\n\n电商广告风格，高清画质，节奏紧凑，适合 TikTok 短视频传播。`;
     setExtractedPromptText(mockPrompt);
@@ -182,7 +182,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   const addSellingPoint = (value: string) => {
     const trimmed = value.trim();
     if (trimmed && !sellingPoints.includes(trimmed)) {
-      setSellingPoints(prev => [...prev, trimmed]);
+      setSellingPoints((prev) => [...prev, trimmed]);
     }
     setSpInput('');
   };
@@ -215,9 +215,9 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
         {/* ── Top bar with back button ── */}
         <div className="shrink-0 px-6 py-3 border-b border-border/20 flex items-center gap-2">
           <button
-            onClick={() => { setViewMode('composer'); setExtractedPromptText(''); }}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
+            onClick={() => {setViewMode('composer');setExtractedPromptText('');}}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+            
             <ArrowLeft className="w-3.5 h-3.5" />
             返回
           </button>
@@ -233,42 +233,42 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
               </div>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="text-xs text-muted-foreground">卖点：</span>
-                {sellingPoints.map(p => (
-                  <span key={p} className="inline-flex h-5 items-center rounded-full bg-muted/40 border border-border/20 px-2 text-[11px] text-foreground/70">{p}</span>
-                ))}
+                {sellingPoints.map((p) =>
+                <span key={p} className="inline-flex h-5 items-center rounded-full bg-muted/40 border border-border/20 px-2 text-[11px] text-foreground/70">{p}</span>
+                )}
               </div>
             </div>
 
             {/* Loading */}
-            {isExtracting && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground animate-fade-in">
+            {isExtracting &&
+            <div className="flex items-center gap-2 text-sm text-muted-foreground animate-fade-in">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span>正在分析视频风格，生成复刻 Prompt...</span>
               </div>
-            )}
+            }
 
             {/* Generated prompt */}
-            {extractedPromptText && !isExtracting && (
-              <div className="rounded-xl border border-border/30 bg-card/60 p-4 space-y-3 animate-fade-in">
+            {extractedPromptText && !isExtracting &&
+            <div className="rounded-xl border border-border/30 bg-card/60 p-4 space-y-3 animate-fade-in">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>复刻 Prompt</span>
                   </div>
                   <button
-                    onClick={handleCopyPrompt}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors"
-                  >
-                    {promptCopied ? (
-                      <><Check className="w-3.5 h-3.5" />已复制</>
-                    ) : (
-                      <><Copy className="w-3.5 h-3.5" />复制</>
-                    )}
+                  onClick={handleCopyPrompt}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors">
+                  
+                    {promptCopied ?
+                  <><Check className="w-3.5 h-3.5" />已复制</> :
+
+                  <><Copy className="w-3.5 h-3.5" />复制</>
+                  }
                   </button>
                 </div>
                 <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line select-all">{extractedPromptText}</p>
               </div>
-            )}
+            }
           </div>
         </div>
 
@@ -281,46 +281,46 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                   {/* Video thumbnail */}
                   <div className="shrink-0">
                     <input ref={videoInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
-                    {styleVideoUrl ? (
-                      <div className="relative w-[80px] h-[60px] rounded-lg overflow-hidden border border-border/40 bg-muted/30 group">
+                    {styleVideoUrl ?
+                    <div className="relative w-[80px] h-[60px] rounded-lg overflow-hidden border border-border/40 bg-muted/30 group">
                         <video src={styleVideoUrl} className="w-full h-full object-cover" />
                         <button
-                          className="absolute top-0.5 right-0.5 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors"
-                          onClick={() => { setStyleVideoFile(null); setStyleVideoUrl(null); }}
-                        >
+                        className="absolute top-0.5 right-0.5 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors"
+                        onClick={() => {setStyleVideoFile(null);setStyleVideoUrl(null);}}>
+                        
                           <X className="w-2.5 h-2.5" />
                         </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => videoInputRef.current?.click()}
-                        className="w-[80px] h-[60px] border-2 border-dashed border-border/40 rounded-lg flex flex-col items-center justify-center gap-1 hover:border-foreground/20 hover:bg-muted/20 transition-colors"
-                      >
+                      </div> :
+
+                    <button
+                      onClick={() => videoInputRef.current?.click()}
+                      className="w-[80px] h-[60px] border-2 border-dashed border-border/40 rounded-lg flex flex-col items-center justify-center gap-1 hover:border-foreground/20 hover:bg-muted/20 transition-colors">
+                      
                         <Plus className="w-4 h-4 text-muted-foreground/60" />
                         <span className="text-[9px] text-muted-foreground/60">换视频</span>
                       </button>
-                    )}
+                    }
                   </div>
 
                   {/* Selling points */}
                   <div className="flex-1 min-w-0 flex items-center gap-1.5 flex-wrap">
-                    {sellingPoints.map(point => (
-                      <span key={point} className="inline-flex items-center gap-1 h-6 rounded-full bg-muted/40 border border-border/20 px-2 text-xs text-foreground/80">
+                    {sellingPoints.map((point) =>
+                    <span key={point} className="inline-flex items-center gap-1 h-6 rounded-full bg-muted/40 border border-border/20 px-2 text-xs text-foreground/80">
                         {point}
-                        <button onClick={() => setSellingPoints(prev => prev.filter(p => p !== point))} className="hover:text-foreground transition-colors">
+                        <button onClick={() => setSellingPoints((prev) => prev.filter((p) => p !== point))} className="hover:text-foreground transition-colors">
                           <X className="w-3 h-3" />
                         </button>
                       </span>
-                    ))}
+                    )}
                     <input
                       ref={spInputRef}
                       value={spInput}
-                      onChange={e => setSpInput(e.target.value)}
+                      onChange={(e) => setSpInput(e.target.value)}
                       onKeyDown={handleSpKeyDown}
-                      onBlur={() => { if (spInput.trim()) addSellingPoint(spInput); }}
+                      onBlur={() => {if (spInput.trim()) addSellingPoint(spInput);}}
                       placeholder="添加卖点..."
-                      className="flex-1 min-w-[100px] h-7 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
-                    />
+                      className="flex-1 min-w-[100px] h-7 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none" />
+                    
                   </div>
 
                   {/* Send */}
@@ -329,42 +329,42 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                     disabled={!canSend || isExtracting}
                     className={cn(
                       'w-8 h-8 rounded-full flex items-center justify-center transition-all self-center shrink-0',
-                      canSend && !isExtracting
-                        ? 'bg-foreground text-background hover:bg-foreground/90'
-                        : 'bg-muted/60 text-muted-foreground/40 cursor-not-allowed'
-                    )}
-                  >
+                      canSend && !isExtracting ?
+                      'bg-foreground text-background hover:bg-foreground/90' :
+                      'bg-muted/60 text-muted-foreground/40 cursor-not-allowed'
+                    )}>
+                    
                     {isExtracting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowUp className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
               {/* Link row */}
               <div className="flex items-center px-4 py-2 border-t border-border/20">
-                {tiktokLink.trim() ? (
-                  <div className="flex items-center gap-1.5 h-6 rounded-full bg-accent/10 border border-accent/20 px-2.5">
+                {tiktokLink.trim() ?
+                <div className="flex items-center gap-1.5 h-6 rounded-full bg-accent/10 border border-accent/20 px-2.5">
                     <Link className="w-3 h-3 text-accent" />
                     <span className="text-[11px] text-accent font-medium max-w-[180px] truncate">{tiktokLink}</span>
                     <button onClick={() => setTiktokLink('')} className="hover:text-accent/80 transition-colors">
                       <X className="w-3 h-3 text-accent/60" />
                     </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-1.5">
+                  </div> :
+
+                <div className="flex items-center gap-1.5">
                     <Link className="w-3.5 h-3.5 text-muted-foreground/50" />
                     <input
-                      value={tiktokLink}
-                      onChange={e => setTiktokLink(e.target.value)}
-                      placeholder="粘贴 TikTok 链接..."
-                      className="w-[160px] h-6 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
-                    />
+                    value={tiktokLink}
+                    onChange={(e) => setTiktokLink(e.target.value)}
+                    placeholder="粘贴 TikTok 链接..."
+                    className="w-[160px] h-6 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none" />
+                  
                   </div>
-                )}
+                }
               </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   // ── Composer view (initial) ──
@@ -388,62 +388,62 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
               {/* ── LEFT: Video Upload / TK Link ── */}
               <div className="shrink-0">
                 <input ref={videoInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
-                {styleVideoUrl ? (
-                  <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 bg-muted/30 group">
+                {styleVideoUrl ?
+                <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 bg-muted/30 group">
                     <video src={styleVideoUrl} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <Play className="w-6 h-6 text-white" />
                     </div>
                     <button
-                      className="absolute top-1 right-1 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors"
-                      onClick={() => { setStyleVideoFile(null); setStyleVideoUrl(null); }}
-                    >
+                    className="absolute top-1 right-1 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors"
+                    onClick={() => {setStyleVideoFile(null);setStyleVideoUrl(null);}}>
+                    
                       <X className="w-3 h-3" />
                     </button>
                     <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-1.5 py-0.5 text-[10px] text-white truncate">
                       {styleVideoFile?.name}
                     </div>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => videoInputRef.current?.click()}
-                    className="w-[120px] h-[100px] border-2 border-dashed border-border/40 rounded-xl flex flex-col items-center justify-center gap-1.5 hover:border-foreground/20 hover:bg-muted/20 transition-colors"
-                  >
+                  </div> :
+
+                <button
+                  onClick={() => videoInputRef.current?.click()}
+                  className="w-[120px] h-[100px] border-2 border-dashed border-border/40 rounded-xl flex flex-col items-center justify-center gap-1.5 hover:border-foreground/20 hover:bg-muted/20 transition-colors">
+                  
                     <Plus className="w-5 h-5 text-muted-foreground/60" />
                     <span className="text-[11px] text-muted-foreground/60 leading-tight text-center px-1">
                       上传对标视频
                     </span>
                   </button>
-                )}
+                }
               </div>
 
               {/* ── RIGHT: Selling Points ── */}
               <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <label className="text-xs font-medium text-muted-foreground mb-1.5">产品卖点</label>
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  {sellingPoints.map(point => (
-                    <span
-                      key={point}
-                      className="inline-flex items-center gap-1 h-6 rounded-full bg-muted/40 border border-border/20 px-2 text-xs text-foreground/80"
-                    >
+                  {sellingPoints.map((point) =>
+                  <span
+                    key={point}
+                    className="inline-flex items-center gap-1 h-6 rounded-full bg-muted/40 border border-border/20 px-2 text-xs text-foreground/80">
+                    
                       {point}
                       <button
-                        onClick={() => setSellingPoints(prev => prev.filter(p => p !== point))}
-                        className="hover:text-foreground transition-colors"
-                      >
+                      onClick={() => setSellingPoints((prev) => prev.filter((p) => p !== point))}
+                      className="hover:text-foreground transition-colors">
+                      
                         <X className="w-3 h-3" />
                       </button>
                     </span>
-                  ))}
+                  )}
                   <input
                     ref={spInputRef}
                     value={spInput}
-                    onChange={e => setSpInput(e.target.value)}
+                    onChange={(e) => setSpInput(e.target.value)}
                     onKeyDown={handleSpKeyDown}
-                    onBlur={() => { if (spInput.trim()) addSellingPoint(spInput); }}
+                    onBlur={() => {if (spInput.trim()) addSellingPoint(spInput);}}
                     placeholder={sellingPoints.length === 0 ? '输入商品卖点，回车添加...' : '添加更多卖点...'}
-                    className="flex-1 min-w-[140px] h-7 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
-                  />
+                    className="flex-1 min-w-[140px] h-7 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none" />
+                  
                 </div>
               </div>
             </div>
@@ -452,25 +452,25 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
           {/* Bottom toolbar */}
           <div className="flex items-center justify-between px-5 py-3 border-t border-border/20">
             <div className="flex items-center gap-2">
-              {tiktokLink.trim() ? (
-                <div className="flex items-center gap-1.5 h-7 rounded-full bg-accent/10 border border-accent/20 px-3">
+              {tiktokLink.trim() ?
+              <div className="flex items-center gap-1.5 h-7 rounded-full bg-accent/10 border border-accent/20 px-3">
                   <Link className="w-3 h-3 text-accent" />
                   <span className="text-[11px] text-accent font-medium max-w-[200px] truncate">{tiktokLink}</span>
                   <button onClick={() => setTiktokLink('')} className="hover:text-accent/80 transition-colors">
                     <X className="w-3 h-3 text-accent/60" />
                   </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1.5">
+                </div> :
+
+              <div className="flex items-center gap-1.5">
                   <Link className="w-3.5 h-3.5 text-muted-foreground/50" />
                   <input
-                    value={tiktokLink}
-                    onChange={e => setTiktokLink(e.target.value)}
-                    placeholder="粘贴 TikTok 链接..."
-                    className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
-                  />
+                  value={tiktokLink}
+                  onChange={(e) => setTiktokLink(e.target.value)}
+                  placeholder="粘贴 TikTok 链接..."
+                  className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none" />
+                
                 </div>
-              )}
+              }
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs text-muted-foreground/60">K2.5 Agent 集群</span>
@@ -479,18 +479,18 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                 disabled={!canSend || isExtracting}
                 className={cn(
                   'w-9 h-9 rounded-full flex items-center justify-center transition-all',
-                  canSend && !isExtracting
-                    ? 'bg-foreground text-background hover:bg-foreground/90'
-                    : 'bg-muted/60 text-muted-foreground/40 cursor-not-allowed'
-                )}
-              >
+                  canSend && !isExtracting ?
+                  'bg-foreground text-background hover:bg-foreground/90' :
+                  'bg-muted/60 text-muted-foreground/40 cursor-not-allowed'
+                )}>
+                
                 {isExtracting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
               </button>
             </div>
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-muted-foreground/40 mt-4">Enter 发送</p>
+        
       </div>
 
       {/* ─── Inspiration Library ─── */}
@@ -512,57 +512,57 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 
           <TabsContent value="trending" className="mt-0">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {MOCK_TRENDING.map(video => (
-                <InspirationCard key={video.id} video={video} onSelect={handleInspirationSelect} />
-              ))}
+              {MOCK_TRENDING.map((video) =>
+              <InspirationCard key={video.id} video={video} onSelect={handleInspirationSelect} />
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="saved" className="mt-0">
-            {savedVideos.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {savedVideos.map(sv => (
-                  <div key={sv.id} className="relative group">
+            {savedVideos.length > 0 ?
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {savedVideos.map((sv) =>
+              <div key={sv.id} className="relative group">
                     <InspirationCard
-                      video={{ id: sv.id, title: sv.title, views: sv.views, likes: sv.likes, coverGradient: sv.coverGradient, source: 'saved' }}
-                      onSelect={handleInspirationSelect}
-                    />
+                  video={{ id: sv.id, title: sv.title, views: sv.views, likes: sv.likes, coverGradient: sv.coverGradient, source: 'saved' }}
+                  onSelect={handleInspirationSelect} />
+                
                     <button
-                      onClick={(e) => { e.stopPropagation(); unsaveVideo(sv.videoId); toast.success('已从灵感库移除'); }}
-                      className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]"
-                    >
+                  onClick={(e) => {e.stopPropagation();unsaveVideo(sv.videoId);toast.success('已从灵感库移除');}}
+                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]">
+                  
                       <X className="w-3 h-3" />
                     </button>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 text-sm text-muted-foreground">
+              )}
+              </div> :
+
+            <div className="text-center py-12 text-sm text-muted-foreground">
                 <Bookmark className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
                 <p>暂无保存的灵感视频</p>
                 <p className="text-xs text-muted-foreground/50 mt-1">在 TikTok 爆款报告中保存视频，即可同步到此处</p>
               </div>
-            )}
+            }
           </TabsContent>
         </Tabs>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ─── Inspiration Card Sub-component ─── */
 function InspirationCard({
   video,
-  onSelect,
-}: {
-  video: InspirationVideo;
-  onSelect: (video: InspirationVideo) => void;
-}) {
+  onSelect
+
+
+
+}: {video: InspirationVideo;onSelect: (video: InspirationVideo) => void;}) {
   return (
     <div
       onClick={() => onSelect(video)}
-      className="group rounded-xl border border-border/30 bg-card/60 overflow-hidden cursor-pointer hover:shadow-md transition-all"
-    >
+      className="group rounded-xl border border-border/30 bg-card/60 overflow-hidden cursor-pointer hover:shadow-md transition-all">
+      
       <div className={cn('aspect-video bg-gradient-to-br flex items-center justify-center relative', video.coverGradient)}>
         <Play className="w-8 h-8 text-white/70 group-hover:text-white transition-colors" />
         <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 bg-black/50 rounded-full px-2 py-0.5">
@@ -577,6 +577,6 @@ function InspirationCard({
           <span>👁 {video.views}</span>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
