@@ -22,6 +22,7 @@ export interface MemoryItem {
   name: string;
   desc: string;
   tag: string;
+  charCount: number;
 }
 
 interface ChatInputBarProps {
