@@ -492,7 +492,36 @@ export function useSkillsEngine() {
 
   // Select a video -> Flow C
   const selectVideo = useCallback((video: CandidateVideo) => {
-    setState(prev => ({ ...prev, selectedVideo: video, isProcessing: true }));
+    // Detect if this is a re-selection (reverse-prompt task was already done)
+    const isReselect = state.tasks.find(t => t.id === 'task-reverse-prompt')?.status === 'done';
+
+    // Reset reverse-prompt task and children to queued state
+    setState(prev => ({
+      ...prev,
+      selectedVideo: video,
+      isProcessing: true,
+      tasks: prev.tasks.map(t => {
+        if (t.id === 'task-reverse-prompt') {
+          return {
+            ...t,
+            status: 'queued' as TaskStatus,
+            progress: 0,
+            startAt: undefined,
+            endAt: undefined,
+            logs: [],
+            output: undefined,
+            children: t.children.map(c => ({
+              ...c,
+              status: 'queued' as TaskStatus,
+              progress: 0,
+              // Reset titles to original
+              title: c.id === 'rp-frame' ? '视频帧分析' : c.id === 'rp-style' ? '风格特征提取' : '提示词生成',
+            })),
+          };
+        }
+        return t;
+      }),
+    }));
     updateTask('task-wait-select', { status: 'done', progress: 100, endAt: now(), output: `已选择: ${video.title}` });
 
     // Persistent status message for this phase
@@ -514,7 +543,7 @@ export function useSkillsEngine() {
         messages: [...prev.messages, { id: `msg-${Date.now()}-${Math.random()}`, type: 'video-gen-status' as const, content }],
       }));
     };
-    addPermanentMsg('现在为你反推提示词');
+    addPermanentMsg(isReselect ? '现在为你重新反推提示词' : '现在为你反推提示词');
 
     // Update existing reverse prompt task to running
     const rpTaskId = 'task-reverse-prompt';
