@@ -108,49 +108,6 @@ function TagInput({
 
 }
 
-const CASE_CATEGORIES = [
-  {
-    id: 'market-insight',
-    label: '市场洞察',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看市场洞察报告案例',
-    cardTitle: '海飞丝市场洞察报告',
-    cardDesc: '涵盖市场趋势、消费者画像、竞品分析与机会挖掘',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '720w', likes: '18w', comments: '6w' },
-  },
-  {
-    id: 'campaign-plan',
-    label: '策划方案',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看策划方案案例',
-    cardTitle: '海飞丝营销策划方案',
-    cardDesc: '涵盖品牌定位、渠道策略、内容规划与预算分配',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '860w', likes: '22w', comments: '9w' },
-  },
-  {
-    id: 'image-gen',
-    label: '图片生成',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看图片生成案例',
-    cardTitle: '海飞丝视觉素材生成',
-    cardDesc: '基于品牌调性自动生成社交媒体图片与广告素材',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '530w', likes: '15w', comments: '4w' },
-  },
-  {
-    id: 'video-gen',
-    label: '视频生成',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看视频生成案例',
-    cardTitle: '海飞丝短视频创作',
-    cardDesc: '一键生成 15-60s 品牌短视频，适配抖音与小红书',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '1200w', likes: '35w', comments: '12w' },
-  },
-];
-
 interface CampaignPlannerComposerProps {
   onSubmit: (payload: CampaignPayload) => void;
   disabled?: boolean;
