@@ -505,7 +505,16 @@ export function useSkillsEngine() {
       });
     };
 
-    setStatus(`✅ 我已经记录了你的选择「${video.title}」。现在让我为你反推提示词。`);
+    setStatus(`✅ 我已经记录了你的选择「${video.title}」。`);
+
+    // Permanent message before subtask list
+    const addMessage = (msg: { type: string; content: string }) => {
+      setState(prev => ({
+        ...prev,
+        messages: [...prev.messages, { id: `msg-${Date.now()}-${Math.random()}`, ...msg }],
+      }));
+    };
+    addMessage({ type: 'video-gen-status', content: '现在为你反推提示词' });
 
     // Update existing reverse prompt task to running
     const rpTaskId = 'task-reverse-prompt';
