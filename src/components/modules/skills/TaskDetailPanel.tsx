@@ -189,16 +189,21 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
                     <div className="w-4 h-4" />
                   }
                 </div>
-                {/* Pixel icon - no border, flat */}
+                {/* Pixel icon with animated ring when running */}
                 <div className={cn(
-                'w-10 h-10 shrink-0 transition-all duration-300',
+                'w-12 h-12 shrink-0 transition-all duration-300 rounded-full flex items-center justify-center',
                 child.status === 'queued' && 'opacity-30',
-                child.status === 'running' && 'animate-pulse'
+                child.status === 'running' && 'ring-2 ring-foreground animate-[spin_3s_linear_infinite] ring-offset-2 ring-offset-background'
               )}>
-                  {avatarSrc ?
-                <img src={avatarSrc} alt={childExpert?.name || ''} className="w-full h-full object-contain" /> :
-                <span className="text-lg">{child.title.slice(0, 1)}</span>
-                }
+                  <div className={cn(
+                    'w-10 h-10 shrink-0',
+                    child.status === 'running' && 'animate-none'
+                  )}>
+                    {avatarSrc ?
+                  <img src={avatarSrc} alt={childExpert?.name || ''} className="w-full h-full object-contain" /> :
+                  <span className="text-lg">{child.title.slice(0, 1)}</span>
+                  }
+                  </div>
                 </div>
                 <span className={cn(
                 'text-[10px] font-light',
