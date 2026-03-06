@@ -116,7 +116,7 @@ interface CampaignPlannerComposerProps {
 export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: CampaignPlannerComposerProps) {
   const { entries } = useMemory();
   const memoryItems = useMemo(() => entries.map((e) => ({
-    id: e.id, name: e.title, desc: e.content.slice(0, 60), tag: e.category
+    id: e.id, name: e.title, desc: e.content.slice(0, 60), tag: e.category, charCount: e.content.length,
   })), [entries]);
   const [selectedMemoryIds, setSelectedMemoryIds] = useState<string[]>([]);
   const [memoryDialogOpen, setMemoryDialogOpen] = useState(false);
