@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import logoDark from '@/assets/logo_dark.svg';
 import { useMemory } from '@/contexts/MemoryContext';
 import { MemorySelectionDialog } from '@/components/modules/memory/MemorySelectionDialog';
+import { ShowcaseCard, SHOWCASE_CARDS } from './app-plaza/ShowcaseCard';
 
 /* ─── Types ─── */
 export interface CampaignPayload {
@@ -351,25 +352,8 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
         {/* Case Cards */}
         <div className="mt-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {CASE_CATEGORIES.map(cat => (
-              <a
-                key={cat.id}
-                href={cat.url}
-                target="_blank"
-                rel="noreferrer"
-                className="group relative rounded-lg border border-border/40 overflow-hidden cursor-pointer hover:border-border transition-colors"
-              >
-                <div className="aspect-[4/3] bg-muted/30 overflow-hidden">
-                  <img src={cat.thumbnail} alt={cat.cardTitle} className="w-full h-full object-cover" />
-                </div>
-                <div className="p-3">
-                  <p className="text-xs font-medium truncate">{cat.cardTitle}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2">{cat.cardDesc}</p>
-                </div>
-                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-xs font-medium text-foreground/80">{cat.hoverText}</span>
-                </div>
-              </a>
+            {SHOWCASE_CARDS.filter(c => c.category === 'campaign').map((card, i) => (
+              <ShowcaseCard key={`campaign-${i}`} card={card} onClick={() => {}} />
             ))}
           </div>
         </div>
