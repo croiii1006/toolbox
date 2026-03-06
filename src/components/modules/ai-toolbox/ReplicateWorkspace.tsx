@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Video,
   Sparkles,
@@ -14,8 +14,11 @@ import {
   Flame,
   Bookmark,
   FolderOpen,
-  Maximize2 } from
-'lucide-react';
+  Maximize2,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useTikTokInspiration } from '@/contexts/TikTokInspirationContext';
 import { useReplicatePrefill } from '@/contexts/ReplicatePrefillContext';
@@ -530,32 +533,27 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
           </div>
 
           <TabsContent value="trending" className="mt-0">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {MOCK_TRENDING.map((video) =>
-              <InspirationCard key={video.id} video={video} onSelect={handleInspirationSelect} />
-              )}
-            </div>
+            <PaginatedInspirationGrid videos={MOCK_TRENDING} onSelect={handleInspirationSelect} />
           </TabsContent>
 
           <TabsContent value="saved" className="mt-0">
             {savedVideos.length > 0 ?
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {savedVideos.map((sv) =>
-              <div key={sv.id} className="relative group">
-                    <InspirationCard
-                  video={{ id: sv.id, title: sv.title, views: sv.views, likes: sv.likes, coverGradient: sv.coverGradient, source: 'saved' }}
-                  onSelect={handleInspirationSelect} />
-                
-                    <button
-                  onClick={(e) => {e.stopPropagation();unsaveVideo(sv.videoId);toast.success('已从灵感库移除');}}
-                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]">
-                  
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-              )}
-              </div> :
-
+            <PaginatedInspirationGrid
+              videos={savedVideos.map((sv) => ({ id: sv.id, title: sv.title, views: sv.views, likes: sv.likes, coverGradient: sv.coverGradient, source: 'saved' as const }))}
+              onSelect={handleInspirationSelect}
+              renderOverlay={(video) => {
+                const sv = savedVideos.find(s => s.id === video.id);
+                if (!sv) return null;
+                return (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); unsaveVideo(sv.videoId); toast.success('已从灵感库移除'); }}
+                    className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                );
+              }}
+            /> :
             <div className="text-center py-12 text-sm text-muted-foreground">
                 <Bookmark className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
                 <p>暂无保存的灵感视频</p>
@@ -570,6 +568,79 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 }
 
 /* ─── Inspiration Card Sub-component ─── */
+const INSPO_PER_PAGE = 3;
+
+function PaginatedInspirationGrid({
+  videos,
+  onSelect,
+  renderOverlay,
+}: {
+  videos: InspirationVideo[];
+  onSelect: (video: InspirationVideo) => void;
+  renderOverlay?: (video: InspirationVideo) => React.ReactNode;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [page, setPage] = useState(0);
+  const totalPages = Math.ceil(videos.length / INSPO_PER_PAGE);
+  const previewVideos = videos.slice(0, INSPO_PER_PAGE);
+  const pagedVideos = videos.slice(page * INSPO_PER_PAGE, (page + 1) * INSPO_PER_PAGE);
+
+  return (
+    <div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {previewVideos.map((video) => (
+          <div key={video.id} className="relative">
+            <InspirationCard video={video} onSelect={onSelect} />
+            {renderOverlay?.(video)}
+          </div>
+        ))}
+      </div>
+
+      {expanded && (
+        <div className="mt-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {pagedVideos.map((video) => (
+              <div key={video.id} className="relative">
+                <InspirationCard video={video} onSelect={onSelect} />
+                {renderOverlay?.(video)}
+              </div>
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-4">
+              <button
+                onClick={() => setPage(p => Math.max(0, p - 1))}
+                disabled={page === 0}
+                className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs text-muted-foreground">{page + 1} / {totalPages}</span>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                disabled={page === totalPages - 1}
+                className="p-1.5 rounded-md border border-border/40 text-muted-foreground hover:text-foreground hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {videos.length > INSPO_PER_PAGE && (
+        <button
+          onClick={() => { setExpanded(!expanded); setPage(0); }}
+          className="flex items-center gap-1 mx-auto mt-4 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {expanded ? '收起' : '查看更多'}
+          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        </button>
+      )}
+    </div>
+  );
+}
+
 function InspirationCard({
   video,
   onSelect
