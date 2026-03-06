@@ -126,7 +126,14 @@ export function SkillsModule() {
 
         }
       case 'video-candidates':
-        return null;
+        return (
+          <VideoCandidateCollapsible
+            key={msg.id}
+            videos={state.candidateVideos}
+            onSelect={handleVideoSelect}
+            selectedVideoId={state.selectedVideo?.id}
+          />
+        );
       case 'video-gen-status': {
           const content = msg.content;
           let icon = null;
