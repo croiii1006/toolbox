@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ArrowUp, X, ChevronDown, Check, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -350,13 +351,7 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
         
 
         {/* Case Cards */}
-        <div className="mt-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {SHOWCASE_CARDS.filter(c => c.category === 'campaign').map((card, i) => (
-              <ShowcaseCard key={`campaign-${i}`} card={card} onClick={() => {}} />
-            ))}
-          </div>
-        </div>
+        <CampaignCaseSection />
       </div>
       {/* Memory selection dialog */}
       <MemorySelectionDialog
