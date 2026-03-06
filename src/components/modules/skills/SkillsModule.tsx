@@ -11,7 +11,7 @@ import { ResultPreviewBlock } from './ResultPreviewBlock';
 import { TaskDetailPanel } from './TaskDetailPanel';
 
 import { ChatInputBar } from './ChatInputBar';
-import { Loader2, Zap, CheckCircle2, SkipForward, RefreshCw, ArrowLeft, Clapperboard, PartyPopper, Search, ListChecks, Check, ChevronRight } from 'lucide-react';
+import { Loader2, Zap, CheckCircle2, SkipForward, RefreshCw, ArrowLeft, Clapperboard, PartyPopper, Search, ListChecks, Check, ChevronRight, X } from 'lucide-react';
 
 export function SkillsModule() {
   const {
