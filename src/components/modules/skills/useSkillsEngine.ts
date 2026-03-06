@@ -700,13 +700,6 @@ export function useSkillsEngine() {
         messages: [...prev.messages, { id: `msg-subtasks-gen-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-generate-video' }],
       }));
 
-      await pause(600);
-
-      // Add the replaceable status message — "爆款视频正在生成清单"
-      setState(prev => ({
-        ...prev,
-        messages: [...prev.messages, { id: statusMsgId, type: 'video-gen-status', content: '爆款视频正在生成清单' }],
-      }));
 
       // Scene rendering — backend dependent (video generation)
       await backendDelay();
@@ -749,7 +742,7 @@ export function useSkillsEngine() {
       }));
 
       // Replace status: all done
-      updateMessage(statusMsgId, { content: '🎉 我已经完成了所有任务！复刻视频已生成，你可以预览、下载或保存到项目中。' });
+      updateMessage(statusMsgId, { content: '🎉 我已经完成了所有任务！复刻视频已生成，你可以预览或下载。' });
 
       await pause(400);
 
