@@ -132,6 +132,7 @@ export function SkillsModule() {
             key={msg.id}
             videos={state.candidateVideos}
             onShowPanel={() => setActiveTaskId(null)}
+            active={!activeTask && hasVideoCandidates}
           />
         );
       case 'video-gen-status': {
@@ -294,6 +295,12 @@ export function SkillsModule() {
           <div className="h-full flex flex-col bg-background">
                 <div className="px-5 py-4 border-b border-border/20 flex items-center justify-between shrink-0">
                   <span className="text-sm font-medium text-foreground">爆款参考视频</span>
+                  <button
+                    onClick={() => {/* close panel by clearing candidates view */ }}
+                    className="p-1 rounded-md hover:bg-muted/30 transition-colors"
+                  >
+                    <X className="w-4 h-4 text-muted-foreground" />
+                  </button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-5">
                   <VideoCandidateRow
