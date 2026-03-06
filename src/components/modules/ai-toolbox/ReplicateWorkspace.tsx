@@ -245,7 +245,23 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
     }
   };
 
-  const handleInspirationSelect = (video: InspirationVideo) => {
+  const handleRestoreHistory = (item: ReplicateHistoryItem) => {
+    setSellingPoints(item.sellingPoints);
+    if (item.tiktokLink) setTiktokLink(item.tiktokLink);
+    else setTiktokLink('');
+    setStyleVideoFile(null);
+    setStyleVideoUrl(null);
+    setInspirationVideo(null);
+    toast.success('已恢复历史记录');
+  };
+
+  const handleDeleteHistory = (id: string) => {
+    const updated = history.filter(h => h.id !== id);
+    setHistory(updated);
+    saveReplicateHistory(updated);
+  };
+
+
     setInspirationVideo(video);
     setStyleVideoFile(null);
     setStyleVideoUrl(null);
