@@ -267,7 +267,7 @@ export function DynamicSidebar({ activeItem, onItemClick }: DynamicSidebarProps)
       <aside
         ref={asideRef}
         className={cn(
-          'bg-sidebar/70 backdrop-blur-xl border-r border-sidebar-border/30 flex flex-col transition-all duration-300 ease-in-out fixed h-screen top-0 pt-14 box-border z-40',
+          'bg-sidebar/40 backdrop-blur-xl border-r border-sidebar-border/20 flex flex-col transition-all duration-300 ease-in-out fixed h-screen top-0 pt-14 box-border z-40',
           sidebarCollapsed ? 'w-[68px]' : 'w-64 shadow-soft-xl'
         )}
       >
