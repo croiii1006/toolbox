@@ -158,29 +158,12 @@ export function ChatInputBar({ onSend, disabled, memoryItems }: ChatInputBarProp
         <div className="flex items-center justify-between mt-2 pt-2">
           <div className="flex items-center gap-2">
             {/* Plus menu */}
-            <Popover open={plusOpen} onOpenChange={setPlusOpen}>
-              <PopoverTrigger asChild>
-                <button className="w-8 h-8 rounded-full border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-colors">
-                  <Plus className="w-4 h-4" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent align="start" className="w-44 p-1 rounded-xl" sideOffset={8}>
-                <button
-                  onClick={() => { fileInputRef.current?.click(); }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors"
-                >
-                  <Paperclip className="w-4 h-4 text-muted-foreground" />
-                  <span>文件和图片</span>
-                </button>
-                <button
-                  onClick={() => { setPlusOpen(false); setMemoryDialogOpen(true); }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-foreground hover:bg-muted/50 rounded-lg transition-colors"
-                >
-                  <Brain className="w-4 h-4 text-muted-foreground" />
-                  <span>选择记忆库</span>
-                </button>
-              </PopoverContent>
-            </Popover>
+            <button
+              onClick={() => setMemoryDialogOpen(true)}
+              className="w-8 h-8 rounded-full border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+            >
+              <Brain className="w-4 h-4" />
+            </button>
 
             {/* Credits display */}
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground/60">
