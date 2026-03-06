@@ -130,9 +130,6 @@ export function TikTokReportComposer({ onSubmit, disabled }: TikTokReportCompose
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-muted-foreground/40 mt-4">
-          Enter 发送
-        </p>
       </div>
     </div>);
 
