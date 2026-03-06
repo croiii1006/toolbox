@@ -152,19 +152,22 @@ export function ChatInputBar({ onSend, disabled, memoryItems }: ChatInputBarProp
         <div className="flex items-center justify-between mt-2 pt-2">
           <div className="flex items-center gap-2">
             {/* Plus menu */}
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => setMemoryDialogOpen(true)}
-                className="w-8 h-8 rounded-full border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-colors"
-              >
-                <Brain className="w-4 h-4" />
-              </button>
+            <button
+              onClick={() => setMemoryDialogOpen(true)}
+              className={cn(
+                'h-8 rounded-full border flex items-center justify-center transition-all',
+                selectedMemoryIds.length > 0
+                  ? 'border-orange-400/60 bg-orange-400/10 text-orange-400 gap-1.5 px-3'
+                  : 'w-8 border-border/40 text-muted-foreground hover:text-foreground hover:border-border'
+              )}
+            >
+              <Brain className="w-4 h-4" />
               {selectedMemoryIds.length > 0 && (
-                <span className="text-[11px] font-medium text-orange-400">
+                <span className="text-[11px] font-medium whitespace-nowrap">
                   {selectedMemoryIds.length} 个记忆库
                 </span>
               )}
-            </div>
+            </button>
 
             {/* Credits display */}
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground/60">
