@@ -118,7 +118,8 @@ export function MemorySelectionDialog({
             <Button
               onClick={() => onOpenChange(false)}
               size="sm"
-              className="rounded-lg h-8 px-5 bg-foreground text-background hover:bg-foreground/90 text-xs"
+              disabled={isOverLimit}
+              className="rounded-lg h-8 px-5 bg-foreground text-background hover:bg-foreground/90 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
             >
               确认 ({selectedIds.length})
             </Button>
