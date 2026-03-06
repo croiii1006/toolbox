@@ -538,23 +538,22 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 
           <TabsContent value="saved" className="mt-0">
             {savedVideos.length > 0 ?
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {savedVideos.map((sv) =>
-              <div key={sv.id} className="relative group">
-                    <InspirationCard
-                  video={{ id: sv.id, title: sv.title, views: sv.views, likes: sv.likes, coverGradient: sv.coverGradient, source: 'saved' }}
-                  onSelect={handleInspirationSelect} />
-                
-                    <button
-                  onClick={(e) => {e.stopPropagation();unsaveVideo(sv.videoId);toast.success('已从灵感库移除');}}
-                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]">
-                  
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-              )}
-              </div> :
-
+            <PaginatedInspirationGrid
+              videos={savedVideos.map((sv) => ({ id: sv.id, title: sv.title, views: sv.views, likes: sv.likes, coverGradient: sv.coverGradient, source: 'saved' as const }))}
+              onSelect={handleInspirationSelect}
+              renderOverlay={(video) => {
+                const sv = savedVideos.find(s => s.id === video.id);
+                if (!sv) return null;
+                return (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); unsaveVideo(sv.videoId); toast.success('已从灵感库移除'); }}
+                    className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/60 text-background flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                );
+              }}
+            /> :
             <div className="text-center py-12 text-sm text-muted-foreground">
                 <Bookmark className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
                 <p>暂无保存的灵感视频</p>
