@@ -9,9 +9,22 @@ interface PromptEditorBlockProps {
   onConfirm: () => void;
   onBack: () => void;
   memoryEnabled: boolean;
+  disabled?: boolean;
 }
 
-export function PromptEditorBlock({ prompt, onChange, onConfirm, onBack, memoryEnabled }: PromptEditorBlockProps) {
+export function PromptEditorBlock({ prompt, onChange, onConfirm, onBack, memoryEnabled, disabled }: PromptEditorBlockProps) {
+  if (disabled) {
+    return (
+      <div className="rounded-xl border border-border/20 bg-muted/20 p-3 space-y-2 opacity-60">
+        <div className="flex items-center justify-between">
+          <h4 className="text-xs text-muted-foreground">生成的爆款复刻 Prompt</h4>
+          <Badge variant="outline" className="text-[10px] opacity-50">已编辑</Badge>
+        </div>
+        <p className="text-xs text-muted-foreground/70 font-mono line-clamp-3 leading-relaxed">{prompt}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl border border-border/40 bg-card/60 backdrop-blur-sm p-5 space-y-4">
       <div className="flex items-center justify-between">
