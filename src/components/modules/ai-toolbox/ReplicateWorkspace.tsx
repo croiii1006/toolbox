@@ -467,13 +467,17 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                   </button>
                 </div> :
 
-              <div className="flex items-center gap-1.5">
+              <div className={cn(
+                "flex items-center gap-1.5 transition-opacity",
+                styleVideoFile ? "opacity-40 pointer-events-none" : ""
+              )}>
                   <Link className="w-3.5 h-3.5 text-muted-foreground/50" />
                   <input
                   value={tiktokLink}
                   onChange={(e) => setTiktokLink(e.target.value)}
-                  placeholder="粘贴 TikTok 链接..."
-                  className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none" />
+                  disabled={!!styleVideoFile}
+                  placeholder={styleVideoFile ? "已上传视频，链接不可用" : "粘贴 TikTok 链接..."}
+                  className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none disabled:cursor-not-allowed" />
                 
                 </div>
               }
