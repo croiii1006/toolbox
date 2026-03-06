@@ -1,12 +1,13 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { ArrowUp, X, ChevronDown, Check, Play, Heart, MessageSquare, Database } from 'lucide-react';
+import { ArrowUp, X, ChevronDown, Check, Database } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import logoDark from '@/assets/logo_dark.svg';
+
 import { useMemory } from '@/contexts/MemoryContext';
 import { MemorySelectionDialog } from '@/components/modules/memory/MemorySelectionDialog';
+import { ShowcaseCard, SHOWCASE_CARDS } from './app-plaza/ShowcaseCard';
 
 /* ─── Types ─── */
 export interface CampaignPayload {
@@ -107,49 +108,6 @@ function TagInput({
     </div>);
 
 }
-
-const CASE_CATEGORIES = [
-  {
-    id: 'market-insight',
-    label: '市场洞察',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看市场洞察报告案例',
-    cardTitle: '海飞丝市场洞察报告',
-    cardDesc: '涵盖市场趋势、消费者画像、竞品分析与机会挖掘',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '720w', likes: '18w', comments: '6w' },
-  },
-  {
-    id: 'campaign-plan',
-    label: '策划方案',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看策划方案案例',
-    cardTitle: '海飞丝营销策划方案',
-    cardDesc: '涵盖品牌定位、渠道策略、内容规划与预算分配',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '860w', likes: '22w', comments: '9w' },
-  },
-  {
-    id: 'image-gen',
-    label: '图片生成',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看图片生成案例',
-    cardTitle: '海飞丝视觉素材生成',
-    cardDesc: '基于品牌调性自动生成社交媒体图片与广告素材',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '530w', likes: '15w', comments: '4w' },
-  },
-  {
-    id: 'video-gen',
-    label: '视频生成',
-    url: 'https://haifeisianalysis.photog.art/',
-    hoverText: '点击查看视频生成案例',
-    cardTitle: '海飞丝短视频创作',
-    cardDesc: '一键生成 15-60s 品牌短视频，适配抖音与小红书',
-    thumbnail: '/haifeisi.jpg',
-    stats: { views: '1200w', likes: '35w', comments: '12w' },
-  },
-];
 
 interface CampaignPlannerComposerProps {
   onSubmit: (payload: CampaignPayload) => void;
@@ -394,25 +352,8 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
         {/* Case Cards */}
         <div className="mt-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {CASE_CATEGORIES.map(cat => (
-              <a
-                key={cat.id}
-                href={cat.url}
-                target="_blank"
-                rel="noreferrer"
-                className="group relative rounded-lg border border-border/40 overflow-hidden cursor-pointer hover:border-border transition-colors"
-              >
-                <div className="aspect-[4/3] bg-muted/30 overflow-hidden">
-                  <img src={cat.thumbnail} alt={cat.cardTitle} className="w-full h-full object-cover" />
-                </div>
-                <div className="p-3">
-                  <p className="text-xs font-medium truncate">{cat.cardTitle}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2">{cat.cardDesc}</p>
-                </div>
-                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-xs font-medium text-foreground/80">{cat.hoverText}</span>
-                </div>
-              </a>
+            {SHOWCASE_CARDS.filter(c => c.category === 'campaign').map((card, i) => (
+              <ShowcaseCard key={`campaign-${i}`} card={card} onClick={() => {}} />
             ))}
           </div>
         </div>
