@@ -388,7 +388,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
               {/* ── LEFT: Video Upload / TK Link ── */}
               <div className="shrink-0">
                 <input ref={videoInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
-                {styleVideoUrl ?
+                {styleVideoUrl ? (
                 <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 bg-muted/30 group">
                     <video src={styleVideoUrl} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -397,14 +397,28 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                     <button
                     className="absolute top-1 right-1 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors"
                     onClick={() => {setStyleVideoFile(null);setStyleVideoUrl(null);}}>
-                    
                       <X className="w-3 h-3" />
                     </button>
                     <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-1.5 py-0.5 text-[10px] text-white truncate">
                       {styleVideoFile?.name}
                     </div>
-                  </div> :
-
+                  </div>
+                ) : inspirationVideo ? (
+                <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 group">
+                    <div className={cn("absolute inset-0 bg-gradient-to-br", inspirationVideo.coverGradient)} />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white/80" />
+                    </div>
+                    <button
+                    className="absolute top-1 right-1 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors opacity-0 group-hover:opacity-100"
+                    onClick={() => setInspirationVideo(null)}>
+                      <X className="w-3 h-3" />
+                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-1.5 py-0.5 text-[10px] text-white truncate">
+                      {inspirationVideo.title}
+                    </div>
+                  </div>
+                ) : (
                 <button
                   onClick={() => !tiktokLink.trim() && videoInputRef.current?.click()}
                   disabled={!!tiktokLink.trim()}
@@ -414,13 +428,12 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                       ? "border-border/20 bg-muted/10 cursor-not-allowed opacity-40"
                       : "border-border/40 hover:border-foreground/20 hover:bg-muted/20"
                   )}>
-                  
                     <Plus className="w-5 h-5 text-muted-foreground/60" />
                     <span className="text-[11px] text-muted-foreground/60 leading-tight text-center px-1">
                       上传对标视频
                     </span>
                   </button>
-                }
+                )}
               </div>
 
               {/* ── RIGHT: Selling Points ── */}
