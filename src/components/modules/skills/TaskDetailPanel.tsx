@@ -109,20 +109,6 @@ export function TaskDetailPanel({ task, onClose, selectedVideoId, onVideoSelect 
           )}
 
 
-          {/* Module chain */}
-          {task.moduleChain && task.moduleChain.length > 0 && (
-            <div>
-              <p className="text-xs text-muted-foreground mb-2">模块调用链</p>
-              <div className="flex items-center gap-1 flex-wrap">
-                {task.moduleChain.map((mod, i) => (
-                  <span key={mod} className="flex items-center gap-1">
-                    <span className="text-[11px] px-2 py-1 rounded-md bg-muted/40 border border-border/20 font-mono text-foreground/70">{mod}</span>
-                    {i < task.moduleChain!.length - 1 && <ChevronRight className="w-3 h-3 text-muted-foreground/30" />}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Sub-tasks */}
           {task.children.length > 0 && (
