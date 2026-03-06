@@ -111,10 +111,8 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onNavigate }: HeroSectionProps) {
-  const [activeCaseCategory, setActiveCaseCategory] = useState<string>('all');
-  const filteredCases = activeCaseCategory === 'all'
-    ? SHOWCASE_CARDS
-    : SHOWCASE_CARDS.filter(c => c.category === activeCaseCategory);
+  const [activeCaseCategory, setActiveCaseCategory] = useState<string>('market');
+  const filteredCases = SHOWCASE_CARDS.filter(c => c.category === activeCaseCategory);
   return (
     <section className="pt-20 pb-16 lg:pt-28 lg:pb-24 flex flex-col">
       <div className="w-full">
