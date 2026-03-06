@@ -188,9 +188,9 @@ export function MarketInsightComposer({ onSubmit, disabled, initialData }: Marke
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-muted-foreground/40 mt-4">
-          Enter 发送
-        </p>
+        
+
+        
 
         {/* Case Card */}
         <div className="mt-8 flex justify-center">
