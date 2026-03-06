@@ -63,7 +63,7 @@ export function VideoCandidateCollapsible({ videos, onSelect, selectedVideoId }:
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-foreground truncate">{video.title}</p>
-                <p className="text-[10px] text-muted-foreground/60 mt-0.5">@{video.author}</p>
+                <p className="text-[10px] text-muted-foreground/60 mt-0.5">{video.tags?.slice(0, 2).join(' · ')}</p>
                 <div className="flex items-center gap-3 mt-1">
                   <span className="flex items-center gap-1 text-[10px] text-muted-foreground/50">
                     <Eye className="w-3 h-3" /> {video.views}
