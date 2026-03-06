@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useMemory } from '@/contexts/MemoryContext';
 import { useSkillsEngine, CandidateVideo } from './useSkillsEngine';
@@ -46,9 +46,10 @@ export function SkillsModule() {
 
   const activeTask = state.tasks.find((t) => t.id === state.activeTaskId);
 
+  const [videoPanelOpen, setVideoPanelOpen] = useState(false);
   // Determine if right panel should show
   const hasVideoCandidates = state.candidateVideos.length > 0;
-  const showRightPanel = activeTask || hasVideoCandidates;
+  const showRightPanel = activeTask || (hasVideoCandidates && videoPanelOpen);
 
   const handleSend = (text: string, image?: string | null, category?: string, memoryIds?: string[]) => {
     if (!state.setupCompleted && (image || text)) {
