@@ -420,9 +420,7 @@ export function useSkillsEngine() {
         ],
       }));
 
-      // Task 3: Wait for user
-      updateTask('task-wait-select', { status: 'running', startAt: now() });
-      addTaskLog('task-wait-select', '等待用户选择参考视频...');
+      // Flow pauses here — user selects a video
 
       setState(prev => ({ ...prev, isProcessing: false }));
     })();
@@ -459,7 +457,7 @@ export function useSkillsEngine() {
   // Select a video -> Flow C
   const selectVideo = useCallback((video: CandidateVideo) => {
     setState(prev => ({ ...prev, selectedVideo: video, isProcessing: true }));
-    updateTask('task-wait-select', { status: 'done', progress: 100, endAt: now(), output: `已选择: ${video.title}` });
+    // No wait-select task to update
 
     // Persistent status message for this phase
     const statusMsgId = `msg-select-status-${Date.now()}`;
