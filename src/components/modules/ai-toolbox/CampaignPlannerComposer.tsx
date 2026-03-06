@@ -108,6 +108,49 @@ function TagInput({
 
 }
 
+const CASE_CATEGORIES = [
+  {
+    id: 'market-insight',
+    label: '市场洞察',
+    url: 'https://haifeisianalysis.photog.art/',
+    hoverText: '点击查看市场洞察报告案例',
+    cardTitle: '海飞丝市场洞察报告',
+    cardDesc: '涵盖市场趋势、消费者画像、竞品分析与机会挖掘',
+    thumbnail: '/haifeisi.jpg',
+    stats: { views: '720w', likes: '18w', comments: '6w' },
+  },
+  {
+    id: 'campaign-plan',
+    label: '策划方案',
+    url: 'https://haifeisianalysis.photog.art/',
+    hoverText: '点击查看策划方案案例',
+    cardTitle: '海飞丝营销策划方案',
+    cardDesc: '涵盖品牌定位、渠道策略、内容规划与预算分配',
+    thumbnail: '/haifeisi.jpg',
+    stats: { views: '860w', likes: '22w', comments: '9w' },
+  },
+  {
+    id: 'image-gen',
+    label: '图片生成',
+    url: 'https://haifeisianalysis.photog.art/',
+    hoverText: '点击查看图片生成案例',
+    cardTitle: '海飞丝视觉素材生成',
+    cardDesc: '基于品牌调性自动生成社交媒体图片与广告素材',
+    thumbnail: '/haifeisi.jpg',
+    stats: { views: '530w', likes: '15w', comments: '4w' },
+  },
+  {
+    id: 'video-gen',
+    label: '视频生成',
+    url: 'https://haifeisianalysis.photog.art/',
+    hoverText: '点击查看视频生成案例',
+    cardTitle: '海飞丝短视频创作',
+    cardDesc: '一键生成 15-60s 品牌短视频，适配抖音与小红书',
+    thumbnail: '/haifeisi.jpg',
+    stats: { views: '1200w', likes: '35w', comments: '12w' },
+  },
+];
+
 interface CampaignPlannerComposerProps {
   onSubmit: (payload: CampaignPayload) => void;
   disabled?: boolean;
@@ -131,6 +174,7 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
   const [channels, setChannels] = useState<string[]>(initialData?.channels || ['抖音', '小红书']);
   const [cycle, setCycle] = useState(initialData?.cycle || '');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [activeCaseCategory, setActiveCaseCategory] = useState(CASE_CATEGORIES[0].id);
 
   const [showGoalPicker, setShowGoalPicker] = useState(false);
   const [showBudgetPicker, setShowBudgetPicker] = useState(false);
@@ -347,76 +391,103 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
 
         
 
-        {/* Case Card */}
-        <div className="mt-8 flex justify-center">
-          <a
-            href="https://haifeisianalysis.photog.art/"
-            target="_blank"
-            rel="noreferrer"
-            className="block relative group w-full max-w-[350px] cursor-pointer">
-            {/* Shadow */}
-            <div className="absolute -right-3 -bottom-3 h-[70%] w-[70%] rounded-[50px] bg-[radial-gradient(60%_60%_at_100%_100%,rgba(0,0,0,0.18),rgba(0,0,0,0))] blur-[16px] z-0" aria-hidden="true" />
+        {/* Case Categories & Card */}
+        <div className="mt-8 space-y-4">
+          {/* Category tabs */}
+          <div className="flex items-center gap-2 justify-center flex-wrap">
+            {CASE_CATEGORIES.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCaseCategory(cat.id)}
+                className={cn(
+                  'px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border',
+                  activeCaseCategory === cat.id
+                    ? 'bg-foreground text-background border-foreground'
+                    : 'bg-transparent text-muted-foreground border-border/40 hover:border-border hover:text-foreground'
+                )}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
 
-            {/* Main card */}
-            <div className="relative overflow-hidden bg-muted/40 dark:bg-muted/20 rounded-[20px] backdrop-blur-[5px] z-10 border border-border/20">
-              {/* Floating mini report card */}
-              <div className="absolute flex items-center justify-center right-[-14px] top-[2px] w-[113px] z-10 transition-transform duration-300 ease-out group-hover:translate-x-[-8px] group-hover:translate-y-[-6px]">
-                <div className="flex-none rotate-[-6deg] transition-transform duration-300 ease-out group-hover:rotate-[-4deg]">
-                  <div className="bg-background overflow-hidden rounded-[4px] shadow-[0px_2px_20px_0px_rgba(35,35,35,0.2)] w-[100px] h-[130px] relative">
-                    <div className="flex items-center gap-[3px] px-[6px] py-[4px]">
-                      <div className="w-[3px] h-[3px] rounded-full bg-destructive" />
-                      <div className="w-[3px] h-[3px] rounded-full bg-yellow-400" />
-                      <div className="w-[3px] h-[3px] rounded-full bg-green-400" />
-                    </div>
-                    <div className="flex items-start gap-[4px] px-[6px] pt-[2px] pb-[4px]">
-                      <div className="flex flex-col gap-[4px] flex-1 min-w-0">
-                        <p className="font-semibold leading-normal line-clamp-1 text-[6px] text-foreground">海飞丝营销策划方案</p>
-                        <div className="flex items-center gap-[2px]">
-                          <div className="w-[7px] h-[7px] rounded-full overflow-hidden bg-muted">
-                            <img alt="OranAI" src={logoDark} className="w-full h-full object-contain" />
+          {/* Case card */}
+          <div className="flex justify-center">
+            {(() => {
+              const cat = CASE_CATEGORIES.find(c => c.id === activeCaseCategory) || CASE_CATEGORIES[0];
+              return (
+                <a
+                  href={cat.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block relative group w-full max-w-[350px] cursor-pointer"
+                >
+                  {/* Shadow */}
+                  <div className="absolute -right-3 -bottom-3 h-[70%] w-[70%] rounded-[50px] bg-[radial-gradient(60%_60%_at_100%_100%,rgba(0,0,0,0.18),rgba(0,0,0,0))] blur-[16px] z-0" aria-hidden="true" />
+
+                  {/* Main card */}
+                  <div className="relative overflow-hidden bg-muted/40 dark:bg-muted/20 rounded-[20px] backdrop-blur-[5px] z-10 border border-border/20">
+                    {/* Floating mini report card */}
+                    <div className="absolute flex items-center justify-center right-[-14px] top-[2px] w-[113px] z-10 transition-transform duration-300 ease-out group-hover:translate-x-[-8px] group-hover:translate-y-[-6px]">
+                      <div className="flex-none rotate-[-6deg] transition-transform duration-300 ease-out group-hover:rotate-[-4deg]">
+                        <div className="bg-background overflow-hidden rounded-[4px] shadow-[0px_2px_20px_0px_rgba(35,35,35,0.2)] w-[100px] h-[130px] relative">
+                          <div className="flex items-center gap-[3px] px-[6px] py-[4px]">
+                            <div className="w-[3px] h-[3px] rounded-full bg-destructive" />
+                            <div className="w-[3px] h-[3px] rounded-full bg-amber-400" />
+                            <div className="w-[3px] h-[3px] rounded-full bg-emerald-400" />
                           </div>
-                          <p className="font-medium leading-normal text-[5px] text-muted-foreground truncate">OranAI</p>
-                        </div>
-                        <div className="flex items-center gap-[2.667px]">
-                          <div className="flex items-center gap-px">
-                            <Play className="w-[4px] h-[4px] text-muted-foreground fill-muted-foreground" />
-                            <p className="font-medium text-[4px] text-muted-foreground">860w</p>
+                          <div className="flex items-start gap-[4px] px-[6px] pt-[2px] pb-[4px]">
+                            <div className="flex flex-col gap-[4px] flex-1 min-w-0">
+                              <p className="font-semibold leading-normal line-clamp-1 text-[6px] text-foreground">{cat.cardTitle}</p>
+                              <div className="flex items-center gap-[2px]">
+                                <div className="w-[7px] h-[7px] rounded-full overflow-hidden bg-muted">
+                                  <img alt="OranAI" src={logoDark} className="w-full h-full object-contain" />
+                                </div>
+                                <p className="font-medium leading-normal text-[5px] text-muted-foreground truncate">OranAI</p>
+                              </div>
+                              <div className="flex items-center gap-[2.667px]">
+                                <div className="flex items-center gap-px">
+                                  <Play className="w-[4px] h-[4px] text-muted-foreground fill-muted-foreground" />
+                                  <p className="font-medium text-[4px] text-muted-foreground">{cat.stats.views}</p>
+                                </div>
+                                <div className="flex items-center gap-px">
+                                  <Heart className="w-[4px] h-[4px] text-muted-foreground" />
+                                  <p className="font-medium text-[4px] text-muted-foreground">{cat.stats.likes}</p>
+                                </div>
+                                <div className="flex items-center gap-px">
+                                  <MessageSquare className="w-[4px] h-[4px] text-muted-foreground" />
+                                  <p className="font-medium text-[4px] text-muted-foreground">{cat.stats.comments}</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-px">
-                            <Heart className="w-[4px] h-[4px] text-muted-foreground" />
-                            <p className="font-medium text-[4px] text-muted-foreground">22w</p>
+                          <div className="relative h-[90px] rounded-[4px] mx-[6px] mb-[6px] overflow-hidden">
+                            <img alt="" className="absolute inset-0 max-w-none object-cover w-full h-full" src={cat.thumbnail} />
                           </div>
-                          <div className="flex items-center gap-px">
-                            <MessageSquare className="w-[4px] h-[4px] text-muted-foreground" />
-                            <p className="font-medium text-[4px] text-muted-foreground">9w</p>
-                          </div>
+                          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-muted to-transparent" />
                         </div>
                       </div>
                     </div>
-                    <div className="relative h-[90px] rounded-[4px] mx-[6px] mb-[6px] overflow-hidden">
-                      <img alt="" className="absolute inset-0 max-w-none object-cover w-full h-full" src="/haifeisi.jpg" />
+
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-[20px] bg-foreground/55 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <p className="text-background text-[12px] leading-[1.4] font-medium">{cat.hoverText}</p>
                     </div>
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-muted to-transparent" />
-                  </div>
-                </div>
-              </div>
 
-              {/* Hover overlay */}
-              <div className="absolute inset-0 z-20 flex items-center justify-center rounded-[20px] bg-foreground/55 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <p className="text-background text-[12px] leading-[1.4] font-medium">点击查看策划方案案例</p>
-              </div>
-
-              {/* Bottom text area */}
-              <div className="relative h-[150px]">
-                <div className="absolute left-0 bottom-0 flex flex-col gap-[6px] items-start justify-end p-[18px] py-[13px] w-full">
-                  <div className="relative shrink-0 w-[232px] whitespace-pre-wrap mb-0 group-hover:opacity-0 transition-opacity duration-200">
-                    <p className="font-medium leading-[1.35] text-[16px] text-foreground">海飞丝营销策划方案</p>
-                    <p className="mt-[8px] font-normal leading-[1.35] text-[12px] text-muted-foreground">涵盖品牌定位、渠道策略、内容规划与预算分配</p>
+                    {/* Bottom text area */}
+                    <div className="relative h-[150px]">
+                      <div className="absolute left-0 bottom-0 flex flex-col gap-[6px] items-start justify-end p-[18px] py-[13px] w-full">
+                        <div className="relative shrink-0 w-[232px] whitespace-pre-wrap mb-0 group-hover:opacity-0 transition-opacity duration-200">
+                          <p className="font-medium leading-[1.35] text-[16px] text-foreground">{cat.cardTitle}</p>
+                          <p className="mt-[8px] font-normal leading-[1.35] text-[12px] text-muted-foreground">{cat.cardDesc}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </a>
+                </a>
+              );
+            })()}
+          </div>
         </div>
       </div>
       {/* Memory selection dialog */}
