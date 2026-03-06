@@ -573,29 +573,58 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 function InspirationCard({
   video,
   onSelect
+}: {video: InspirationVideo; onSelect: (video: InspirationVideo) => void;}) {
+  const [previewOpen, setPreviewOpen] = useState(false);
 
-
-
-}: {video: InspirationVideo;onSelect: (video: InspirationVideo) => void;}) {
   return (
-    <div
-      onClick={() => onSelect(video)}
-      className="group rounded-xl border border-border/30 bg-card/60 overflow-hidden cursor-pointer hover:shadow-md transition-all">
-      
-      <div className={cn('aspect-video bg-gradient-to-br flex items-center justify-center relative', video.coverGradient)}>
-        <Play className="w-8 h-8 text-white/70 group-hover:text-white transition-colors" />
-        <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 bg-black/50 rounded-full px-2 py-0.5">
-          <Flame className="w-3 h-3 text-orange-400" />
-          <span className="text-[10px] text-white">{video.views}</span>
+    <>
+      <div
+        onClick={() => onSelect(video)}
+        className="group rounded-xl border border-border/30 bg-card/60 overflow-hidden cursor-pointer hover:shadow-md transition-all">
+        
+        <div className={cn('aspect-video bg-gradient-to-br flex items-center justify-center relative', video.coverGradient)}>
+          <Play className="w-8 h-8 text-white/70 group-hover:text-white transition-colors" />
+          <button
+            onClick={(e) => { e.stopPropagation(); setPreviewOpen(true); }}
+            className="absolute bottom-1.5 left-1.5 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-[5]"
+            title="预览视频"
+          >
+            <Maximize2 className="w-3 h-3" />
+          </button>
+          <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 bg-black/50 rounded-full px-2 py-0.5">
+            <Flame className="w-3 h-3 text-orange-400" />
+            <span className="text-[10px] text-white">{video.views}</span>
+          </div>
+        </div>
+        <div className="p-2.5">
+          <p className="text-xs font-medium text-foreground/80 truncate">{video.title}</p>
+          <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
+            <span>👍 {video.likes}</span>
+            <span>👁 {video.views}</span>
+          </div>
         </div>
       </div>
-      <div className="p-2.5">
-        <p className="text-xs font-medium text-foreground/80 truncate">{video.title}</p>
-        <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
-          <span>👍 {video.likes}</span>
-          <span>👁 {video.views}</span>
-        </div>
-      </div>
-    </div>);
 
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="max-w-2xl p-0 overflow-hidden">
+          <DialogTitle className="sr-only">{video.title}</DialogTitle>
+          <div className="flex flex-col">
+            <div className={cn('aspect-video bg-gradient-to-br flex items-center justify-center', video.coverGradient)}>
+              <div className="flex flex-col items-center gap-3">
+                <Play className="w-16 h-16 text-white/80" />
+                <span className="text-white/60 text-sm">视频预览</span>
+              </div>
+            </div>
+            <div className="p-4">
+              <p className="text-sm font-medium text-foreground">{video.title}</p>
+              <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                <span>👍 {video.likes}</span>
+                <span>👁 {video.views}</span>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }
