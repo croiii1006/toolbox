@@ -85,8 +85,8 @@ export function MarketInsightComposer({ onSubmit, disabled, initialData }: Marke
       <div className="w-full max-w-2xl animate-fade-in">
         {/* Title */}
         <div className="text-center mb-10">
-          <h1 className="text-2xl md:text-3xl font-normal text-foreground tracking-tight">
-            品牌健康度分析
+          <h1 className="text-2xl md:text-3xl font-normal text-foreground tracking-tight">品牌洞察分析报告
+
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             输入品牌与品类信息，一键生成洞察报告
@@ -151,7 +151,7 @@ export function MarketInsightComposer({ onSubmit, disabled, initialData }: Marke
                   value={competitorInput}
                   onChange={(e) => setCompetitorInput(e.target.value)}
                   onKeyDown={handleCompetitorKeyDown}
-                  onBlur={() => { if (competitorInput.trim()) addCompetitor(competitorInput); }}
+                  onBlur={() => {if (competitorInput.trim()) addCompetitor(competitorInput);}}
                   placeholder={competitors.length === 0 ? '输入竞品，回车添加' : '添加竞品...'}
                   className="h-6 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none w-[120px]" />
                 
