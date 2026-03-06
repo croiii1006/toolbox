@@ -311,8 +311,7 @@ export function useSkillsEngine() {
     (async () => {
       // ─── Task 1: Memory ───
       if (setup.memoryEnabled) {
-        // Show intro status + subtask list simultaneously
-        setStatus('正在为您调用记忆库.....');
+        // Show subtask list
         setState(prev => ({
           ...prev,
           messages: [...prev.messages, { id: `msg-subtasks-memory-${Date.now()}`, type: 'task-subtask-list' as const, content: 'task-memory' }],
@@ -327,7 +326,7 @@ export function useSkillsEngine() {
         await subDelay();
         updateChild('task-memory', 'task-memory-connect', { status: 'done', progress: 100, title: '记忆专家完成连接记忆库' });
         addTaskLog('task-memory', '记忆专家完成连接记忆库 → 已建立安全连接');
-        setStatus('已连接记忆库，正在检索相关记忆...');
+        
 
         // Sub 2: Retrieve
         updateChild('task-memory', 'task-memory-retrieve', { status: 'running', title: '爬虫专家正在检索相关记忆' });
@@ -336,7 +335,7 @@ export function useSkillsEngine() {
         const memoryCount = setup.selectedMemoryIds.length || 4;
         updateChild('task-memory', 'task-memory-retrieve', { status: 'done', progress: 100, title: '爬虫专家完成检索相关记忆' });
         addTaskLog('task-memory', `爬虫专家完成检索相关记忆 → 命中 ${memoryCount} 条相关记忆`);
-        setStatus(`已检索到 ${memoryCount} 条相关记忆，正在构建上下文向量...`);
+        
 
         // Sub 3: Context
         updateChild('task-memory', 'task-memory-context', { status: 'running', title: '数据专家正在构建上下文向量' });
@@ -368,11 +367,11 @@ export function useSkillsEngine() {
 
       // Sub 1: Spider — backend dependent
       updateChild('task-crawl', 'task-crawl-spider', { status: 'running', title: '爬虫专家正在启动 TikTok 爬虫' });
-      setStatus('正在启动 TikTok 爬虫，抓取同品类视频...');
+      
       await backendDelay();
       updateChild('task-crawl', 'task-crawl-spider', { status: 'done', progress: 100, title: '爬虫专家完成启动 TikTok 爬虫' });
       addTaskLog('task-crawl', '爬虫专家完成抓取 → 共获取 142 条视频数据');
-      setStatus('已抓取 142 条视频数据，正在分析卖点匹配度...');
+      
 
       // Sub 2: Analyze — backend dependent
       updateChild('task-crawl', 'task-crawl-analyze', { status: 'running', title: '数据专家正在分析卖点匹配度' });
@@ -380,7 +379,7 @@ export function useSkillsEngine() {
       await backendDelay();
       updateChild('task-crawl', 'task-crawl-analyze', { status: 'done', progress: 100, title: '数据专家完成分析卖点匹配度' });
       addTaskLog('task-crawl', '数据专家完成分析 → 平均匹配度 73.2%，高匹配 28 条');
-      setStatus('已完成匹配度分析，正在排序生成 Top 20...');
+      
 
       // Sub 3: Rank — fixed step
       updateChild('task-crawl', 'task-crawl-rank', { status: 'running', title: '策略专家正在排序生成 Top 20' });
@@ -388,7 +387,7 @@ export function useSkillsEngine() {
       await randDelay();
       updateChild('task-crawl', 'task-crawl-rank', { status: 'done', progress: 100, title: '策略专家完成排序生成 Top 20' });
       addTaskLog('task-crawl', '策略专家完成排序 → Top 20 候选已生成');
-      setStatus('已生成 Top 20 候选，正在提取视频封面...');
+      
 
       // Sub 4: Cover — fixed step
       updateChild('task-crawl', 'task-crawl-cover', { status: 'running', title: '视频专家正在提取视频封面' });
@@ -396,7 +395,7 @@ export function useSkillsEngine() {
       await randDelay();
       updateChild('task-crawl', 'task-crawl-cover', { status: 'done', progress: 100, title: '视频专家完成提取视频封面' });
       addTaskLog('task-crawl', '视频专家完成封面提取 → 20 张高清封面已缓存');
-      setStatus('已提取封面，正在提取元数据...');
+      
 
       // Sub 5: Meta — fixed step
       updateChild('task-crawl', 'task-crawl-meta', { status: 'running', title: '数据专家正在提取元数据' });
@@ -528,18 +527,18 @@ export function useSkillsEngine() {
       // Frame analysis — fixed step
       await pause(400);
       updateRPChild('rp-frame', { status: 'running', title: '视频专家正在分析视频帧' });
-      setStatus('正在分析视频帧...');
+      
       await randDelay();
       updateRPChild('rp-frame', { status: 'done', progress: 100, title: '视频专家完成视频帧分析' });
       addTaskLog(rpTaskId, '视频专家完成视频帧分析 → 提取 48 个关键帧，识别 5 个场景段');
-      setStatus('已完成视频帧分析，正在提取风格特征...');
+      
 
       // Style extraction — fixed step
       updateRPChild('rp-style', { status: 'running', title: '设计专家正在提取风格特征' });
       await randDelay();
       updateRPChild('rp-style', { status: 'done', progress: 100, title: '设计专家完成风格特征提取' });
       addTaskLog(rpTaskId, '设计专家完成风格特征提取 → 暖色调、近景特写、快节奏剪辑');
-      setStatus('已完成风格特征提取，正在生成提示词...');
+      
 
       // Prompt generation — backend dependent
       updateRPChild('rp-prompt', { status: 'running', title: '策略专家正在生成提示词' });
