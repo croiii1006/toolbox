@@ -597,6 +597,15 @@ export function useSkillsEngine() {
       streamTimers.current.push(t);
     });
 
+    const updateGenChild = (childId: string, updates: Partial<SkillTask>) => {
+      setState(prev => ({
+        ...prev,
+        tasks: prev.tasks.map(t => t.id === genTaskId ? {
+          ...t, children: t.children.map(c => c.id === childId ? { ...c, ...updates } : c),
+        } : t),
+      }));
+    };
+
     (async () => {
       await pause(800);
 
