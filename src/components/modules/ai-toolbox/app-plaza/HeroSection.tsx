@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Shield, History, Play, Heart, MessageSquare, BarChart3, Lightbulb, Image, Video, Globe } from 'lucide-react';
+import { Zap, Shield, History, BarChart3, Lightbulb, Image, Video, Globe, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { FeatureCard } from './FeatureCard';
 import { PreviewInsight, PreviewPlanner, PreviewImageGen, PreviewVideoGen, PreviewTikTok } from './FeaturePreviews';
 import { ShowcaseCard, SHOWCASE_CARDS } from './ShowcaseCard';
@@ -67,7 +67,20 @@ interface HeroSectionProps {
 
 export function HeroSection({ onNavigate }: HeroSectionProps) {
   const [activeCaseCategory, setActiveCaseCategory] = useState<string>('market');
+  const [expanded, setExpanded] = useState(false);
+  const [page, setPage] = useState(0);
+  const ITEMS_PER_PAGE = 4;
+
   const filteredCases = SHOWCASE_CARDS.filter(c => c.category === activeCaseCategory);
+  const previewCases = filteredCases.slice(0, ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredCases.length / ITEMS_PER_PAGE);
+  const pagedCases = filteredCases.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+
+  const handleCategoryChange = (id: string) => {
+    setActiveCaseCategory(id);
+    setExpanded(false);
+    setPage(0);
+  };
   return (
     <section className="pt-20 pb-16 lg:pt-28 lg:pb-24 flex flex-col">
       <div className="w-full">
