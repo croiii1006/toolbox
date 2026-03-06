@@ -32,7 +32,8 @@ export function SkillsModule() {
     id: e.id,
     name: e.title,
     desc: e.content.slice(0, 60) + (e.content.length > 60 ? '...' : ''),
-    tag: e.category
+    tag: e.category,
+    charCount: e.content.length,
   })), [entries]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
