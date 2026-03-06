@@ -89,6 +89,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   /* ── Input Side ── */
   const [styleVideoFile, setStyleVideoFile] = useState<File | null>(null);
   const [styleVideoUrl, setStyleVideoUrl] = useState<string | null>(null);
+  const [inspirationVideo, setInspirationVideo] = useState<InspirationVideo | null>(null);
   const [settings] = useState<ReplicateSettings>(DEFAULT_SETTINGS);
 
   /* ── UI-only state ── */
@@ -98,7 +99,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 
 
   /* ── Action & Status ── */
-  const hasVideoSource = !!(styleVideoFile || tiktokLink.trim());
+  const hasVideoSource = !!(styleVideoFile || inspirationVideo || tiktokLink.trim());
   const canSend = hasVideoSource && sellingPoints.length > 0;
   const [isExtracting, setIsExtracting] = useState(false);
   const [viewMode, setViewMode] = useState<'composer' | 'conversation'>('composer');
@@ -148,6 +149,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
     const url = URL.createObjectURL(file);
     setStyleVideoFile(file);
     setStyleVideoUrl(url);
+    setInspirationVideo(null);
     setTiktokLink('');
     toast.success('对标视频已上传');
     e.target.value = '';
@@ -199,13 +201,11 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
   };
 
   const handleInspirationSelect = (video: InspirationVideo) => {
-    // Set video as the reference (对标视频) via TikTok link
-    setTiktokLink(`https://www.tiktok.com/@user/video/${video.id}`);
-    // Clear any uploaded file since we're using a link now
+    setInspirationVideo(video);
     setStyleVideoFile(null);
     setStyleVideoUrl(null);
+    setTiktokLink('');
     toast.success(`已将「${video.title}」设为对标视频`);
-    // Scroll to top so user can see the composer
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -229,7 +229,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
             <div className="rounded-xl border border-border/20 bg-muted/10 p-4 space-y-2">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Video className="w-3.5 h-3.5" />
-                <span>对标视频：{styleVideoFile?.name || tiktokLink || '—'}</span>
+                <span>对标视频：{styleVideoFile?.name || inspirationVideo?.title || tiktokLink || '—'}</span>
               </div>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="text-xs text-muted-foreground">卖点：</span>
@@ -388,7 +388,7 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
               {/* ── LEFT: Video Upload / TK Link ── */}
               <div className="shrink-0">
                 <input ref={videoInputRef} type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
-                {styleVideoUrl ?
+                {styleVideoUrl ? (
                 <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 bg-muted/30 group">
                     <video src={styleVideoUrl} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -397,14 +397,28 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                     <button
                     className="absolute top-1 right-1 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors"
                     onClick={() => {setStyleVideoFile(null);setStyleVideoUrl(null);}}>
-                    
                       <X className="w-3 h-3" />
                     </button>
                     <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-1.5 py-0.5 text-[10px] text-white truncate">
                       {styleVideoFile?.name}
                     </div>
-                  </div> :
-
+                  </div>
+                ) : inspirationVideo ? (
+                <div className="relative w-[120px] h-[120px] rounded-xl overflow-hidden border border-border/40 group">
+                    <div className={cn("absolute inset-0 bg-gradient-to-br", inspirationVideo.coverGradient)} />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white/80" />
+                    </div>
+                    <button
+                    className="absolute top-1 right-1 p-0.5 rounded-full bg-background/80 hover:bg-background transition-colors opacity-0 group-hover:opacity-100"
+                    onClick={() => setInspirationVideo(null)}>
+                      <X className="w-3 h-3" />
+                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-1.5 py-0.5 text-[10px] text-white truncate">
+                      {inspirationVideo.title}
+                    </div>
+                  </div>
+                ) : (
                 <button
                   onClick={() => !tiktokLink.trim() && videoInputRef.current?.click()}
                   disabled={!!tiktokLink.trim()}
@@ -414,13 +428,12 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
                       ? "border-border/20 bg-muted/10 cursor-not-allowed opacity-40"
                       : "border-border/40 hover:border-foreground/20 hover:bg-muted/20"
                   )}>
-                  
                     <Plus className="w-5 h-5 text-muted-foreground/60" />
                     <span className="text-[11px] text-muted-foreground/60 leading-tight text-center px-1">
                       上传对标视频
                     </span>
                   </button>
-                }
+                )}
               </div>
 
               {/* ── RIGHT: Selling Points ── */}
@@ -469,14 +482,14 @@ export function ReplicateWorkspace({ onNavigate }: ReplicateWorkspaceProps) {
 
               <div className={cn(
                 "flex items-center gap-1.5 transition-opacity",
-                styleVideoFile ? "opacity-40 pointer-events-none" : ""
+                (styleVideoFile || inspirationVideo) ? "opacity-40 pointer-events-none" : ""
               )}>
                   <Link className="w-3.5 h-3.5 text-muted-foreground/50" />
                   <input
                   value={tiktokLink}
                   onChange={(e) => setTiktokLink(e.target.value)}
-                  disabled={!!styleVideoFile}
-                  placeholder={styleVideoFile ? "已上传视频，链接不可用" : "粘贴 TikTok 链接..."}
+                  disabled={!!(styleVideoFile || inspirationVideo)}
+                  placeholder={(styleVideoFile || inspirationVideo) ? "已选择视频，链接不可用" : "粘贴 TikTok 链接..."}
                   className="w-[160px] h-7 text-[11px] bg-transparent text-foreground placeholder:text-muted-foreground/40 focus:outline-none disabled:cursor-not-allowed" />
                 
                 </div>
