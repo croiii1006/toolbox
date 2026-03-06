@@ -276,7 +276,7 @@ export function SkillsModule() {
             task={activeTask}
             onClose={() => setActiveTaskId(null)}
             videoCandidates={
-            activeTask.id === 'task-crawl' || activeTask.id === 'task-wait-select' ?
+            activeTask.id === 'task-crawl' ?
             state.candidateVideos : undefined
             }
             selectedVideoId={state.selectedVideo?.id}
