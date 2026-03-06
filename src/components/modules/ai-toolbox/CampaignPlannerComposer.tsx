@@ -400,10 +400,10 @@ export function CampaignPlannerComposer({ onSubmit, disabled, initialData }: Cam
                 key={cat.id}
                 onClick={() => setActiveCaseCategory(cat.id)}
                 className={cn(
-                  'px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border',
+                  'px-3 py-1 rounded-md text-xs transition-all',
                   activeCaseCategory === cat.id
-                    ? 'bg-foreground text-background border-foreground'
-                    : 'bg-transparent text-muted-foreground border-border/40 hover:border-border hover:text-foreground'
+                    ? 'text-foreground font-medium bg-muted/60'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 {cat.label}
