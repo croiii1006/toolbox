@@ -813,10 +813,33 @@ export function useSkillsEngine() {
     });
   }, []);
 
+  // Restore setup without running the full flow (for history)
+  const restoreSetup = useCallback((setup: SessionSetup) => {
+    clearTimers();
+    setState({
+      sessionId: `session-${Date.now()}`,
+      setupCompleted: true,
+      setup,
+      uiMode: 'single',
+      activeTaskId: null,
+      tasks: [],
+      messages: [
+        { id: `msg-summary-${Date.now()}`, type: 'setup-summary', content: JSON.stringify(setup) },
+        { id: `msg-restored-${Date.now()}`, type: 'text', content: '✅ 已从历史记录恢复。您可以继续输入指令，或重新开始。' },
+      ],
+      candidateVideos: [],
+      selectedVideo: null,
+      generatedPrompt: '',
+      resultVideo: null,
+      isProcessing: false,
+    });
+  }, []);
+
   return {
     state,
     CATEGORIES,
     completeSetup,
+    restoreSetup,
     refreshCandidates,
     selectVideo,
     updatePrompt,
