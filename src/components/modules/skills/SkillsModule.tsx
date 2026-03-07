@@ -1,7 +1,7 @@
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { useMemory } from '@/contexts/MemoryContext';
-import { useSkillsEngine, CandidateVideo } from './useSkillsEngine';
+import { useSkillsEngine, CandidateVideo, SessionSetup } from './useSkillsEngine';
 import { SetupSummary } from './SetupSummary';
 import { ChecklistCard } from './ChecklistCard';
 import { VideoCandidateCollapsible } from './VideoCandidateCollapsible';
@@ -11,7 +11,34 @@ import { ResultPreviewBlock } from './ResultPreviewBlock';
 import { TaskDetailPanel } from './TaskDetailPanel';
 
 import { ChatInputBar } from './ChatInputBar';
-import { Loader2, Zap, CheckCircle2, SkipForward, RefreshCw, ArrowLeft, Clapperboard, PartyPopper, Search, ListChecks, Check, ChevronRight, X } from 'lucide-react';
+import { Loader2, Zap, CheckCircle2, SkipForward, RefreshCw, ArrowLeft, Clapperboard, PartyPopper, Search, ListChecks, Check, ChevronRight, X, History } from 'lucide-react';
+import {
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+} from '@/components/ui/sheet';
+
+/* ─── History helpers ─── */
+interface SkillsHistoryItem {
+  id: string;
+  category: string;
+  sellingPoints: string;
+  image: string | null;
+  memoryEnabled: boolean;
+  selectedMemoryIds: string[];
+  date: string;
+}
+
+const SKILLS_HISTORY_KEY = 'skills-solution-history';
+
+function loadSkillsHistory(): SkillsHistoryItem[] {
+  try {
+    const raw = localStorage.getItem(SKILLS_HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function saveSkillsHistory(items: SkillsHistoryItem[]) {
+  localStorage.setItem(SKILLS_HISTORY_KEY, JSON.stringify(items));
+}
 
 export function SkillsModule() {
   const {
@@ -37,6 +64,7 @@ export function SkillsModule() {
   })), [entries]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [history, setHistory] = useState<SkillsHistoryItem[]>(loadSkillsHistory);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -59,19 +87,54 @@ export function SkillsModule() {
     }
   }, [hasVideoCandidates]);
 
+  const addHistory = useCallback((setup: SessionSetup) => {
+    const newItem: SkillsHistoryItem = {
+      id: crypto.randomUUID(),
+      category: setup.category,
+      sellingPoints: setup.sellingPoints,
+      image: setup.image,
+      memoryEnabled: setup.memoryEnabled,
+      selectedMemoryIds: setup.selectedMemoryIds,
+      date: new Date().toISOString(),
+    };
+    const updated = [newItem, ...history].slice(0, 20);
+    setHistory(updated);
+    saveSkillsHistory(updated);
+  }, [history]);
+
+  const deleteHistory = useCallback((id: string) => {
+    const updated = history.filter(h => h.id !== id);
+    setHistory(updated);
+    saveSkillsHistory(updated);
+  }, [history]);
+
   const handleSend = (text: string, image?: string | null, category?: string, memoryIds?: string[]) => {
     if (!state.setupCompleted && (image || text)) {
-      completeSetup({
+      const setup: SessionSetup = {
         image: image || null,
         imageName: image ? 'uploaded-image' : null,
         memoryEnabled: memoryIds && memoryIds.length > 0 || false,
         selectedMemoryIds: memoryIds || [],
         sellingPoints: text || '',
         category: category || '其它'
-      });
+      };
+      addHistory(setup);
+      completeSetup(setup);
     } else {
       handleUserInput(text);
     }
+  };
+
+  const handleRestoreHistory = (item: SkillsHistoryItem) => {
+    const setup: SessionSetup = {
+      image: item.image,
+      imageName: item.image ? 'uploaded-image' : null,
+      memoryEnabled: item.memoryEnabled,
+      selectedMemoryIds: item.selectedMemoryIds,
+      sellingPoints: item.sellingPoints,
+      category: item.category,
+    };
+    completeSetup(setup);
   };
 
   const handleVideoSelect = (video: CandidateVideo) => {
@@ -222,6 +285,57 @@ export function SkillsModule() {
 
   const isEmpty = !state.setupCompleted && state.messages.length === 0;
 
+  const historySheet = (
+    <Sheet>
+      <SheetTrigger asChild>
+        <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1.5 rounded-lg hover:bg-muted/40">
+          <History className="w-3.5 h-3.5" />
+          <span>历史记录</span>
+        </button>
+      </SheetTrigger>
+      <SheetContent className="w-80 sm:w-96">
+        <SheetHeader>
+          <SheetTitle className="text-base font-medium">历史记录</SheetTitle>
+        </SheetHeader>
+        <div className="mt-4 space-y-3">
+          {history.map(item => (
+            <button
+              key={item.id}
+              onClick={() => handleRestoreHistory(item)}
+              className="w-full text-left p-3 rounded-xl border border-border/30 hover:border-border/60 hover:bg-muted/20 transition-all group relative"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm font-medium text-foreground">{item.category}</span>
+                <span className="text-[10px] text-muted-foreground">
+                  {new Date(item.date).toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground truncate">{item.sellingPoints}</p>
+              <div className="flex gap-1 mt-1.5 flex-wrap">
+                {item.memoryEnabled && (
+                  <span className="text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded-full">记忆库</span>
+                )}
+                {item.image && (
+                  <span className="text-[10px] bg-muted/40 text-muted-foreground px-1.5 py-0.5 rounded-full">含图片</span>
+                )}
+              </div>
+              <button
+                onClick={e => { e.stopPropagation(); deleteHistory(item.id); }}
+                className="absolute top-3 right-10 opacity-0 group-hover:opacity-100 p-1 rounded-full hover:bg-muted/40 transition-all"
+              >
+                <X className="w-3.5 h-3.5 text-muted-foreground/50" />
+              </button>
+              <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30 shrink-0" />
+            </button>
+          ))}
+          {history.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-8">暂无历史记录</p>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col bg-background">
       <div className="flex-1 flex overflow-hidden">
@@ -232,7 +346,10 @@ export function SkillsModule() {
         )}>
           {isEmpty ? (
           /* Centered composer layout - mirroring Market Insight style */
-          <div className="min-h-full flex flex-col items-center justify-center p-6 md:p-8 py-[60px]">
+          <div className="relative min-h-full flex flex-col items-center justify-center p-6 md:p-8 py-[60px]">
+              <div className="absolute top-4 right-4 z-20">
+                {historySheet}
+              </div>
               <div className="w-full max-w-2xl animate-fade-in">
                 {/* Title */}
                 <div className="text-center mb-10">
