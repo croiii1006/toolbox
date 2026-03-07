@@ -45,7 +45,6 @@ export function SkillsModule() {
     state,
     CATEGORIES,
     completeSetup,
-    restoreSetup,
     refreshCandidates,
     selectVideo,
     updatePrompt,
@@ -135,7 +134,7 @@ export function SkillsModule() {
       sellingPoints: item.sellingPoints,
       category: item.category,
     };
-    restoreSetup(setup);
+    completeSetup(setup);
   };
 
   const handleVideoSelect = (video: CandidateVideo) => {
